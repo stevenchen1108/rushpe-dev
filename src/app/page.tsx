@@ -91,8 +91,8 @@ export default function Home() {
       <div className="relative overflow-hidden h-[45rem]">
         <div className="absolute flex flex-col align-middle justify-center h-full w-1/2 min-w-[35rem] z-10 p-24 bg-black bg-opacity-30 right-0">
           <h1 className="tracking-wider font-bold text-6xl">Our Mission</h1>
-          <p className="my-5">"Recruit, retain, and graduate minority students majoring in engineering,
-            math, and science."</p>
+          <p className="my-5">&quot;Recruit, retain, and graduate minority students majoring in engineering,
+            math, and science.&quot;</p>
           <p className="font-semibold">You do not have to be Hispanic to join. We accept everyone</p>
         </div>
         <Image
