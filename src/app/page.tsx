@@ -1,113 +1,136 @@
-import Image from "next/image";
+import Image from 'next/image';
 
 export default function Home() {
+  const frontPageLinks = [
+    {
+      id: 0,
+      title: 'Upcoming Events',
+      desc: 'View our upcoming events & meetings.'
+    }, {
+      id: 1,
+      title: 'Scholarship Opportunities',
+      desc: 'Apply for scholarship and access academic resources.'
+    }, {
+      id: 2,
+      title: 'Professional Resources',
+      desc: 'Attend our workshops & expand your network.'
+    }, {
+      id: 3,
+      title: 'Send Us A Message',
+      desc: 'Deliver questions, comments, or concerns.'
+    },
+  ];
+  const offeringLinks = [
+    {
+      id: 0,
+      title: 'Academic Support',
+      imgName: 'academic-support',
+      link: ''
+    }, {
+      id: 1,
+      title: 'Professionalism',
+      imgName: 'professionalism',
+      link: ''
+    }, {
+      id: 2,
+      title: 'Internship & Scholarship',
+      imgName: 'internship-scholarship',
+      link: ''
+    }, {
+      id: 3,
+      title: 'Networking',
+      imgName: 'networking',
+      link: ''
+    }, {
+      id: 4,
+      title: 'Fun Activities',
+      imgName: 'fun-activities',
+      link: ''
+    }, {
+      id: 5,
+      title: 'Volunteering',
+      imgName: 'volunteering',
+      link: ''
+    },
+  ]
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <>
+      <div className="relative w-full overflow-x-hidden flex justify-center">
+        <video autoPlay={true} muted loop className="min-w-[90rem] m-auto object-contain">
+          {/* set to true ^^^ */}
+          <source src="/home-pg-assets/home-bg-vid.mp4" type="video/mp4"/>       
+        </video>
+        <div className="absolute px-16 py-20 top-0 left-0">
+          <div className="text-wrap w-[37rem] p-4 bg-black bg-opacity-25">
+            <h2 className="text-5xl font-semibold tracking-wide">Welcome to RUSHPE!</h2>
+            <p className="text-lg my-3 max-w-[80%]">
+              Our Rutgers chapter seeks to foster both academic
+              and professional education to further individuals of
+              any denomination in all fields of study.
+            </p>
+          </div>
+        </div>
+        <div className="absolute m-5 bottom-0 flex justify-center">
+          {
+            frontPageLinks.map( link => {
+              return (
+                <div key={link.id} className="bg-white w-56 h-44 p-3 shadow-2xl rounded-md m-2 text-center">
+                  <h1 className="my-3 text-black text-2xl font-semibold tracking-wide">
+                    {link.title}
+                  </h1>
+                  <p className="text-sm text-gray-500">
+                    {link.desc}
+                  </p>
+                </div>
+              );
+            })
+          }
         </div>
       </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
+      <div className="relative overflow-hidden h-[45rem]">
+        <div className="absolute flex flex-col align-middle justify-center h-full w-1/2 min-w-[35rem] z-10 p-24 bg-black bg-opacity-30 right-0">
+          <h1 className="tracking-wider font-bold text-6xl">Our Mission</h1>
+          <p className="my-5">"Recruit, retain, and graduate minority students majoring in engineering,
+            math, and science."</p>
+          <p className="font-semibold">You do not have to be Hispanic to join. We accept everyone</p>
+        </div>
         <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+        src="/home-pg-assets/our-mission-bg.jpg"
+        placeholder="blur"
+        blurDataURL="/home-pg-assets/our-mission-bg.jpg"
+        alt="our mission" fill
+        sizes="(max-width: 768px) 100vw"
+        objectFit="cover"
+        ></Image>
       </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className="relative min-w-72 py-4">
+        <h1 className='w-full text-5xl tracking-wide font-semibold text-center'>
+          We Offer
+        </h1>
+        <div className="flex flex-wrap align-middle justify-center">
+          {
+            offeringLinks.map( offerItem => {
+              return (
+                <div key={offerItem.id} className="relative h-[22rem] w-72 m-5">
+                  <Image src={`/home-pg-assets/${offerItem.imgName}.jpg`}
+                  placeholder="blur"
+                  blurDataURL={`/home-pg-assets/${offerItem.imgName}.jpg`}
+                  alt={offerItem.title} fill
+                  sizes="(max-width: 768px) 100vw"
+                  objectFit="cover"
+                  ></Image>
+                  <div className="absolute flex flex-col justify-end align-middle inset-0">
+                    <h1 className="text-3xl font-semibold text-center my-auto">
+                      {offerItem.title.toUpperCase()}
+                    </h1>
+                  </div>
+                </div>
+              );
+            })
+          }
+        </div>
       </div>
-    </main>
+    </>
   );
 }
