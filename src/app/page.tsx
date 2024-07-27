@@ -1,4 +1,10 @@
 import Image from 'next/image';
+import asImage from '../../public/home-pg-assets/academic-support.jpg';
+import isImage from '../../public/home-pg-assets/internship-scholarship.jpg';
+import prImage from '../../public/home-pg-assets/professionalism.jpg';
+import neImage from '../../public/home-pg-assets/networking.jpg';
+import faImage from '../../public/home-pg-assets/fun-activities.jpg';
+import vnImage from '../../public/home-pg-assets/volunteering.jpg';
 
 export default function Home() {
   const frontPageLinks = [
@@ -24,32 +30,32 @@ export default function Home() {
     {
       id: 0,
       title: 'Academic Support',
-      imgName: 'academic-support',
+      imgName: asImage,
       link: ''
     }, {
       id: 1,
       title: 'Professionalism',
-      imgName: 'professionalism',
+      imgName: prImage,
       link: ''
     }, {
       id: 2,
       title: 'Internship & Scholarship',
-      imgName: 'internship-scholarship',
+      imgName: isImage,
       link: ''
     }, {
       id: 3,
       title: 'Networking',
-      imgName: 'networking',
+      imgName: neImage,
       link: ''
     }, {
       id: 4,
       title: 'Fun Activities',
-      imgName: 'fun-activities',
+      imgName: faImage,
       link: ''
     }, {
       id: 5,
       title: 'Volunteering',
-      imgName: 'volunteering',
+      imgName: vnImage,
       link: ''
     },
   ]
@@ -113,9 +119,8 @@ export default function Home() {
             offeringLinks.map( offerItem => {
               return (
                 <div key={offerItem.id} className="relative h-[22rem] w-72 m-5">
-                  <Image src={`/home-pg-assets/${offerItem.imgName}.jpg`}
+                  <Image src={offerItem.imgName}
                   placeholder="blur"
-                  blurDataURL={`/home-pg-assets/${offerItem.imgName}.jpg`}
                   alt={offerItem.title} fill
                   sizes="(max-width: 768px) 100vw"
                   objectFit="cover"
