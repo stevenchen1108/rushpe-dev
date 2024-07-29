@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import Image from 'next/image';
 import asImage from '../../public/home-pg-assets/academic-support.jpg';
 import isImage from '../../public/home-pg-assets/internship-scholarship.jpg';
@@ -7,6 +8,7 @@ import faImage from '../../public/home-pg-assets/fun-activities.jpg';
 import vnImage from '../../public/home-pg-assets/volunteering.jpg';
 
 export default function Home() {
+
   const frontPageLinks = [
     {
       id: 0,
@@ -62,13 +64,13 @@ export default function Home() {
 
   return (
     <>
-      <div className="relative w-full overflow-x-hidden flex justify-center">
-        <video autoPlay={true} muted loop className="min-w-[90rem] m-auto object-contain">
+      <div className="relative w-full h-[45rem] overflow-hidden flex justify-center items-center">
+        <video autoPlay={true} muted loop className="min-w-[90rem] w-full object-cover">
           {/* set to true ^^^ */}
           <source src="/home-pg-assets/home-bg-vid.mp4" type="video/mp4"/>       
         </video>
-        <div className="absolute px-16 py-20 top-0 left-0">
-          <div className="text-wrap w-[37rem] p-4 bg-black bg-opacity-25">
+        <div className="absolute top-[10%] md:left-[10%]">
+          <div className="text-wrap sm:w-[37rem] p-4 bg-black bg-opacity-25">
             <h2 className="text-5xl font-semibold tracking-wide">Welcome to RUSHPE!</h2>
             <p className="text-lg my-3 max-w-[80%]">
               Our Rutgers chapter seeks to foster both academic
@@ -77,11 +79,11 @@ export default function Home() {
             </p>
           </div>
         </div>
-        <div className="absolute m-5 bottom-0 flex justify-center">
+        <div className="absolute bottom-0 flex gap-4 justify-center flex-wrap py-3">
           {
             frontPageLinks.map( link => {
               return (
-                <div key={link.id} className="bg-white w-56 h-44 p-3 shadow-2xl rounded-md m-2 text-center">
+                <div key={link.id} className="bg-white w-56 h-44 p-3 shadow-2xl rounded-md text-center">
                   <h1 className="my-3 text-black text-2xl font-semibold tracking-wide">
                     {link.title}
                   </h1>
@@ -95,7 +97,7 @@ export default function Home() {
         </div>
       </div>
       <div className="relative overflow-hidden h-[45rem]">
-        <div className="absolute flex flex-col align-middle justify-center h-full w-1/2 min-w-[35rem] z-10 p-24 bg-black bg-opacity-30 right-0">
+        <div className="absolute flex flex-col align-middle md:justify-center h-full w-full md:w-1/2 md:min-w-[35rem] z-10 p-24 bg-black bg-opacity-30 right-0 text-center md:text-left">
           <h1 className="tracking-wider font-bold text-6xl">Our Mission</h1>
           <p className="my-5">&quot;Recruit, retain, and graduate minority students majoring in engineering,
             math, and science.&quot;</p>
@@ -114,11 +116,11 @@ export default function Home() {
         <h1 className='w-full text-5xl tracking-wide font-semibold text-center'>
           We Offer
         </h1>
-        <div className="flex flex-wrap align-middle justify-center">
+        <div className="flex flex-wrap align-middle justify-center gap-5">
           {
             offeringLinks.map( offerItem => {
               return (
-                <div key={offerItem.id} className="relative h-[22rem] w-72 m-5">
+                <div key={offerItem.id} className="block grow md:grow-0 relative h-[28rem] md:h-[22rem] w-72">
                   <Image src={offerItem.imgName}
                   placeholder="blur"
                   alt={offerItem.title} fill

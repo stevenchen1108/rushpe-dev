@@ -3,12 +3,12 @@ import Image from 'next/image';
 export default function FooterBar() {
     return (
         <>
-            <div className="bg-main flex flex-row justify-around items-center px-14 py-3">
+            <footer className="bg-main flex flex-row justify-around items-center px-14 py-3">
                 <div className="relative h-32 w-32 shrink-0">
                     <Image src="/she-logo.png" alt="she logo" fill={true}></Image>
                 </div>
                 <div className="flex flex-col justify-between items-center text-center">
-                    <div className="bg-dark-main p-8 rounded-full shadow-2xl w-64 m-5">
+                    <div className="bg-dark-main p-8 rounded-full shadow-2 w-64 m-5">
                     rushpe@gmail.com
                     Meetings Tuesday @
                     600 Bartholomew Rd, Piscataway, NJ 08854
@@ -17,7 +17,7 @@ export default function FooterBar() {
                         Copyright © 2023, Rutgers SHPE, Society of Hispanic Engineers.
                     </p>
                 </div>
-            </div>
+            </footer>
         </>
     );
 }
