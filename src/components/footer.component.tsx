@@ -3,7 +3,7 @@ import Image from 'next/image';
 export default function FooterBar() {
     return (
         <>
-            <footer className="bg-main flex flex-row justify-around items-center px-14 py-3">
+            <footer className="bg-main flex flex-col sm:flex-row justify-around items-center px-14 py-3">
                 <div className="relative h-32 w-32 shrink-0">
                     <Image src="/she-logo.png" alt="she logo" fill={true}></Image>
                 </div>

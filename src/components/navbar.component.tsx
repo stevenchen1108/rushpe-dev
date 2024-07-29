@@ -31,11 +31,10 @@ export default function NavBar() {
         <header className="sticky top-0 z-20">
             <div className='flex flex-col bg-dark-main relative overflow-auto'>
                 <div className="flex justify-between md:justify-center items-stretch h-28">
-                    <div className='flex flex-row gap-3 items-center font-bold text-4xl px-6'>
+                    <div className='flex flex-row gap-2 sm:gap-3 items-center font-bold px-2 sm:px-6'>
                         <Image src="/she-logo.png" alt="she logo"
                         width={80} height={80} className="shrink-0"></Image>
-                        <h1 className="hidden md:block">Society of Hispanic Engineers</h1>
-                        <h1 className="block md:hidden tracking-wide text-5xl">S.H.E.</h1>
+                        <h1 className="block w-20 sm:w-4/5 md:w-auto text-md sm:text-4xl">Society of Hispanic Engineers</h1>
                     </div>
                     <div className="relative flex md:hidden text-5xl justify-end items-center grow px-6
                     cursor-pointer" onClick={() => setMenu(!menuDropped)}>

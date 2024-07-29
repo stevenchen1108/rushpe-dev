@@ -69,25 +69,25 @@ export default function Home() {
           {/* set to true ^^^ */}
           <source src="/home-pg-assets/home-bg-vid.mp4" type="video/mp4"/>       
         </video>
-        <div className="absolute top-[10%] md:left-[10%]">
+        <div className="absolute text-center top-0 sm:top-[10%] sm:text-left md:left-[10%]">
           <div className="text-wrap sm:w-[37rem] p-4 bg-black bg-opacity-25">
             <h2 className="text-5xl font-semibold tracking-wide">Welcome to RUSHPE!</h2>
-            <p className="text-lg my-3 max-w-[80%]">
+            <p className="text-lg my-3 sm:max-w-[80%]">
               Our Rutgers chapter seeks to foster both academic
               and professional education to further individuals of
               any denomination in all fields of study.
             </p>
           </div>
         </div>
-        <div className="absolute bottom-0 flex gap-4 justify-center flex-wrap py-3">
+        <div className="absolute bottom-0 flex sm:gap-4 justify-center flex-wrap sm:py-3">
           {
             frontPageLinks.map( link => {
               return (
-                <div key={link.id} className="bg-white w-56 h-44 p-3 shadow-2xl rounded-md text-center">
-                  <h1 className="my-3 text-black text-2xl font-semibold tracking-wide">
+                <div key={link.id} className="bg-white w-1/2 rounded-t-md sm:w-56 sm:h-40 px-3 shadow-2xl sm:rounded-md text-center">
+                  <h1 className="m-3 h-full sm:h-auto sm:w-auto text-black text-2xl font-semibold tracking-wide">
                     {link.title}
                   </h1>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 h-0 sm:h-auto">
                     {link.desc}
                   </p>
                 </div>
@@ -116,7 +116,7 @@ export default function Home() {
         <h1 className='w-full text-5xl tracking-wide font-semibold text-center'>
           We Offer
         </h1>
-        <div className="flex flex-wrap align-middle justify-center gap-5">
+        <div className="flex flex-wrap align-middle justify-center sm:gap-5">
           {
             offeringLinks.map( offerItem => {
               return (
