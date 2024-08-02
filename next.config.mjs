@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    //basePath: '/rushpe-dev',
+    basePath: '/rushpe-dev',
     output: 'export',
     distDir: 'dist',
     images: {

@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
 import { VscMenu, VscChromeClose } from "react-icons/vsc";
 import './navbar.component.css';
@@ -9,26 +10,32 @@ export default function NavBar() {
     const pages = [
         {
             name: 'Home',
+            link: '',
             id: 0
         }, {
             name: 'About Us',
+            link: 'about-us',
             id: 1
         }, {
             name: 'Executive Board',
+            link: 'executive-board',
             id: 2
         }, {
             name: 'Events',
+            link: 'events',
             id: 3
         }, {
             name: 'Corporate',
+            link: 'corporate',
             id: 4
         }, {
             name: 'Contact Us',
+            link: 'contact',
             id: 5
         }
     ]
     return (
-        <header className="sticky top-0 z-20">
+        <header className="md:sticky md:top-0 z-20">
             <div className='flex flex-col bg-dark-main relative overflow-auto'>
                 <div className="flex justify-between md:justify-center items-stretch h-28">
                     <div className='flex flex-row gap-2 sm:gap-3 items-center font-bold px-2 sm:px-6'>
@@ -47,10 +54,10 @@ export default function NavBar() {
                     {
                     pages.map( pageName => {
                         return (
-                            <div className='flex justify-center items-center basis-0 grow p-6 md:p-3 shrink-0 px-2 hover:bg-main hover:shadow-lg'
-                            key={pageName.id}>
+                            <Link className='flex justify-center items-center basis-0 grow p-6 md:p-3 shrink-0 px-2 hover:bg-main hover:shadow-lg'
+                            key={pageName.id} href={'/' + pageName.link} onClick={() => setMenu(!menuDropped)}>
                                 <h1 className="text-3xl md:text-base font-semibold text-center">{pageName.name.toUpperCase()}</h1>
-                            </div>
+                            </Link>
                         );
                     })
                     }

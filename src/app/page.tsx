@@ -79,15 +79,15 @@ export default function Home() {
             </p>
           </div>
         </div>
-        <div className="absolute bottom-0 flex sm:gap-4 justify-center flex-wrap sm:py-3">
+        <div className="absolute bottom-0 sm:gap-4 flex justify-center flex-wrap sm:py-3"> {/*flex justify-center flex-wrap*/}
           {
             frontPageLinks.map( link => {
               return (
-                <div key={link.id} className="bg-white w-1/2 rounded-t-md sm:w-56 sm:h-40 px-3 shadow-2xl sm:rounded-md text-center">
-                  <h1 className="m-3 h-full sm:h-auto sm:w-auto text-black text-2xl font-semibold tracking-wide">
+                <div key={link.id} className="bg-white min-h-12 w-1/2 rounded-t-md sm:w-56 sm:h-40 px-3 shadow-2xl sm:rounded-md text-center">
+                  <h1 className="h-full sm:p-3 sm:h-auto sm:w-auto sm:text-2xl text-black text-xl font-semibold tracking-wide">
                     {link.title}
                   </h1>
-                  <p className="text-sm text-gray-500 h-0 sm:h-auto">
+                  <p className="hidden sm:block text-sm text-gray-500 h-0 sm:h-auto">
                     {link.desc}
                   </p>
                 </div>
@@ -97,7 +97,8 @@ export default function Home() {
         </div>
       </div>
       <div className="relative overflow-hidden h-[45rem]">
-        <div className="absolute flex flex-col align-middle md:justify-center h-full w-full md:w-1/2 md:min-w-[35rem] z-10 p-24 bg-black bg-opacity-30 right-0 text-center md:text-left">
+        <div className="absolute flex flex-col align-middle h-full w-full z-10 py-24 bg-black bg-opacity-30 right-0 text-center
+        md:justify-center md:w-1/2 md:min-w-[35rem] sm:p-24 md:text-left">
           <h1 className="tracking-wider font-bold text-6xl">Our Mission</h1>
           <p className="my-5">&quot;Recruit, retain, and graduate minority students majoring in engineering,
             math, and science.&quot;</p>
