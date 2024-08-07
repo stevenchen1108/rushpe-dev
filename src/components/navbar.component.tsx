@@ -20,19 +20,19 @@ export default function NavBar() {
             name: 'Executive Board',
             link: 'executive-board',
             id: 2
-        }, {
-            name: 'Events',
-            link: 'events',
-            id: 3
+        // }, {
+        //     name: 'Events',
+        //     link: 'events',
+        //     id: 3
         }, {
             name: 'Corporate',
             link: 'corporate',
             id: 4
-        }, {
-            name: 'Contact Us',
-            link: 'contact',
-            id: 5
-        }
+        }, //{
+        //     name: 'Contact Us',
+        //     link: 'contact',
+        //     id: 5
+        // }
     ]
     return (
         <header className="md:sticky md:top-0 z-20">
