@@ -16,12 +16,16 @@ export async function POST(request) {
         nonFieldData.imgFileDownloadURL = downloadURL;
         const docRef = await addDoc(collection(db, "form-data"), nonFieldData);
         console.log("Document written with ID: ", docRef.id);
-        return new Response(JSON.stringify({ message: 'POST request received', data: postData }), {
+        const serverlessResponse = new Response(JSON.stringify({ message: 'POST request received', data: postData }), {
             status: 200,
             headers: {
             'Content-Type': 'application/json',
             },
         });
+        serverlessResponse.headers.set('Access-Control-Allow-Origin', '*');
+        serverlessResponse.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        serverlessResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        return serverlessResponse;
     } catch (e) {
         console.error("Error adding document: ", e);
         return new Response(JSON.stringify({ error: 'POST request received' }), {
