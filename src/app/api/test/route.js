@@ -11,7 +11,7 @@ export async function POST(request) {
         const nonFieldData = JSON.parse(postData.get('nonFieldData'));
         // console.log(imgFile, nonFieldData);
         const storageRef = ref(fireStorage, `firstUploads/${imgFile.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, imgFile);
+        const uploadTask = await uploadBytesResumable(storageRef, imgFile);
         const downloadURL = await getDownloadURL(storageRef);
         nonFieldData.imgFileDownloadURL = downloadURL;
         const docRef = await addDoc(collection(db, "form-data"), nonFieldData);
