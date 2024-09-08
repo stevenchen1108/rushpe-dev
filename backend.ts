@@ -2,8 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import "mssql";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,6 +14,22 @@ const firebaseConfig = {
   appId: process.env.APP_ID
 };
 
+const azureConfig = {
+    user: process.env.MS_USER,
+    password: process.env.MS_PASS,
+    server: process.env.MS_SERVER,
+    port: parseInt(process.env.MS_PORT ? process.env.MS_PORT : '0'), // optional, defaults to 1433
+    database: process.env.MS_DATABASE,
+    authentication: {
+        type: 'default'
+    },
+    options: {
+        encrypt: true
+    }
+}
+
+const msDatabase = require("mssql");
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
@@ -22,4 +37,4 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const fireStorage = getStorage(app);
 
-export { db, fireStorage };
+export { db, fireStorage, msDatabase, azureConfig };

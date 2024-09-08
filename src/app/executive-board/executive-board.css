@@ -6,4 +6,16 @@
     .e-board {
         grid-template-columns: 1fr 1.5em;
     }
+    .desc:hover {
+        opacity: 1;
+        background-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .desc {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: all;
+        transition-duration: 0.4s;
+    }
 }
