@@ -26,14 +26,11 @@ export default function Form() {
             .then((data) => console.log(data.message));
         setSubmissionMessage(true);
     };
-    if (hasSubmitted) {
-        return (
-            <section className="flex flex-col items-center bg-white text-black p-8 py-72">
+    return hasSubmitted ? (
+            <section className="flex flex-col items-center bg-white text-black p-8 py-64">
                 <h1 className="text-xl italic">Thank you for submitting!</h1>
             </section>
-        )
-    }
-    return (
+        ) : (
         <>
         <section className="flex flex-col items-center bg-white text-black p-6">
             <h1 className="text-2xl">EBOARD Form</h1>

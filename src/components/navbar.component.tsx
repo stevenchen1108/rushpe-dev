@@ -28,11 +28,11 @@ export default function NavBar() {
             name: 'Corporate',
             link: 'corporate',
             id: 4
-        }, //{
-        //     name: 'Contact Us',
-        //     link: 'contact',
-        //     id: 5
-        // }
+        }, {
+            name: 'Contact Us',
+            link: 'contact',
+            id: 5
+        }
     ]
     return (
         <header className="md:sticky md:top-0 z-20">

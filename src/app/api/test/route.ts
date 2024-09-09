@@ -1,6 +1,6 @@
 
 import { collection, addDoc } from "firebase/firestore";
-import { db, fireStorage } from "@/../firebase";
+import { db, fireStorage } from "../../../../backend";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { NextRequest, NextResponse } from "next/server";
 
