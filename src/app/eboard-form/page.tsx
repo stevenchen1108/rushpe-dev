@@ -41,12 +41,12 @@ export default function Form() {
                 className="p-3 w-full shadow-md rounded-lg text-wrap"></textarea>
                 <input {...register('linkedin', { required: true, pattern: /linkedin.com/})} placeholder="LinkedIn URL" type="url"
                 className="p-3 w-full shadow-md rounded-lg"/>
-                <p className="font-semibold self-start">Optional:</p>
+                {/* <p className="font-semibold self-start">Optional:</p>
                 <p>If you want to change your headshot, upload here:</p>
                 <input {...register('fileList')} placeholder="Image" type="file"
                 className="p-3 w-full shadow-md rounded-lg"/>
                 <input {...register('instareel')} placeholder="Please send me ur funniest reel :D" type="url"
-                className="p-3 w-full shadow-md rounded-lg"/>
+                className="p-3 w-full shadow-md rounded-lg"/> */}
                 { (errors.name || errors.desc || errors.linkedin) && <span>Enter valid input</span>}
                 <input type="submit"
                 className="p-3 w-2/3 shadow-md rounded-lg bg-main text-white font-bold hover:bg-dark-main transition-colors"/>
