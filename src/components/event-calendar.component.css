@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .date-panel {
+        border-width: 2px;
+        border-style: solid;
+        border-image: 
+            linear-gradient(
+                45deg,
+                rgba(0, 0, 0, 0) 45%,
+                rgb(207, 207, 207)
+            ) 1;
+        border-left: 0;
+        border-bottom: 0;
+    }
+    .selected-panel {
+        border-image: none;
+        border-color: rgba(0, 0, 0, 0);
+        border-width: 2px;
+        span:before {
+            background-color: black;
+            inset: 0;
+        }
+    }
+}

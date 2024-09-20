@@ -60,7 +60,7 @@ export default function Home() {
       imgName: vnImage,
       link: ''
     },
-  ]
+  ];
 
   return (
     <>
