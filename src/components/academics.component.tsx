@@ -9,7 +9,7 @@ export default function ProfessionalismInfo() {
             <p>We offer our member weekly study nights, which is located at Richard Weeks.
             We encourage you to take advantage of this opportunity and get studies in while bonding with our members.</p>
             <h1 className="text-4xl font-bold tracking-wider">Academic Advice Programs</h1>
-            <p>​Every month we host events that is strictly done to teach our members things that normally aren't covered in class.<br/><br/>
+            <p>Every month we host events that is strictly done to teach our members things that normally are not covered in class.<br/><br/>
             Events such as our Financial Literacy Workshop and Professionalism Panel are crucial to the success of our members in the future.</p>
         </section>
     );
