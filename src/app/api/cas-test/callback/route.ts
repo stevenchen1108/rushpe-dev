@@ -7,21 +7,21 @@ const cas = new CASAuthentication({
   cas_version: '3.0',
 });
 
-export async function GET(request: NextResponse) {
-  return new Promise((resolve) => {
-    const req = request; // Incoming request to the callback
-    const res = {
-      writeHead: (status: any, headers: any) => {
-        console.log(status);
-        resolve(NextResponse.redirect(headers.Location)); // Redirect user based on response
-      },
-      end: () => resolve(NextResponse.next()),
-    };
+// export async function GET(request: NextResponse) {
+//   return new Promise((resolve) => {
+//     const req = request; // Incoming request to the callback
+//     const res = {
+//       writeHead: (status: any, headers: any) => {
+//         console.log(status);
+//         resolve(NextResponse.redirect(headers.Location)); // Redirect user based on response
+//       },
+//       end: () => resolve(NextResponse.next()),
+//     };
 
-    cas.handle(req, res, () => {
-      // At this point, the user has been authenticated by CAS.
-      // You can now store user information in a session or cookie.
-      resolve(NextResponse.redirect('/protected')); // Redirect to a protected page after login
-    });
-  });
-}
+//     cas.handle(req, res, () => {
+//       // At this point, the user has been authenticated by CAS.
+//       // You can now store user information in a session or cookie.
+//       resolve(NextResponse.redirect('/protected')); // Redirect to a protected page after login
+//     });
+//   });
+// }
