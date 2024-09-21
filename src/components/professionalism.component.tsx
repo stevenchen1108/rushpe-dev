@@ -11,7 +11,7 @@ export default function ProfessionalInfo() {
               <img src={graphicDoc.src} className="size-32"></img>
               <img src={graphicCollab.src}></img>
             </div>
-            <p>We offer assistance with building and editing our members' resumes and cover letters.<br/><br/>
+            <p>We offer assistance with building and editing our members resumes and cover letters.<br/><br/>
             Having a strong resume and cover letter is crucial in earning your first internship/job.</p>
             <h1 className="text-4xl font-bold tracking-wider">Professional & Leadership Workshops</h1>
             <p>SHE hosts at least one Professional and Leadership Workshops every month.<br/><br/></p>
