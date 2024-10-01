@@ -16,7 +16,7 @@ export default function Form() {
         nonFileFields['imgFileDownloadURL'] = ''; // leave for backend to fill
         nonFileFields['submittedOn'] = new Date().toISOString();
         userFormData.append('nonFieldData', JSON.stringify(nonFileFields));
-        userFormData.append('targetFile', userInput['fileList'][0]);
+        userFormData.append('targetFile', (userInput['fileList'] ? userInput['fileList'][0] : null));
         console.log(userFormData);
         fetch('/api/test', {
             method: 'POST',
