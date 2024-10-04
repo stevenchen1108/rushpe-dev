@@ -113,7 +113,7 @@ export default function ExecutiveBoard() {
             headshot: collegiateHeadshot,
             email: 'collegiate@rushpe.org',
             linkedin: "https://www.linkedin.com/in/michaelc1252",
-            desc: "As an Electrical and Computer Engineering student, I am committed to delivering high quality work and continuously supporting my SHPE chapter. With experience in IT Support and leadership skills gained from previous roles, I am excited to welcome incoming freshmen and promote collegiate-level events in my role as this year’s Collegiate Chair.",
+            desc: "As an Electrical and Computer Engineering student, I am committed to delivering high quality work and continuously supporting my SHPE chapter. With experience in IT Support and leadership skills gained from previous roles, I am excited to welcome incoming freshmen and promote collegiate-level events in my role as this year's Collegiate Chair.",
             index: 11
         }, {
             position: 'Fundraising Chair',
@@ -121,7 +121,7 @@ export default function ExecutiveBoard() {
             headshot: fundraisingHeadshot,
             email: 'fundraising@rushpe.org',
             linkedin: 'https://www.linkedin.com/in/josesantiagob',
-            desc: null,
+            desc: "I am a Sophomore Majoring in Electrical Engineering and working towards a minor in Computer Science. This year, I am the Fundraising Chair for the chapter. I got involved with SHE during my freshmen year and got the opportunity to be part of the Community Service Committee. I enjoy going to the gym, playing soccer, and exploring new cities for fun!",
             index: 12
         }, {
             position: 'Historian',

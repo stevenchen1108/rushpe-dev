@@ -14,7 +14,7 @@ export default function FooterBar() {
                     600 Bartholomew Rd, Piscataway, NJ 08854
                     </div>
                     <p className="text-gray-600 text-xs">
-                        Copyright © 2023, Rutgers SHPE, Society of Hispanic Engineers.
+                        Copyright © 2024, Rutgers SHPE, Society of Hispanic Engineers.
                     </p>
                 </div>
             </footer>
