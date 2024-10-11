@@ -56,7 +56,7 @@ export default function Calendar() {
     var [eventSelected, updateEventSelected] = useState(new Event());
     var [calendarData, setCalendar] = useState<CalendarDay[]>(dayArray);
     var [eventPopup, setEventPopup] = useState(false);
-    var isMounted = false;
+    var [isMounted, setMount] = useState(false);
     daySelected.selected = true;
 
     const fetchEvents = async () => {
@@ -100,7 +100,7 @@ export default function Calendar() {
                     }
                 });
                 setCalendar(dayArray);
-                isMounted = true;
+                setMount(true);
             }
         } catch (e) {
             console.log(e);
