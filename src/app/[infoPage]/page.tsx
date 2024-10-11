@@ -4,9 +4,11 @@ import Networking from '@/components/networking.component';
 import Events from '@/components/event-calendar.component';
 
 
-export default function InfoPage( { params } : any ) {
+export default function InfoPage( { params } : {
+    params: { infoPage: string }
+} ) {
     const linkMap: any = { professionalism: <Professionalism/>, academics: <Academics/>, networking: <Networking/>, events: <Events/> };
-    const linkPage: any = params['info-page'];
+    const linkPage: any = params.infoPage;
     return (
         <>
             {linkMap[linkPage]}
