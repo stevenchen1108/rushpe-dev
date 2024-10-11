@@ -10,6 +10,8 @@ const config: Config = {
     extend: {
       colors: {
         'main': '#BB2423',
+        'main-hover': '#A43A38',
+        'light-main-hover': '#C87877',
         'light-main': '#D27D7C',
         'dark-main': '#7D1817'
       },

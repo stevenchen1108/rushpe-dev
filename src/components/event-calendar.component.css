@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 @layer components {
+    .calendar-grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        grid-auto-rows: 1fr;
+    }
     .date-panel {
         border-width: 2px;
         border-style: solid;
