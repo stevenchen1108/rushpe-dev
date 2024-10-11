@@ -63,7 +63,7 @@ export default function Calendar() {
         const calendarId = 'c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com';
         try {
             const response = await fetch(
-                `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${process.env.NEXT_PUBLIC_GOOGLE_CAL_API_KEY}&supportsAttachments=true&singleEvents=true&orderBy=startTime`, {
+                `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${process.env.NEXT_PUBLIC_GOOGLE_CAL_API_KEY ? process.env.NEXT_PUBLIC_GOOGLE_CAL_API_KEY : 'AIzaSyBCIOf5yqU8ThEm-h95QvynRXrM4H7wnUs'}&supportsAttachments=true&singleEvents=true&orderBy=startTime`, {
                     method: 'GET',
                     headers: {
                     'Content-Type': 'application/json',
