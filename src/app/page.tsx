@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import asImage from '../../public/home-pg-assets/academic-support.jpg';
 import isImage from '../../public/home-pg-assets/internship-scholarship.jpg';
 import prImage from '../../public/home-pg-assets/professionalism.jpg';
@@ -121,7 +122,7 @@ export default function Home() {
           {
             offeringLinks.map( offerItem => {
               return (
-                <div key={offerItem.id} className="block grow md:grow-0 relative h-[28rem] md:h-[22rem] w-72">
+                <Link href key={offerItem.id} className="block grow md:grow-0 relative h-[28rem] md:h-[22rem] w-72">
                   <Image src={offerItem.imgName}
                   placeholder="blur"
                   alt={offerItem.title} fill
@@ -133,7 +134,7 @@ export default function Home() {
                       {offerItem.title.toUpperCase()}
                     </h1>
                   </div>
-                </div>
+                </Link>
               );
             })
           }
