@@ -20,10 +20,10 @@ export default function NavBar() {
             name: 'Executive Board',
             link: 'executive-board',
             id: 2
-        // }, {
-        //     name: 'Events',
-        //     link: 'events',
-        //     id: 3
+        }, {
+            name: 'Events',
+            link: 'events',
+            id: 3
         }, {
             name: 'Corporate',
             link: 'corporate',
