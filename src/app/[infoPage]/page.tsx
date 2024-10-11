@@ -9,7 +9,7 @@ export default function InfoPage( { params } : {
 } ) {
     const linkMap: any = { professionalism: <Professionalism/>, academics: <Academics/>, networking: <Networking/>, events: <Events/> };
     const linkPage: any = params.infoPage;
-    console.log(linkPage,  params, linkMap);
+    console.log(linkPage,  Object.keys(params), linkMap);
     return (
         <>
             <span>{linkPage.toString()}</span>
