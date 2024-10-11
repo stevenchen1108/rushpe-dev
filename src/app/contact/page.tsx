@@ -42,7 +42,7 @@ export default function ContactUs() {
                         <br/><br/>
                         Click the icons for our socials below!</p>
                     <div className="flex flex-row gap-5 text-4xl md:text-5xl md:p-4 md:gap-9">
-                        <a href="https://groupme.com/join_group/101562896/JPrsE9dd"><SiGroupme /></a>
+                        {/* <a href="https://groupme.com/join_group/101562896/JPrsE9dd"><SiGroupme /></a> */}
                         <a href="https://www.instagram.com/shpe_ru/"><FaInstagram /></a>
                         <a href="https://www.linkedin.com/in/rutgers-university-shpe-686bba295"><FaLinkedinIn /></a>
                         <a href="https://www.facebook.com/rutgers.she/"><FaFacebook /></a>

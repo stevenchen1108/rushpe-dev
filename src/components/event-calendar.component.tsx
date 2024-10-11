@@ -1,18 +1,36 @@
 'use client'
-import Image from 'next/image';
-import { eachDayOfInterval, addDays, subDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek, set } from 'date-fns';
+import { eachDayOfInterval, addDays, subDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek, set, getWeekOfMonth, format } from 'date-fns';
 import { useState, useEffect } from 'react';
 import './event-calendar.component.css';
+import { VscChromeClose } from "react-icons/vsc";
+
+class Event {
+    summary: string;
+    description: string;
+    start: {date: string, dateTime: string};
+    end: {date: string, dateTime: string};
+    attachments: Array<{fileId: String}>;
+    rsvp: string;
+    color: string;
+    image: string;
+    text: string;
+
+    constructor() {
+        this.summary = '';
+        this.description = '';
+        this.start = {date: '', dateTime: ''};
+        this.end = {date: '', dateTime: ''};
+        this.attachments = [];
+        this.rsvp = '';
+        this.color = '';
+        this.image = '';
+        this.text = '';
+    }
+}
 
 class CalendarDay extends Date {
     selected: boolean;
-    events: Array<{
-        summary: string,
-        description: string
-        start: {date: string, dateTime: string},
-        end: {date: string, dateTime: string},
-        attachments: Array<{fileId: String}>
-    }>;
+    events: Array<Event>;
 
     constructor(date: Date = new Date(), selected: boolean = false) {
         super(date);
@@ -34,9 +52,10 @@ export default function Calendar() {
         return new CalendarDay(date, false);
     });
     const dateIndexOffset: number = firstDayOfMonth.getDay() - 1;
-    var [daySelected, updateSelect] = useState(dayArray[today.getDate() + dateIndexOffset]);
+    var [daySelected, updateDaySelected] = useState(dayArray[today.getDate() + dateIndexOffset]);
+    var [eventSelected, updateEventSelected] = useState(new Event());
     var [calendarData, setCalendar] = useState<CalendarDay[]>(dayArray);
-    var [mobileDropdown, setMobileDropdown] = useState(true);
+    var [eventPopup, setEventPopup] = useState(false);
     var isMounted = false;
     daySelected.selected = true;
 
@@ -44,7 +63,7 @@ export default function Calendar() {
         const calendarId = 'c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com';
         try {
             const response = await fetch(
-                `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${process.env.NEXT_PUBLIC_GOOGLE_CAL_API_KEY}&supportsAttachments=true`, {
+                `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${process.env.NEXT_PUBLIC_GOOGLE_CAL_API_KEY}&supportsAttachments=true&singleEvents=true&orderBy=startTime`, {
                     method: 'GET',
                     headers: {
                     'Content-Type': 'application/json',
@@ -55,28 +74,67 @@ export default function Calendar() {
             });
             if (!isMounted) {
                 response.items.forEach( (calendarEvent: any) => {
-                    const isFullDay = calendarEvent.start.date;
-                    const startDate = new Date(isFullDay ? calendarEvent.start.date + 'T12:00:00Z' : calendarEvent.start.dateTime);
-                    console.log(startDate.getDate(), dateIndexOffset);
-                    if (startDate.getMonth() === today.getMonth()) {
+                    if (calendarEvent.start.date) {
+                        calendarEvent.start.dateTime = calendarEvent.start.date + 'T12:00:00Z';
+                        calendarEvent.end.dateTime = calendarEvent.end.date + 'T12:00:00Z';
+                    }
+                    var desc: String = calendarEvent.description;
+                    if (desc) {
+                        desc = desc.replace(/<br>/g, '\n');
+                        desc = desc.replace(/(<a href=".*">)|(<\/a>)/g, '');
+                        const optionsList: Array<string> = ['RSVP', 'COLOR', 'IMAGE', 'TEXT'];
+                        optionsList.forEach( (option) => {
+                            const regex = new RegExp("\\s*" + option + ":\\s*([^\\s]+)", 'g');
+                            const matches = regex.exec('' + desc);
+                            if (matches) {
+                                const optionValue = matches[1];
+                                calendarEvent[option.toLowerCase()] = optionValue;
+                            }
+                            desc = desc.replace(regex, '');
+                        });
+                        calendarEvent.description = desc;
+                    }
+                    const startDate = new Date(calendarEvent.start.dateTime);
+                    if (startDate.getMonth() === today.getMonth() && startDate.getFullYear() === today.getFullYear()) {
                         dayArray[startDate.getDate() + dateIndexOffset].events.push(calendarEvent);
                     }
                 });
                 setCalendar(dayArray);
                 isMounted = true;
             }
-        } catch {
-            console.log('err1');
+        } catch (e) {
+            console.log(e);
         }
 
     };
 
     const selectDate = function (dayObj: CalendarDay) {
         daySelected.selected = false;
-        updateSelect(dayObj);
+        updateDaySelected(dayObj);
         dayObj.selected = true;
-        console.log(dayObj.events, dayArray[dayObj.getDate() + dateIndexOffset].events);
+        if (!dayObj.events.length) {
+            setEventPopup(false);
+        }
+        // console.log(dayObj.events, dayArray[dayObj.getDate() + dateIndexOffset].events);
     };
+
+    const selectEvent = function (eventObj: Event) {
+        updateEventSelected(eventObj);
+        setEventPopup(true);
+    }
+
+    const toolTipPosition = function () {
+        const eventObj: any = eventSelected;
+        const focusedDay: Date = new Date(eventObj.start.dateTime ? eventObj.start.dateTime : today);
+        const weekOfMonth = getWeekOfMonth(focusedDay) + (focusedDay.getMonth() - today.getMonth()) * (getWeekOfMonth(endOfMonth(today)) - 1);
+        const stylingObj = {left: 'auto', right: 'auto', top: (14 * weekOfMonth) + '%', bottom: 'auto'};
+        if (focusedDay.getDay() < 4) {
+            stylingObj.left = (14.28 * (focusedDay.getDay() + 1) + 1) + '%';
+        } else {
+            stylingObj.right = (14.28 * (7 - focusedDay.getDay()) + 1) + '%';
+        }
+        return stylingObj;
+    }
 
     useEffect(() => {
         fetchEvents();
@@ -84,56 +142,83 @@ export default function Calendar() {
 
     return (
         <>
-            <section className="bg-white text-black p-2">
-                <div className="py-1">
-                    <h1 className="text-left tracking-widest text-3xl p-1 sm:w-5/6 sm:mx-auto">OCTOBER</h1>
-                    <div className="grid grid-cols-7 text-center text-sm sm:w-5/6 sm:mx-auto">
+            <section className="bg-white text-black p-2 sm:p-12">
+                <div className="relative py-1">
+                    <h1 className="text-left tracking-widest text-3xl p-1">OCTOBER</h1>
+                    <div className="grid grid-cols-7 text-center text-sm">
                         {
                             weekArray.map( (day, index) => {
                                 return (
-                                    <span key={index}>{day}</span>
+                                    <span key={index + 'weekName'}>{day}</span>
                                 )
                             })
                         }
                     </div>
-                </div>
-                <div className="relative grid grid-cols-7 text-xs text-center rounded-md sm:w-5/6 sm:mx-auto">
                     {
-                        calendarData.map( (dayObj, index) => {
-                            return (
-                                <div className={"h-16 relative transition-all date-panel" + (dayObj.getTime() === daySelected.getTime() ? " selected-panel" : "") + (dayObj.getMonth() === today.getMonth() ? "" : " opacity-50")}
-                                    key={index} onClick={ () => selectDate(dayObj) }>
-                                    <div className={"relative p-[0.1rem] size-4" + (dayObj.getTime() === today.getTime() ? " today-panel text-white" : "")}>
-                                        <span className={"absolute inset-0"}>{dayObj.getDate()}</span>
-                                    </div>
-                                    <div className={"absolute flex flex-col inset-x-0 gap-1 pt-1"}>
-                                        {
-                                            dayObj.events.map( (eventObj, index) => {
-                                                return (
-                                                    <div key={index} className="bg-light-main inset-x-0 min-h-1 rounded-md"></div>
-                                                );
-                                            })
-                                        }
-                                    </div>
+                        (
+                            eventPopup && <div className="hidden sm:flex z-10 absolute flex-col bg-slate-100 min-w-1/6 max-w-[28rem] p-3 transition-all shadow-md"
+                            style={toolTipPosition()}>
+                                <div className="flex flex-row justify-between items-center text-lg gap-3">
+                                    <h1 className="font-bold">{eventSelected.summary}</h1>
+                                    <VscChromeClose className="rounded-lg hover:bg-slate-300" onClick={ () => setEventPopup(false) }/>
                                 </div>
-                            );
-                        })
+                                <p className="text-sm font-medium tracking-wide"><i>{!eventSelected.start.date ? (format(new Date(eventSelected.start.dateTime), 'EE, h:mm a - ') +
+                                    format(new Date(eventSelected.end.dateTime), 'h:mm a')) : format(new Date(eventSelected.start.dateTime), 'EEEE')}</i></p>
+                                <p className="pt-1 text-sm whitespace-pre-line">{eventSelected.description}</p>
+                                { (eventSelected.attachments || eventSelected.image) &&
+                                <img className="pt-2" src={eventSelected.image ? eventSelected.image :
+                                    ('https://lh3.googleusercontent.com/d/' + eventSelected.attachments[0].fileId)}></img> }
+                                { eventSelected.rsvp &&
+                                <a className="p-1 my-2 hover:bg-main-hover self-center bg-main text-white tracking-wider text-center w-32"
+                                    href={eventSelected.rsvp}>RSVP</a> }
+                            </div>
+                        )
                     }
+                    <div className="calendar-grid text-xs text-center rounded-md">
+                        {
+                            calendarData.map( (dayObj, index) => {
+                                return (
+                                    <div className={"relative hover:bg-slate-50 min-h-16 transition-all date-panel" + (dayObj.getTime() === daySelected.getTime() ? " selected-panel" : "") + (dayObj.getMonth() === today.getMonth() ? "" : " opacity-50")}
+                                        key={index + 'panel'} onClick={ () => selectDate(dayObj) }>
+                                        <div className={"relative p-[0.1rem] size-4" + (dayObj.getTime() === today.getTime() ? " today-panel text-white" : "")}>
+                                            <span className={"absolute inset-0"}>{dayObj.getDate()}</span>
+                                        </div>
+                                        <div className="flex flex-col inset-x-0 gap-1 pt-1 my-1">
+                                            {
+                                                dayObj.events.map( (eventObj, index) => {
+                                                    return (
+                                                        <div key={index}>
+                                                            <div className="md:hidden bg-light-main inset-x-0 min-h-1 rounded-md" style={eventObj.color ? {'backgroundColor': eventObj.color} : {}}></div>
+                                                            <div className="hidden md:block hover:brightness-95 bg-light-main inset-x-0 min-h-1 rounded-sm text-sm transition-colors"
+                                                            style={{  ...eventObj.color && {'backgroundColor': eventObj.color}, ...eventObj.text && {'color': eventObj.text} }}
+                                                            onClick={ () => selectEvent(eventObj) }>
+                                                                {eventObj.summary}
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })
+                                            }
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        }
+                    </div>
                 </div>
-                <div className="flex flex-col gap-2 sm:w-5/6 p-2 sm:mx-auto">
+                <div className="flex flex-col gap-2 p-2 items-center">
                     {
                         daySelected.events.map( (eventObj, index) => {
-                            const isFullDay = eventObj.start.date;
-                            const eventDateArr = new Date(isFullDay ? eventObj.start.date + 'T12:00:00Z' : eventObj.start.dateTime).toDateString().split(' ');
+                            const eventDate: Date = new Date(eventObj.start.dateTime);
+                            const endTime: Date = new Date(eventObj.end.dateTime);
                             return (
-                                <div key={index} className="rounded-md min-h-8 bg-slate-200 p-3">
+                                <div key={index + 'event'} className="w-4/5 rounded-md min-h-8 bg-slate-100 p-3">
                                     <div className="flex flex-row justify-between">
                                         <h1 className="text-md font-bold">{eventObj.summary}</h1>
-                                        <h1 className="text-md">{eventDateArr[0] + ', ' + eventDateArr[1] + ' ' + eventDateArr[2]}</h1>
+                                        <h1 className="text-md">{format(eventDate, 'h:mm aaa') + format(eventDate, ' - h:mm aaa')}</h1>
                                     </div>
                                     <div className="flex flex-row justify-between">
-                                        <p>{'\t\t\t' + eventObj.summary}</p>
-                                        <h1 className="text-md">{eventDateArr[0] + ', ' + eventDateArr[1] + ' ' + eventDateArr[2]}</h1>
+                                        <p className="whitespace-pre-line">{eventObj.description}</p>
+                                        <h1 className="text-sm">{format(eventDate, 'EEEE, MMM do')}</h1>
                                     </div>
                                     {
                                         // (eventObj.attachments) ? (
