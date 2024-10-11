@@ -122,7 +122,7 @@ export default function Home() {
           {
             offeringLinks.map( offerItem => {
               return (
-                <Link href key={offerItem.id} className="block grow md:grow-0 relative h-[28rem] md:h-[22rem] w-72">
+                <div key={offerItem.id} className="block grow md:grow-0 relative h-[28rem] md:h-[22rem] w-72">
                   <Image src={offerItem.imgName}
                   placeholder="blur"
                   alt={offerItem.title} fill
@@ -134,7 +134,7 @@ export default function Home() {
                       {offerItem.title.toUpperCase()}
                     </h1>
                   </div>
-                </Link>
+                </div>
               );
             })
           }
