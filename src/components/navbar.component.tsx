@@ -24,7 +24,7 @@ export default function NavBar() {
             name: 'Events',
             link: 'events',
             id: 3
-        }, {
+        }, {//
             name: 'Corporate',
             link: 'corporate',
             id: 4
