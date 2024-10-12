@@ -78,6 +78,8 @@ export default function Calendar() {
                         calendarEvent.start.dateTime = calendarEvent.start.date + 'T12:00:00Z';
                         calendarEvent.end.dateTime = calendarEvent.end.date + 'T12:00:00Z';
                     }
+                    // default color
+                    calendarEvent.color = '#D27D7C';
                     var desc: String = calendarEvent.description;
                     if (desc) {
                         desc = desc.replace(/<br>/g, '\n');
@@ -205,20 +207,21 @@ export default function Calendar() {
                         }
                     </div>
                 </div>
-                <div className="flex flex-col gap-2 p-2 items-center">
+                <h1 className={'w-fit text-sm px-2 bg-slate-100 rounded-md sm:mx-auto' + (daySelected.events.length ? '': ' hidden')}>{format(daySelected, 'EEEE, MMM do')}</h1>
+                <div className="flex flex-col gap-2 py-1 text-sm sm:text-md sm:items-center">
                     {
                         daySelected.events.map( (eventObj, index) => {
                             const eventDate: Date = new Date(eventObj.start.dateTime);
                             const endTime: Date = new Date(eventObj.end.dateTime);
                             return (
-                                <div key={index + 'event'} className="w-4/5 rounded-md min-h-8 bg-slate-100 p-3">
+                                <div key={index} className="relative sm:w-4/5 p-2 sm:p-3 min-h-8 rounded-md overflow-hidden bg-slate-100 shadow-sm"
+                                    style={ eventObj.color ? {borderColor: eventObj.color, borderRight: '8px solid ' + eventObj.color} : {} }>
                                     <div className="flex flex-row justify-between">
                                         <h1 className="text-md font-bold">{eventObj.summary}</h1>
-                                        <h1 className="text-md">{format(eventDate, 'h:mm aaa') + format(eventDate, ' - h:mm aaa')}</h1>
+                                        <h1 className="sm:text-md"><i>{format(eventDate, 'h:mm aaa') + format(eventDate, ' - h:mm aaa')}</i></h1>
                                     </div>
-                                    <div className="flex flex-row justify-between">
-                                        <p className="whitespace-pre-line">{eventObj.description}</p>
-                                        <h1 className="text-sm">{format(eventDate, 'EEEE, MMM do')}</h1>
+                                    <div className="relative w-full flex flex-row justify-between">
+                                        <p className="text-xs sm:text-sm bottom-event-details">{eventObj.description}</p>
                                     </div>
                                     {
                                         // (eventObj.attachments) ? (
