@@ -215,10 +215,10 @@ export default function Calendar() {
                             const endTime: Date = new Date(eventObj.end.dateTime);
                             return (
                                 <div key={index} className="relative sm:w-4/5 p-2 sm:p-3 min-h-8 rounded-md overflow-hidden bg-slate-100 shadow-sm"
-                                    style={ eventObj.color ? {borderColor: eventObj.color, borderRight: '8px solid ' + eventObj.color} : {} }>
+                                    style={ eventObj.color ? {borderColor: eventObj.color, borderLeft: '8px solid ' + eventObj.color} : {} }>
                                     <div className="flex flex-row justify-between">
                                         <h1 className="text-md font-bold">{eventObj.summary}</h1>
-                                        <h1 className="sm:text-md"><i>{format(eventDate, 'h:mm aaa') + format(eventDate, ' - h:mm aaa')}</i></h1>
+                                        <h1 className="sm:text-md"><i>{format(eventDate, 'h:mm aaa') + format(endTime, ' - h:mm aaa')}</i></h1>
                                     </div>
                                     <div className="relative w-full flex flex-row justify-between">
                                         <p className="text-xs sm:text-sm bottom-event-details">{eventObj.description}</p>
