@@ -146,7 +146,7 @@ export default function Calendar() {
         <>
             <section className="bg-white text-black p-2 sm:p-12">
                 <div className="relative py-1">
-                    <h1 className="text-left tracking-widest text-3xl p-1">OCTOBER</h1>
+                    <h1 className="text-left tracking-widest text-3xl p-1">{ format(today, 'LLLL').toUpperCase() }</h1>
                     <div className="grid grid-cols-7 text-center text-sm">
                         {
                             weekArray.map( (day, index) => {

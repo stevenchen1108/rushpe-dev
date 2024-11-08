@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+'use client'
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import asImage from '../../public/home-pg-assets/academic-support.jpg';
@@ -7,6 +8,9 @@ import prImage from '../../public/home-pg-assets/professionalism.jpg';
 import neImage from '../../public/home-pg-assets/networking.jpg';
 import faImage from '../../public/home-pg-assets/fun-activities.jpg';
 import vnImage from '../../public/home-pg-assets/volunteering.jpg';
+import comicStyleBg from '../../public/comic-style-bg.png';
+import RubyInfo from '@/components/ruby.component';
+import Shenanometer from '@/components/she-nano-meter.component';
 
 export default function Home() {
 
@@ -65,7 +69,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="relative w-full h-[45rem] overflow-hidden flex justify-center items-center">
+      <section className="relative w-full h-[45rem] overflow-hidden flex justify-center items-center">
         <video autoPlay={true} muted loop className="min-w-[90rem] w-full object-cover">
           {/* set to true ^^^ */}
           <source src="/home-pg-assets/home-bg-vid.mp4" type="video/mp4"/>       
@@ -80,7 +84,7 @@ export default function Home() {
             </p>
           </div>
         </div>
-        <div className="absolute bottom-0 sm:gap-4 flex justify-center flex-wrap sm:py-3"> {/*flex justify-center flex-wrap*/}
+        {/* <div className="absolute bottom-0 sm:gap-4 flex justify-center flex-wrap sm:py-3">
           {
             frontPageLinks.map( link => {
               return (
@@ -95,9 +99,16 @@ export default function Home() {
               );
             })
           }
-        </div>
-      </div>
-      <div className="relative overflow-hidden h-[45rem]">
+        </div> */}
+      </section>
+      <RubyInfo></RubyInfo>
+      <div className="w-full h-2 bg-blue-900"></div>
+      <section className="relative bg-blue-600">
+        <Shenanometer></Shenanometer>
+        {/* <img src={comicCld.src} className="absolute h-32 md:h-64 left-[-10rem] top-[-6rem]"></img>
+        <img src={comicCld.src} className="absolute h-32 md:h-64 right-[-10rem] top-[-6rem]"></img> */}
+      </section>
+      <div className="relative overflow-hidden h-[40rem]">
         <div className="absolute flex flex-col align-middle h-full w-full z-10 py-24 bg-black bg-opacity-30 right-0 text-center
         md:justify-center md:w-1/2 md:min-w-[35rem] sm:p-24 md:text-left">
           <h1 className="tracking-wider font-bold text-6xl">Our Mission</h1>

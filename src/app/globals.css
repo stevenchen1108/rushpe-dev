@@ -16,6 +16,14 @@
   }
 } */
 
+@font-face {
+  font-family: 'badabb';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/badabb.ttf') format('truetype');
+}
+
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -30,4 +38,8 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.comic-style {
+  font-family: 'badabb';
 }

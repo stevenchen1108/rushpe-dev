@@ -18,7 +18,7 @@ export default function ContactUs() {
     const [ hasSubmitted, setSubmissionMessage ] = useState(false);
     const sendContactFormData = async (userInput: any) => {
         try {
-            await supabaseClient.from('general-questions').insert(
+            await supabaseClient.from('GeneralQuestions').insert(
                 {
                     first_name: userInput.firstName, last_name: userInput.lastName, email: userInput.email,
                     phone_num: userInput.phoneNum, desc: userInput.desc
