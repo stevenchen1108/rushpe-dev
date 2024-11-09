@@ -42,13 +42,13 @@ export default function RubySection() {
                     <div className="relative bg-yellow-600 hover:bg-yellow-900 text-black hover:text-white text-2xl p-2">RSVP</div>
                 </a>
                 <h1 className="text-4xl">+</h1>
-                <a href="https://qplxqb.clicks.mlsend.com/tf/c/eyJ2Ijoie1wiYVwiOjgzMzg5MCxcImxcIjoxMzcxOTI2NTAzMjUzNjIwOTksXCJyXCI6MTM3MTkyNjYxNTA3Mzc2NDMyfSIsInMiOiIyYzllMTBhMGExOGZiNzA3In0">
+                <a href="https://qplxqb.clicks.mlsend.com/tf/c/eyJ2Ijoie1wiYVwiOjgzMzg5MCxcImxcIjoxMzcxOTI2NTAzMjk1NTY0MTUsXCJyXCI6MTM3MTkyNjYxNTA3Mzc2NDMyfSIsInMiOiI4OTQ1OGQ4NWQzYTc5ZDI1In0">
                     <div className="relative bg-yellow-600 hover:bg-yellow-900 text-black hover:text-white text-2xl p-2">
                         PAYMENT FORM
                     </div>
                 </a>
             </div>
-            <h1 className="relative justify-self-end text-md">CELEBRATING 40 YEARS OF S.H.E. EXCELLENCE</h1>
+            <h1 className="relative justify-self-end text-md"><b>CELEBRATING 40 YEARS OF S.H.E. EXCELLENCE</b></h1>
         </section>
         </>
     );
