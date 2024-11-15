@@ -2,6 +2,8 @@ import rubyBg from '../../public/home-pg-assets/ruby-bg.png';
 import Image from 'next/image';
 import { Alex_Brush } from "next/font/google";
 import { Italiana } from "next/font/google";
+import googleDriveIcon from "../../public/google-drive-icon.png";
+
 const alexBrush = Alex_Brush({
   weight: "400",
   subsets: ["latin"],
@@ -23,10 +25,15 @@ export default function RubySection() {
             src={rubyBg.src} fill
             alt="ruby gala"
             ></Image>
-            <div className="pt-4 px-3 sm:px-16 self-start">
+            <div className="pt-4 px-3 lg:px-16 self-start">
                 <a href="https://qplxqb.clicks.mlsend.com/tf/c/eyJ2Ijoie1wiYVwiOjgzMzg5MCxcImxcIjoxMzcxOTI2NTAzMTU5MjQ4OTcsXCJyXCI6MTM3MTkyNjYxNTA3Mzc2NDMyfSIsInMiOiJhOWZiYTBiN2ZiMzdmYjdjIn0">
-                    <h1 className="relative md:absolute text-center max-w-32 sm:max-w-40 sm:text-xl rounded-full bg-yellow-600 hover:bg-yellow-700 leading-5 p-4">
-                        Add your memories & photos here!
+                    <h1 className="relative flex flex-row gap-2 items-center top-[10%] sm:absolute sm:text-lg rounded-full bg-white hover:bg-gray-200 text-black font-serif leading-5 p-2 sm:p-4">
+                        <Image
+                        src={googleDriveIcon.src}
+                        alt="google drive"
+                        height={40}
+                        width={40}></Image>
+                        <span className="max-w-32 sm:max-w-40 underline text-blue-500">Add your memories & photos here!</span>
                     </h1>
                 </a>
             </div>

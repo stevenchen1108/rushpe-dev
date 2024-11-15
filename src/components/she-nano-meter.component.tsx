@@ -54,7 +54,7 @@ export default function Shenanometer() {
                 </div>
             </div>
             <div className="bg-main rounded-lg flex flex-col items-center w-1/3 text-2xl">
-                <h1>TIER 4 | FLAME OR FROST</h1>
+                <h1 className="p-2 text-center">TIER 4 | FLAME OR FROST</h1>
             </div>
             <div className="bg-dark-main rounded-lg flex flex-col w-2/3 text-xl tracking-wide text-center p-2">
                 <h1>Watch as out E-board suddenly comes together for a surprice chereographed routine...
