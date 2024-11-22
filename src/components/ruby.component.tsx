@@ -25,9 +25,9 @@ export default function RubySection() {
             src={rubyBg.src} fill
             alt="ruby gala"
             ></Image>
-            <div className="pt-4 px-3 lg:px-16 self-start">
+            <div className="py-4 px-3 lg:px-16 self-start">
                 <a href="https://qplxqb.clicks.mlsend.com/tf/c/eyJ2Ijoie1wiYVwiOjgzMzg5MCxcImxcIjoxMzcxOTI2NTAzMTU5MjQ4OTcsXCJyXCI6MTM3MTkyNjYxNTA3Mzc2NDMyfSIsInMiOiJhOWZiYTBiN2ZiMzdmYjdjIn0">
-                    <h1 className="relative flex flex-row gap-2 items-center top-[10%] sm:absolute sm:text-lg rounded-full bg-white hover:bg-gray-200 text-black font-serif leading-5 p-2 sm:p-4">
+                    <h1 className="relative flex flex-row gap-2 items-center top-[10%] sm:absolute sm:text-lg rounded-full bg-white hover:bg-gray-200 text-black font-serif leading-5 p-2 sm:p-3">
                         <Image
                         src={googleDriveIcon.src}
                         alt="google drive"

@@ -69,7 +69,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="relative w-full h-[45rem] overflow-hidden flex justify-center items-center">
+      <section className="relative w-full h-[45rem] overflow-hidden flex justify-center items-center">
         <video autoPlay={true} muted loop className="min-w-[90rem] w-full object-cover">
           {/* set to true ^^^ */}
           <source src="/home-pg-assets/home-bg-vid.mp4" type="video/mp4"/>       
@@ -100,10 +100,10 @@ export default function Home() {
             })
           }
         </div> */}
-      </div>
+      </section>
       <RubyInfo></RubyInfo>
       <div className="w-full h-2 bg-blue-900"></div>
-      <section className="relative bg-blue-600">
+      <section className="relative">
         <Shenanometer></Shenanometer>
         {/* <img src={comicCld.src} className="absolute h-32 md:h-64 left-[-10rem] top-[-6rem]"></img>
         <img src={comicCld.src} className="absolute h-32 md:h-64 right-[-10rem] top-[-6rem]"></img> */}
@@ -129,22 +129,24 @@ export default function Home() {
         <h1 className='w-full text-5xl tracking-wide font-semibold text-center'>
           We Offer
         </h1>
-        <div className="flex flex-wrap align-middle justify-center sm:gap-5">
+        <div className="flex flex-wrap align-middle justify-center sm:gap-5 overflow-clip">
           {
             offeringLinks.map( offerItem => {
               return (
-                <div key={offerItem.id} className="block grow md:grow-0 relative h-[28rem] md:h-[22rem] w-72">
-                  <Image src={offerItem.imgName}
-                  placeholder="blur"
-                  alt={offerItem.title} fill
-                  sizes="(max-width: 768px) 100vw"
-                  objectFit="cover"
-                  ></Image>
-                  <div className="absolute flex flex-col justify-end align-middle inset-0">
-                    <h1 className="text-3xl font-semibold text-center my-auto">
-                      {offerItem.title.toUpperCase()}
-                    </h1>
-                  </div>
+                <div key={offerItem.id} className="block grow md:grow-0 relative h-[28rem] md:h-[22rem] w-72 hover:scale-105 transition-all">
+                  <Link href={"/"}>
+                    <Image src={offerItem.imgName}
+                    placeholder="blur"
+                    alt={offerItem.title} fill
+                    sizes="(max-width: 768px) 100vw"
+                    objectFit="cover"
+                    ></Image>
+                    <div className="absolute flex flex-col justify-end align-middle inset-0">
+                      <h1 className="text-3xl font-semibold text-center my-auto">
+                        {offerItem.title.toUpperCase()}
+                      </h1>
+                    </div>
+                  </Link>
                 </div>
               );
             })

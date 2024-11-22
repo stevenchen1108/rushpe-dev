@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .comic-bg-animate {
+        height: auto;
+        animation: spin 70s linear infinite;
+    }
+    @keyframes spin {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+}
