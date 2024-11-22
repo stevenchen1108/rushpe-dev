@@ -69,7 +69,7 @@ export default function Home() {
 
   return (
     <>
-      <section className="relative w-full h-[45rem] overflow-hidden flex justify-center items-center">
+      <div className="relative w-full h-[45rem] overflow-hidden flex justify-center items-center">
         <video autoPlay={true} muted loop className="min-w-[90rem] w-full object-cover">
           {/* set to true ^^^ */}
           <source src="/home-pg-assets/home-bg-vid.mp4" type="video/mp4"/>       
@@ -100,7 +100,7 @@ export default function Home() {
             })
           }
         </div> */}
-      </section>
+      </div>
       <RubyInfo></RubyInfo>
       <div className="w-full h-2 bg-blue-900"></div>
       <section className="relative bg-blue-600">

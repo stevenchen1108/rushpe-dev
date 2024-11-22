@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import ssmImg from '../../../public/she-swe-meet/she-swe-meet-logo.jpeg';
 import bloomLogo from '../../../public/she-swe-meet/bloomburg-logo.png';
+import whitingLogo from '../../../public/she-swe-meet/wt-logo.png';
 
 export default function Corporate() {
     return (
@@ -20,7 +21,10 @@ export default function Corporate() {
                 <div className="flex flex-col items-stretch gap-3 py-5 px-3 lg:w-2/3 rounded-md bg-slate-100 shadow-md">
                     <h1 className="tracking-wide text-xl border-b-2 border-black"><i>Special Thanks To Our Sponsors</i></h1>
                     <h1 className="self-start tracking-wider text-3xl font-bold text-yellow-600">Bronze Sponsor</h1>
-                    <div className="self-center relative w-1/2">
+                    <div className="self-center relative flex flex-col gap-6 w-1/2">
+                        <a href="https://www.whiting-turner.com/careers/">
+                            <Image src={whitingLogo} alt="whiting turner logo"></Image>
+                        </a>
                         <a href="https://www.bloomberg.com/">
                             <Image src={bloomLogo} alt="bloomburg logo"></Image>
                         </a>
