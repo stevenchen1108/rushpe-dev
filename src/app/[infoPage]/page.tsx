@@ -12,9 +12,6 @@ export default function InfoPage( { params } : {
     console.log(linkPage,  Object.keys(params), linkMap);
     return (
         <>
-            <span>{linkPage.toString()}</span>
-            <span>{params.toString()}</span>
-            <span>{linkMap.toString()}</span>
             {linkMap[linkPage]}
         </>
     );

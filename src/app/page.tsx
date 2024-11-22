@@ -38,32 +38,32 @@ export default function Home() {
       id: 0,
       title: 'Academic Support',
       imgName: asImage,
-      link: ''
+      link: 'academics'
     }, {
       id: 1,
       title: 'Professionalism',
       imgName: prImage,
-      link: ''
+      link: 'professionalism'
     }, {
       id: 2,
       title: 'Internship & Scholarship',
       imgName: isImage,
-      link: ''
+      link: 'corporate'
     }, {
       id: 3,
       title: 'Networking',
       imgName: neImage,
-      link: ''
+      link: 'networking'
     }, {
       id: 4,
       title: 'Fun Activities',
       imgName: faImage,
-      link: ''
+      link: 'activities'
     }, {
       id: 5,
       title: 'Volunteering',
       imgName: vnImage,
-      link: ''
+      link: 'events'
     },
   ];
 
@@ -134,7 +134,7 @@ export default function Home() {
             offeringLinks.map( offerItem => {
               return (
                 <div key={offerItem.id} className="block grow md:grow-0 relative h-[28rem] md:h-[22rem] w-72 hover:scale-105 transition-all">
-                  <Link href={"/"}>
+                  <Link href={"/" + offerItem.link}>
                     <Image src={offerItem.imgName}
                     placeholder="blur"
                     alt={offerItem.title} fill
