@@ -37,7 +37,7 @@ export default function NavBar() {
     return (
         <header className="md:sticky md:top-0 z-20">
             <div className='flex flex-col bg-dark-main relative overflow-auto'>
-                <div className="flex justify-between md:justify-center items-stretch h-28">
+                <div className="flex justify-between md:justify-center items-stretch h-24 sm:h-28">
                     <div className='flex flex-row gap-2 sm:gap-3 items-center font-bold px-2 sm:px-6'>
                         <Image src="/she-logo.png" alt="she logo"
                         width={80} height={80} className="shrink-0"></Image>

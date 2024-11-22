@@ -84,7 +84,7 @@ export default function Home() {
             </p>
           </div>
         </div>
-        {/* <div className="absolute bottom-0 sm:gap-4 flex justify-center flex-wrap sm:py-3">
+        <div className="absolute bottom-0 sm:gap-4 flex justify-center flex-wrap sm:py-3">
           {
             frontPageLinks.map( link => {
               return (
@@ -99,7 +99,7 @@ export default function Home() {
               );
             })
           }
-        </div> */}
+        </div>
       </section>
       <RubyInfo></RubyInfo>
       <div className="w-full h-2 bg-blue-900"></div>

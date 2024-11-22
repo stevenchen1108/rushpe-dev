@@ -129,11 +129,16 @@ export default function Calendar() {
         const eventObj: any = eventSelected;
         const focusedDay: Date = new Date(eventObj.start.dateTime ? eventObj.start.dateTime : today);
         const weekOfMonth = getWeekOfMonth(focusedDay) + (focusedDay.getMonth() - today.getMonth()) * (getWeekOfMonth(endOfMonth(today)) - 1);
-        const stylingObj = {left: 'auto', right: 'auto', top: (14 * weekOfMonth) + '%', bottom: 'auto'};
+        const stylingObj = {left: 'auto', right: 'auto', top: 'auto', bottom: 'auto'};
         if (focusedDay.getDay() < 4) {
             stylingObj.left = (14.28 * (focusedDay.getDay() + 1) + 1) + '%';
         } else {
             stylingObj.right = (14.28 * (7 - focusedDay.getDay()) + 1) + '%';
+        }
+        if (weekOfMonth > 3) {
+            stylingObj.bottom = (3 * weekOfMonth) + '%';
+        } else {
+            stylingObj.top = (12 * weekOfMonth) + '%';
         }
         return stylingObj;
     }
