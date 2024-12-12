@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .shiny-platinum {
+        background: linear-gradient(to right,
+        rgb(186, 225, 243),
+        rgb(97, 201, 249),
+        rgb(186, 225, 243),
+        rgb(186, 225, 243),
+        rgb(186, 225, 243),
+        rgb(186, 225, 243),
+        rgb(186, 225, 243));
+        -webkit-background-clip: text;
+        color: transparent;
+        background-position: -30rem;
+        animation: shineText 5s infinite;
+    }
+
+    @keyframes shineText {
+        0% {
+            background-position: -30rem;
+        }
+        75% {
+            background-position: 30rem;
+        }
+        100% {
+            background-position: 30rem;
+        }
+    }
+}

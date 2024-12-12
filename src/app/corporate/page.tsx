@@ -2,6 +2,11 @@ import Image from 'next/image';
 import ssmImg from '../../../public/she-swe-meet/she-swe-meet-logo.jpeg';
 import bloomLogo from '../../../public/she-swe-meet/bloomburg-logo.png';
 import whitingLogo from '../../../public/she-swe-meet/wt-logo.png';
+import bofaLogo from '../../../public/she-swe-meet/bofa-logo.png';
+import verizonLogo from '../../../public/she-swe-meet/verizon-logo.png';
+import navalLogo from '../../../public/she-swe-meet/naval-nuclear-logo.png';
+
+import './corporate-page.css';
 
 export default function Corporate() {
     return (
@@ -18,12 +23,27 @@ export default function Corporate() {
                 the largest student-run career fairs on campus! With over 50 companies and hundreds of students attending the career fair
                 seeking corporate opportunities. Please contact our External Vice President at external.vp@rushpe.org for further information.
                 </p>
-                <div className="flex flex-col items-stretch gap-3 py-5 px-3 lg:w-2/3 rounded-md bg-slate-100 shadow-md">
+                <div className="flex flex-col items-stretch gap-7 py-5 px-3 lg:w-2/3 rounded-md bg-slate-100 shadow-md">
                     <h1 className="tracking-wide text-xl border-b-2 border-black"><i>Special Thanks To Our Sponsors</i></h1>
-                    <h1 className="self-start tracking-wider text-3xl font-bold text-yellow-600">Bronze Sponsor</h1>
-                    <div className="self-center relative flex flex-col gap-6 w-1/2">
+                    <h1 className="tracking-wider text-3xl font-bold shiny-platinum">Platinum Sponsors</h1>
+                    <div className="self-center relative flex flex-row items-center gap-6 w-5/6">
+                        <a href="https://mycareer.verizon.com/">
+                            <Image src={verizonLogo} height={2000} alt="verizon logo"></Image>
+                        </a>
+                        <a href="https://careers.bankofamerica.com/en-us">
+                            <Image src={bofaLogo} height={4000} alt="bank of america logo"></Image>
+                        </a>
+                    </div>
+                    <h1 className="self-start tracking-wider text-3xl font-bold text-gray-400">Silver Sponsor</h1>
+                    <div className="self-center justify-center relative flex flex-row items-center gap-6 w-5/6">
+                        <a href="https://navalnuclearlab.energy.gov/careers/">
+                            <Image src={navalLogo} height={200} alt="naval nuclear logo"></Image>
+                        </a>
+                    </div>
+                    <h1 className="self-start tracking-wider text-3xl font-bold text-yellow-600">Bronze Sponsors</h1>
+                    <div className="self-center relative flex flex-row items-center gap-6 w-5/6">
                         <a href="https://www.whiting-turner.com/careers/">
-                            <Image src={whitingLogo} alt="whiting turner logo"></Image>
+                            <Image src={whitingLogo} height={2400} alt="whiting turner logo"></Image>
                         </a>
                         <a href="https://www.bloomberg.com/">
                             <Image src={bloomLogo} alt="bloomburg logo"></Image>
