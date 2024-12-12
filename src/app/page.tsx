@@ -101,7 +101,6 @@ export default function Home() {
           }
         </div>
       </section>
-      <RubyInfo></RubyInfo>
       <div className="w-full h-2 bg-blue-900"></div>
       <section className="relative">
         <Shenanometer></Shenanometer>
