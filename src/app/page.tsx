@@ -37,12 +37,12 @@ export default function Home() {
       id: 0,
       title: 'Academic Support',
       imgName: asImage,
-      link: 'academics'
+      link: 'info/academics'
     }, {
       id: 1,
       title: 'Professionalism',
       imgName: prImage,
-      link: 'professionalism'
+      link: 'info/professionalism'
     }, {
       id: 2,
       title: 'Internship & Scholarship',
@@ -52,7 +52,7 @@ export default function Home() {
       id: 3,
       title: 'Networking',
       imgName: neImage,
-      link: 'networking'
+      link: 'info/networking'
     }, {
       id: 4,
       title: 'Fun Activities',
@@ -132,7 +132,7 @@ export default function Home() {
             offeringLinks.map( offerItem => {
               return (
                 <div key={offerItem.id} className="block grow md:grow-0 relative h-[28rem] md:h-[22rem] w-72 hover:scale-105 transition-all">
-                  <Link href={"/info/" + offerItem.link}>
+                  <Link href={"/" + offerItem.link}>
                     <Image src={offerItem.imgName}
                     placeholder="blur"
                     alt={offerItem.title} fill
