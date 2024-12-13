@@ -8,7 +8,6 @@ import prImage from '../../public/home-pg-assets/professionalism.jpg';
 import neImage from '../../public/home-pg-assets/networking.jpg';
 import faImage from '../../public/home-pg-assets/fun-activities.jpg';
 import vnImage from '../../public/home-pg-assets/volunteering.jpg';
-import comicStyleBg from '../../public/comic-style-bg.png';
 import RubyInfo from '@/components/ruby.component';
 import Shenanometer from '@/components/she-nano-meter.component';
 
