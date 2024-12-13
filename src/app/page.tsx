@@ -133,7 +133,7 @@ export default function Home() {
             offeringLinks.map( offerItem => {
               return (
                 <div key={offerItem.id} className="block grow md:grow-0 relative h-[28rem] md:h-[22rem] w-72 hover:scale-105 transition-all">
-                  <Link href={"/" + offerItem.link}>
+                  <Link href={"/info/" + offerItem.link}>
                     <Image src={offerItem.imgName}
                     placeholder="blur"
                     alt={offerItem.title} fill
