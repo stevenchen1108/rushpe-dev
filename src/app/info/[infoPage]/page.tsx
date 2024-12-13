@@ -13,7 +13,6 @@ export default function InfoPage( { params } : {
     console.log(linkPage,  Object.keys(params), linkMap);
     return (
         <>
-            <p>{linkPage + ' ' +  Object.keys(params)}</p>
             {linkMap[linkPage]}
         </>
     );

@@ -57,7 +57,7 @@ export default function Home() {
       id: 4,
       title: 'Fun Activities',
       imgName: faImage,
-      link: 'activities'
+      link: 'events'
     }, {
       id: 5,
       title: 'Volunteering',
