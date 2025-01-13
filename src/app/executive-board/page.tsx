@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import shpetinasHeadshot from '../../../public/executive-board-24_25/madeleyn-andrade.png';
 import communityHeadshot from '../../../public/executive-board-24_25/daniel-gonzalez.jpeg';
 import webmasterHeadshot from '../../../public/executive-board-24_25/david-fabian.jpg';
 import academicHeadshot from '../../../public/executive-board-24_25/francisco-aguirre-ponce.jpg';
@@ -91,7 +92,17 @@ export default function ExecutiveBoard() {
             linkedin: "https://www.linkedin.com/in/daniel-gonzalez-7337b0252/",
             desc: "I am a Junior majoring in Chemical Engineering and working towards a certificate in Packaging Engineering. I am the Community Service Chair this year for Rutgers SHPE and am looking forward to the year's events. On campus I am also a SoE Ambassador, a Learning Assistant, and a First Year Integration Leader.",
             index: 8
-        }, {
+        },
+        {
+            position: 'SHPEtinas Chair',
+            name: "Madeleyn Andrade-Cajamarca",
+            headshot: shpetinasHeadshot,
+            email: 'shpetinas@rushpe.org',
+            linkedin: "https://www.linkedin.com/in/madeleyn-andrade-71101a1b0",
+            desc: "Hi there! I'm Madeleyn. A little bit about me, I grew up in Ecuador and moved to the US a few years ago. I'm currently pursuing my Bachelor's degree in Mechanical Engineering and I'm always looking for opportunities to explore the world out there and give back to the community that has welcomed me!",
+            index: 9
+        },
+        {
             position: 'Webmaster',
             name: 'David Fabian',
             headshot: webmasterHeadshot,
