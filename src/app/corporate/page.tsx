@@ -4,6 +4,7 @@ import bloomLogo from '../../../public/she-swe-meet/bloomburg-logo.png';
 import whitingLogo from '../../../public/she-swe-meet/wt-logo.png';
 import bofaLogo from '../../../public/she-swe-meet/bofa-logo.png';
 import verizonLogo from '../../../public/she-swe-meet/verizon-logo.png';
+import infiniteumLogo from '@/../public/she-swe-meet/infineum-logo.svg'
 import navalLogo from '../../../public/she-swe-meet/naval-nuclear-logo.png';
 
 import './corporate-page.css';
@@ -32,6 +33,12 @@ export default function Corporate() {
                         </a>
                         <a href="https://careers.bankofamerica.com/en-us">
                             <Image src={bofaLogo} height={4000} alt="bank of america logo"></Image>
+                        </a>
+                    </div>
+                    <h1 className="tracking-wider text-3xl font-bold text-yellow-500">Gold Sponsor</h1>
+                    <div className="self-center justify-center relative flex flex-row items-center gap-6 w-5/6">
+                        <a href="https://www.infineum.com/careers/">
+                            <Image src={infiniteumLogo} height={200} alt="infiniteum logo"></Image>
                         </a>
                     </div>
                     <h1 className="self-start tracking-wider text-3xl font-bold text-gray-400">Silver Sponsor</h1>
