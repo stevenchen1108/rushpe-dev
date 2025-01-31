@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+
+    @keyframes sliding-img {
+        0% {
+            left: 0;
+        }
+        100% {
+            left: 100%;
+        }
+    }
+}
