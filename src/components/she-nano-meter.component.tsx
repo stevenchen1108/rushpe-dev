@@ -27,12 +27,10 @@ export default function Shenanometer() {
         if (data) {
             fetchFunds = data.reduce((acc: any, row: any) => acc + row.amount, 0);
         }
-        console.log(fetchFunds);
         } catch (e: any) {
         console.log(e);
         }
         if (donationsTotalInput) {
-            console.log(donationsTotalInput, fetchFunds);
             setTotalFunds(fetchFunds);
             donationsTotalInput.value = fetchFunds;
         }

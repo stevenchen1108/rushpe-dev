@@ -33,15 +33,15 @@ export default function Home () {
       link: 'events'
     }, {
       id: 1,
-      title: 'Scholarship Opportunities',
-      desc: 'Apply for scholarship and access academic resources.',
-      link: 'academics'
-    }, {
-      id: 3,
       title: 'Send Us A Message',
       desc: 'Deliver questions, comments, or concerns.',
       link: 'contact'
-    },
+    }, {
+      id: 2,
+      title: 'Estamos Aqui',
+      desc: 'Know your rights regardless of your citizenship status',
+      link: 'info/know-your-rights'
+    }
   ];
   const offeringLinks = [
     {
@@ -98,14 +98,15 @@ export default function Home () {
           {
             frontPageLinks.map( link => {
               return (
-                <div key={link.id} className="bg-white min-h-12 w-1/2 rounded-t-md sm:w-56 sm:h-40 px-3 shadow-2xl sm:rounded-md text-center">
+                <a key={link.id} className="bg-white min-h-12 w-1/2 rounded-t-md sm:w-56 sm:h-40 px-3 shadow-2xl sm:rounded-md text-center hover:scale-105 hover:bg-gray-100 ease-linear"
+                    href={link.link}>
                   <h1 className="h-full sm:p-3 sm:h-auto sm:w-auto sm:text-2xl text-black text-xl font-semibold tracking-wide">
                     {link.title}
                   </h1>
                   <p className="hidden sm:block text-sm text-gray-500 h-0 sm:h-auto">
                     {link.desc}
                   </p>
-                </div>
+                </a>
               );
             })
           }
