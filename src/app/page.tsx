@@ -2,34 +2,45 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import asImage from '../../public/home-pg-assets/academic-support.jpg';
-import isImage from '../../public/home-pg-assets/internship-scholarship.jpg';
-import prImage from '../../public/home-pg-assets/professionalism.jpg';
-import neImage from '../../public/home-pg-assets/networking.jpg';
-import faImage from '../../public/home-pg-assets/fun-activities.jpg';
-import vnImage from '../../public/home-pg-assets/volunteering.jpg';
+import asImage from '@/../public/home-pg-assets/academic-support.jpg';
+import isImage from '@/../public/home-pg-assets/internship-scholarship.jpg';
+import prImage from '@/../public/home-pg-assets/professionalism.jpg';
+import neImage from '@/../public/home-pg-assets/networking.jpg';
+import faImage from '@/../public/home-pg-assets/fun-activities.jpg';
+import vnImage from '@/../public/home-pg-assets/volunteering.jpg';
 import RubyInfo from '@/components/ruby.component';
 import Shenanometer from '@/components/she-nano-meter.component';
 
-export default function Home() {
+import ImgBook from '@/components/img-book.component';
+import imgBook1 from '@/../public/home-pg-assets/alumni-panel-f24.jpg';
+import imgBook2 from '@/../public/home-pg-assets/bowlero-f24.jpg';
+import imgBook3 from '@/../public/home-pg-assets/cultural-gbm-f24-1.jpg';
+import imgBook4 from '@/../public/home-pg-assets/cultural-gbm-f24-2.jpg';
+import imgBook6 from '@/../public/home-pg-assets/first-gbm-f24-1.jpg';
+import imgBook7 from '@/../public/home-pg-assets/first-gbm-f24-2.jpg';
+import imgBook8 from '@/../public/home-pg-assets/first-gbm-f24-3.jpg';
+import imgBook9 from '@/../public/home-pg-assets/beach-sweeps-f24-1.jpg';
+import imgBook10 from '@/../public/home-pg-assets/prof-gbm-f24-1.jpg';
+
+
+export default function Home () {
 
   const frontPageLinks = [
     {
       id: 0,
       title: 'Upcoming Events',
-      desc: 'View our upcoming events & meetings.'
+      desc: 'View our upcoming events & meetings.',
+      link: 'events'
     }, {
       id: 1,
       title: 'Scholarship Opportunities',
-      desc: 'Apply for scholarship and access academic resources.'
-    }, {
-      id: 2,
-      title: 'Professional Resources',
-      desc: 'Attend our workshops & expand your network.'
+      desc: 'Apply for scholarship and access academic resources.',
+      link: 'academics'
     }, {
       id: 3,
       title: 'Send Us A Message',
-      desc: 'Deliver questions, comments, or concerns.'
+      desc: 'Deliver questions, comments, or concerns.',
+      link: 'contact'
     },
   ];
   const offeringLinks = [
@@ -71,7 +82,7 @@ export default function Home() {
       <section className="relative w-full h-[45rem] overflow-hidden flex justify-center items-center">
         <video autoPlay={true} muted loop className="min-w-[90rem] w-full object-cover">
           {/* set to true ^^^ */}
-          <source src="/home-pg-assets/home-bg-vid.mp4" type="video/mp4"/>       
+          <source src="/home-pg-assets/home-bg-vid-jan2025.mp4" type="video/mp4"/>       
         </video>
         <div className="absolute text-center top-0 sm:top-[10%] sm:text-left md:left-[10%]">
           <div className="text-wrap sm:w-[37rem] p-4 bg-black bg-opacity-25">
@@ -103,8 +114,6 @@ export default function Home() {
       <div className="w-full h-2 bg-blue-900"></div>
       <section className="relative">
         <Shenanometer></Shenanometer>
-        {/* <img src={comicCld.src} className="absolute h-32 md:h-64 left-[-10rem] top-[-6rem]"></img>
-        <img src={comicCld.src} className="absolute h-32 md:h-64 right-[-10rem] top-[-6rem]"></img> */}
       </section>
       <div className="relative overflow-hidden h-[40rem]">
         <div className="absolute flex flex-col align-middle h-full w-full z-10 py-24 bg-black bg-opacity-30 right-0 text-center
@@ -122,6 +131,8 @@ export default function Home() {
         sizes="(max-width: 768px) 100vw"
         objectFit="cover"
         ></Image>
+        <ImgBook imgList={[imgBook1, imgBook2, imgBook3, imgBook4, imgBook6, imgBook7, imgBook8, imgBook9, imgBook10]}>
+        </ImgBook>
       </div>
       <div className="relative min-w-72 py-4">
         <h1 className='w-full text-5xl tracking-wide font-semibold text-center'>

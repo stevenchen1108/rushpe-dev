@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NavBar></NavBar>
+        <NavBar currLink="home" isTransparent={false}></NavBar>
         {children}
         <FooterBar></FooterBar>
       </body>

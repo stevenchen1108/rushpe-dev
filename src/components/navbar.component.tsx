@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { VscMenu, VscChromeClose } from "react-icons/vsc";
 import './navbar.component.css';
 
-export default function NavBar() {
+export default function NavBar({ currLink, isTransparent }: { currLink: string, isTransparent: boolean }) {
     let [menuDropped, setMenu] = useState(false);
     const pages = [
         {
@@ -35,8 +35,8 @@ export default function NavBar() {
         }
     ]
     return (
-        <header className="md:sticky md:top-0 z-20">
-            <div className='flex flex-col bg-dark-main relative overflow-auto'>
+        <header className={"md:top-0 z-20" + (isTransparent ? ' absolute left-0 right-0' : '')}>
+            <div className={'flex flex-col overflow-auto' + (isTransparent ? '' : ' bg-dark-main')}>
                 <div className="flex justify-between md:justify-center items-stretch h-24 sm:h-28">
                     <div className='flex flex-row gap-2 sm:gap-3 items-center font-bold px-2 sm:px-6'>
                         <Image src="/she-logo.png" alt="she logo"
@@ -54,7 +54,7 @@ export default function NavBar() {
                     {
                     pages.map( pageName => {
                         return (
-                            <Link className='flex justify-center items-center basis-0 grow p-6 md:p-3 shrink-0 px-2 hover:bg-main hover:shadow-lg'
+                            <Link className={"flex justify-center items-center basis-0 grow p-6 md:p-3 shrink-0 px-2 hover:shadow-lg" + (isTransparent ? ' hover:bg-slate-700 hover:bg-opacity-30' : ' hover:bg-main')}
                             key={pageName.id} href={'/' + pageName.link} onClick={() => setMenu(!menuDropped)}>
                                 <h1 className="text-3xl md:text-base font-semibold text-center">{pageName.name.toUpperCase()}</h1>
                             </Link>

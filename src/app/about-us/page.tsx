@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import faceOffImg from '../../../public/about-pg-assets/about-us-bg.jpg'
-import gbmBuildImg from '../../../public/about-pg-assets/about-us-image.png'
-import pillarsGphc from '../../../public/about-pg-assets/pillars-graphic.png'
+import faceOffImg from '@/../public/about-pg-assets/about-us-bg.jpg'
+import gbmBuildImg from '@/../public/about-pg-assets/about-us-image.png'
+import pillarsGphc from '@/../public/about-pg-assets/pillars-graphic.png'
 import { FaRegFilePdf } from "react-icons/fa";
 
 export default function AboutUs() {

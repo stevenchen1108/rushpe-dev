@@ -3,6 +3,7 @@ import { eachDayOfInterval, addDays, subDays, startOfMonth, endOfMonth, startOfW
 import { useState, useEffect } from 'react';
 import './event-calendar.component.css';
 import { VscChromeClose } from "react-icons/vsc";
+import { SiGooglecalendar } from "react-icons/si";
 
 class Event {
     summary: string;
@@ -151,7 +152,15 @@ export default function Calendar() {
         <>
             <section className="bg-white text-black p-2 sm:p-12">
                 <div className="relative py-1">
-                    <h1 className="text-left tracking-widest text-3xl p-1">{ format(today, 'LLLL').toUpperCase() }</h1>
+                    <div className="flex flex-row justify-between py-3">
+                        <h1 className="text-left tracking-widest text-3xl">{ format(today, 'LLLL').toUpperCase() }</h1>
+                        <a className="flex flex-row gap-2 px-3 items-center text-lg bg-main text-white rounded-md hover:bg-main-hover"
+                            href="https://calendar.google.com/calendar/u/0/r?cid=c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com">
+                            <SiGooglecalendar />
+                            <h1 className="text-xs sm:hidden">Subscribe!</h1>
+                            <h1 className="text-xs hidden sm:block">Subscribe to our calendar!</h1>
+                        </a>
+                    </div>
                     <div className="grid grid-cols-7 text-center text-sm">
                         {
                             weekArray.map( (day, index) => {

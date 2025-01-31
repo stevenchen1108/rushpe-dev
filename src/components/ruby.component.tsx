@@ -1,8 +1,8 @@
-import rubyBg from '../../public/home-pg-assets/ruby-bg.png';
+import rubyBg from '@/../public/home-pg-assets/ruby-bg.png';
 import Image from 'next/image';
 import { Alex_Brush } from "next/font/google";
 import { Italiana } from "next/font/google";
-import googleDriveIcon from "../../public/google-drive-icon.png";
+import googleDriveIcon from "@/../public/google-drive-icon.png";
 
 const alexBrush = Alex_Brush({
   weight: "400",

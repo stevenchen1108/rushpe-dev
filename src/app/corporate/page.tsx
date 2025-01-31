@@ -1,11 +1,12 @@
 import Image from 'next/image';
-import ssmImg from '../../../public/she-swe-meet/she-swe-meet-logo.jpeg';
-import bloomLogo from '../../../public/she-swe-meet/bloomburg-logo.png';
-import whitingLogo from '../../../public/she-swe-meet/wt-logo.png';
-import bofaLogo from '../../../public/she-swe-meet/bofa-logo.png';
-import verizonLogo from '../../../public/she-swe-meet/verizon-logo.png';
+import ssmImg from '@/../public/she-swe-meet/she-swe-meet-logo.jpeg';
+import bloomLogo from '@/../public/she-swe-meet/bloomburg-logo.png';
+import whitingLogo from '@/../public/she-swe-meet/wt-logo.png';
+import bofaLogo from '@/../public/she-swe-meet/bofa-logo.png';
+import verizonLogo from '@/../public/she-swe-meet/verizon-logo.png';
 import infiniteumLogo from '@/../public/she-swe-meet/infineum-logo.svg'
-import navalLogo from '../../../public/she-swe-meet/naval-nuclear-logo.png';
+import navalLogo from '@/../public/she-swe-meet/naval-nuclear-logo.png';
+import ImgBook from '@/components/img-book.component';
 
 import './corporate-page.css';
 
