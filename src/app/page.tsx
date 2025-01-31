@@ -12,15 +12,15 @@ import RubyInfo from '@/components/ruby.component';
 import Shenanometer from '@/components/she-nano-meter.component';
 
 import ImgBook from '@/components/img-book.component';
-import imgBook1 from '@/../public/home-pg-assets/alumni-panel-f24.jpg';
-import imgBook2 from '@/../public/home-pg-assets/bowlero-f24.jpg';
-import imgBook3 from '@/../public/home-pg-assets/cultural-gbm-f24-1.jpg';
-import imgBook4 from '@/../public/home-pg-assets/cultural-gbm-f24-2.jpg';
-import imgBook6 from '@/../public/home-pg-assets/first-gbm-f24-1.jpg';
-import imgBook7 from '@/../public/home-pg-assets/first-gbm-f24-2.jpg';
-import imgBook8 from '@/../public/home-pg-assets/first-gbm-f24-3.jpg';
-import imgBook9 from '@/../public/home-pg-assets/beach-sweeps-f24-1.jpg';
-import imgBook10 from '@/../public/home-pg-assets/prof-gbm-f24-1.jpg';
+import imgBook1 from '/public/home-pg-assets/alumni-panel-f24.jpg';
+import imgBook2 from '/public/home-pg-assets/bowlero-f24.jpg';
+import imgBook3 from '/public/home-pg-assets/cultural-gbm-f24-1.jpg';
+import imgBook4 from '/public/home-pg-assets/cultural-gbm-f24-2.jpg';
+import imgBook6 from '/public/home-pg-assets/first-gbm-f24-1.jpg';
+import imgBook7 from '/public/home-pg-assets/first-gbm-f24-2.jpg';
+import imgBook8 from '/public/home-pg-assets/first-gbm-f24-3.jpg';
+import imgBook9 from '/public/home-pg-assets/beach-sweeps-f24-1.jpg';
+import imgBook10 from '/public/home-pg-assets/prof-gbm-f24-1.jpg';
 
 
 export default function Home () {
