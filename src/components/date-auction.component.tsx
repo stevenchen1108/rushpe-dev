@@ -38,14 +38,16 @@ export default function DateAuction() {
 
     return (
         <>
-        <section className="h-full w-full lg:w-1/2 relative flex flex-col gap-2 justify-center items-stretch pb-3 lg:pb-0">
-            <div className="h-[24rem] w-[30rem] sm:h-[35rem] sm:w-[49rem] lg:h-[30rem] lg:w-[30rem] xl:h-[30rem] xl:w-[40rem]">
-                <RiveComponent className="h-full w-full"/>
-            </div>
-            <div className="text-center text-2xl">
-                <h1 className="italic font-bold">$
-                <span className="text-pink-400 text-4xl">{totalFunds}
-                    </span> raised from our Alumni! <br/> Thank you!</h1>
+        <section className="h-full w-full lg:w-1/2 relative pb-3 lg:pb-0">
+            <div className="max-w-full flex flex-col gap-2 justify-center items-center overflow-hidden">
+                <div className="h-[20rem] w-full sm:h-[35rem] sm:w-[49rem] lg:h-[30rem] lg:w-[30rem] xl:h-[30rem] xl:w-[40rem]">
+                    <RiveComponent className="h-full w-full"/>
+                </div>
+                <div className="text-center text-2xl">
+                    <h1 className="italic font-bold">$
+                    <span className="text-pink-400 text-4xl">{totalFunds}
+                        </span>  raised from our Alumni!<br/>Thank you!</h1>
+                </div>
             </div>
         </section>
         </>
