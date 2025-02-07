@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRive, Layout, Fit, Alignment, useStateMachineInput } from '@rive-app/react-canvas';
 import { createClient } from "@supabase/supabase-js";
-import { spring, animate } from 'react-spring'
 import comicBg from "@/../public/comic-bg.jpg";
 
 const supabaseClient = createClient(
