@@ -43,11 +43,11 @@ export default function DateAuction() {
                 <div className="h-[20rem] w-full sm:h-[35rem] sm:w-[49rem] lg:h-[30rem] lg:w-[30rem] xl:h-[30rem] xl:w-[40rem]">
                     <RiveComponent className="h-full w-full"/>
                 </div>
-                <div className="text-center text-2xl">
+                {/* <div className="text-center text-2xl">
                     <h1 className="italic font-bold">$
                     <span className="text-pink-400 text-4xl">{totalFunds}
                         </span>  raised from our Alumni!<br/>Thank you!</h1>
-                </div>
+                </div> */}
             </div>
         </section>
         </>
