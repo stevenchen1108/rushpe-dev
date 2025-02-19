@@ -23,12 +23,13 @@ export default function Shenanometer() {
     const getTotalFunds = async () => {
         let fetchFunds = 0;
         try {
-        const { data, error } = await supabaseClient.from('ShenaniganData').select();
-        if (data) {
-            fetchFunds = data.reduce((acc: any, row: any) => acc + row.amount, 0);
-        }
+            // charity id for shenanigans = 1
+            const { data, error } = await supabaseClient.from('DonationData').select().match({charity_id: 1});
+            if (data) {
+                fetchFunds = data.reduce((acc: any, row: any) => acc + row.amount, 0);
+            }
         } catch (e: any) {
-        console.log(e);
+            console.log(e);
         }
         if (donationsTotalInput) {
             setTotalFunds(fetchFunds);
@@ -46,7 +47,7 @@ export default function Shenanometer() {
                 <img
                     src={comicBg.src}
                     alt="she-nani-gans bg"
-                    className="comic-bg-animate absolute min-w-[350%] sm:min-w-[200%]"
+                    className="comic-bg-animate absolute min-w-[350%] sm:min-w-[350%]"
                 ></img>
             </div>
             <div className="relative flex flex-col items-center gap-3 min-h-96 sm:min-h-[35rem] py-5">

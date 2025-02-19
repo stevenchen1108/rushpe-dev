@@ -10,6 +10,7 @@ import faImage from '@/../public/home-pg-assets/fun-activities.jpg';
 import vnImage from '@/../public/home-pg-assets/volunteering.jpg';
 import RubyInfo from '@/components/ruby.component';
 import Shenanometer from '@/components/she-nano-meter.component';
+import DateAuctionComp from '@/components/date-auction.component';
 
 import ImgBook from '@/components/img-book.component';
 import imgBook1 from '/public/home-pg-assets/alumni-panel-f24.jpg';
@@ -113,8 +114,9 @@ export default function Home () {
         </div>
       </section>
       <div className="w-full h-2 bg-blue-900"></div>
-      <section className="relative">
+      <section className="relative flex flex-col lg:flex-row">
         <Shenanometer></Shenanometer>
+        <DateAuctionComp></DateAuctionComp>
       </section>
       <div className="relative overflow-hidden h-[40rem]">
         <div className="absolute flex flex-col align-middle h-full w-full z-10 py-24 bg-black bg-opacity-30 right-0 text-center
