@@ -15,14 +15,14 @@ export default function ShpetinasResources () {
                         
                         <li className="flex flex-col bg-[#ffa6a6] rounded-md mt-7" style={{minHeight: "300px"}}>
                             
-                        <div className="flex flex-row items-center justify-center px-8 py-6 mx-auto w-full">
-                                <img className="rounded-2xl" src={ResourceImage1.src} alt="event-img-1" width={150} height={150} />
-                                <div className="ml-5 text-center flex-grow">
+                            <div className="flex flex-col md:flex-row items-center justify-center px-8 py-6 w-full">
+                                <img className="rounded-2xl mx-auto sm:w-8 md:w-32 lg:w-56 md:mr-5 md:ml-0 mb-4 md:mb-0" src={ResourceImage1.src} alt="event-img-1"/>
+                                <div className="text-center flex-grow max-w-[90%] md:max-w-[60%]">
                                     <h2 className="font-bold text-black text-4xl">RICAP</h2>
                                     <h1 className="text-xl font-semibold">Rutgers Immigrant Community Assistance Project</h1>
                                 </div>
                             </div>
-                            
+
                             <div className="text-left text-lg px-3 mt-3 mb-3">
                                 <p> <a className="underline text-blue-700 font-bold" href="https://law.rutgers.edu/information-for/get-legal-help/rutgers-immigrant-community-assistance-project">
                                     RICAP</a> strives to foster a safe environment on campus and to remove barriers to student success by <strong>providing immigration legal services</strong>.
@@ -43,11 +43,11 @@ export default function ShpetinasResources () {
                         
                         <li className="flex flex-col bg-[#ffc7a6] rounded-md mt-7" style={{minHeight: "300px"}}>
                             
-                        <div className="flex flex-row items-center justify-center px-8 py-6 mx-auto w-full">
-                                <img className="rounded-2xl" src={ResourceImage2.src} alt="event-img-1" width={150} height={150} />
-                                <div className="ml-5 text-center flex-grow">
+                            <div className="flex flex-col md:flex-row items-center justify-center px-8 py-6 w-full">
+                                <img className="rounded-2xl mx-auto sm:w-8 md:w-32 lg:w-56 md:mr-5 md:ml-0 mb-4 md:mb-0" src={ResourceImage2.src} alt="event-img-2" width={150} height={150}/>
+                                <div className="text-center flex-grow max-w-[90%] md:max-w-[60%]">
                                     <h2 className="font-bold text-black text-4xl">HESAA</h2>
-                                    <h1 className="text-xl font-semibold">Rutgers Immigrant Community Assistance Project</h1>
+                                    <h1 className="text-xl font-semibold">Higher Education Student Assistance Authority</h1>
                                 </div>
                             </div>
                             
@@ -65,9 +65,9 @@ export default function ShpetinasResources () {
                         
                         <li className="flex flex-col bg-[#ffeca6] rounded-md mt-7 mb-7" style={{minHeight: "300px"}}>
                             
-                        <div className="flex flex-row items-center justify-center px-8 py-6 mx-auto w-full">
-                                <img className="rounded-2xl" src={ResourceImage3.src} alt="event-img-1" width={150} height={150} />
-                                <div className="ml-5 text-center flex-grow">
+                            <div className="flex flex-col md:flex-row items-center justify-center px-8 py-6 w-full">
+                                <img className="rounded-2xl mx-auto sm:w-8 md:w-32 lg:w-56 md:mr-5 md:ml-0 mb-4 md:mb-0" src={ResourceImage3.src} alt="event-img-3" width={150} height={150}/>
+                                <div className="text-center flex-grow max-w-[90%] md:max-w-[60%]">
                                     <h2 className="font-bold text-black text-4xl">OWH</h2>
                                     <h1 className="text-xl font-semibold">Office on Women's Health</h1>
                                 </div>
