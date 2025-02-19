@@ -4,10 +4,11 @@ import EventsComponent from '@/components/events-shpetinas.component';
 export default function Shpetinas () {
     return (
         <>
-            <h1>TESTING</h1>
-            
-            <EventsComponent />
-            <ResourceComponent />
+            <div className="bg-[#ffdbf8]">
+                
+                <EventsComponent />
+                <ResourceComponent />
+            </div>
         </>
     );
 }
