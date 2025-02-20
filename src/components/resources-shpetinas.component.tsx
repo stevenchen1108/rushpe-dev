@@ -64,7 +64,6 @@ export default function ShpetinasResources () {
                         </li> 
                         
                         <li className="flex flex-col bg-[#ffeca6] rounded-md mt-7 mb-7" style={{minHeight: "300px"}}>
-                            
                             <div className="flex flex-col md:flex-row items-center justify-center px-8 py-6 w-full lg:space-x-4">
                                 <img className="rounded-2xl mx-auto sm:w-8 md:w-32 lg:w-56 md:mr-5 mb-4 md:mb-0" src={ResourceImage3.src} alt="event-img-3"/>
                                 <div className="text-center flex-grow max-w-[90%] md:max-w-[60%]">
