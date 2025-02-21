@@ -15,7 +15,7 @@ export default function ShpetinasEvents() {
                                 <img className="rounded-2xl" src={EventImage1.src} alt="event-img-1" width={500} height={500} />
                             </div>
                             <div className="text-center">
-                                <h2 className="mt-5 mb-3 font-bold text-[#841f70] text-3xl">Women's Day at Douglass</h2>
+                                <h2 className="mt-5 mb-3 font-bold text-[#841f70] text-3xl">Women&apos;s Day at Douglass</h2>
                                 <div className="text-3xl">                                    
                                     <p><strong>Date:</strong> March 6th</p>
                                     <p><strong>Location:</strong> Kathleen W. Ludwig Global Village Living Learning (Jameson Complex)</p>

@@ -39,7 +39,7 @@ export default function Shenanometer() {
 
     useEffect(() => {
         getTotalFunds();
-    }, [getTotalFunds, donationsTotalInput]);
+    }, [getTotalFunds]);
     return (
         <>
         <section className="comic-style relative overflow-hidden">

@@ -148,7 +148,7 @@ export default function Calendar() {
 
     useEffect(() => {
         fetchEvents();
-    }, [fetchEvents]);
+    });
 
     return (
         <>
@@ -184,7 +184,7 @@ export default function Calendar() {
                                     format(new Date(eventSelected.end.dateTime), 'h:mm a')) : format(new Date(eventSelected.start.dateTime), 'EEEE')}</i></p>
                                 <p className="pt-1 text-sm whitespace-pre-line">{eventSelected.description}</p>
                                 { (eventSelected.attachments || eventSelected.image) &&
-                                <img className="pt-2" src={eventSelected.image ? eventSelected.image :
+                                <img alt="event image" className="pt-2" src={eventSelected.image ? eventSelected.image :
                                     ('https://lh3.googleusercontent.com/d/' + eventSelected.attachments[0].fileId)}></img> }
                                 { eventSelected.rsvp &&
                                 <a className="p-1 my-2 hover:bg-main-hover self-center bg-main text-white tracking-wider text-center w-32"
