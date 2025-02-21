@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import './event-calendar.component.css';
 import { VscChromeClose } from "react-icons/vsc";
 import { SiGooglecalendar } from "react-icons/si";
+import Image from 'next/image';
 
 class Event {
     summary: string;
@@ -73,6 +74,7 @@ export default function Calendar() {
             ).then( (res) => {
                 return res.json();
             });
+            console.log(response);
             if (!isMounted) {
                 response.items.forEach( (calendarEvent: any) => {
                     if (calendarEvent.start.date) {
@@ -146,7 +148,7 @@ export default function Calendar() {
 
     useEffect(() => {
         fetchEvents();
-    }, []);
+    }, [fetchEvents]);
 
     return (
         <>

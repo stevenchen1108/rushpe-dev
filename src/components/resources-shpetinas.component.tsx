@@ -28,7 +28,7 @@ export default function ShpetinasResources () {
                                     RICAP</a> strives to foster a safe environment on campus and to remove barriers to student success by <strong>providing immigration legal services</strong>.
                                     They host community forums, informational Immigration presentations, and Know-Your-Rights training on all Rutgers campuses. <br/>
                                 </p>
-                                <p className="mt-3 mb-3">If you're seeking an appointment or have general questions, please contact RICAP:</p>
+                                <p className="mt-3 mb-3">If you&apos;re seeking an appointment or have general questions, please contact RICAP:</p>
                                 <ul className="list-disc list-inside pl-4">
                                     <li><strong>Request an Appointment</strong> with Immigration Attorney Jason Hernandez by emailing 
                                         <a className="underline text-blue-700 font-bold ml-1" href="mailto:mary.hewey@rutgers.edu">Mary Hewey</a>, the RICAP Paralegal.
@@ -68,13 +68,13 @@ export default function ShpetinasResources () {
                                 <img className="rounded-2xl mx-auto sm:w-8 md:w-32 lg:w-56 md:mr-5 mb-4 md:mb-0" src={ResourceImage3.src} alt="event-img-3"/>
                                 <div className="text-center flex-grow max-w-[90%] md:max-w-[60%]">
                                     <h2 className="font-bold text-black text-5xl">OWH</h2>
-                                    <h1 className="text-3xl font-semibold">Office on Women's Health</h1>
+                                    <h1 className="text-3xl font-semibold">Office on Women&apos;s Health</h1>
                                 </div>
                             </div>
                             
                             <div className="text-left text-2xl px-4 mt-3 mb-3">
                                 <p> <a className="underline text-blue-700 font-bold" href="https://law.rutgers.edu/information-for/get-legal-help/rutgers-immigrant-community-assistance-project">
-                                    OWH</a> coordinates women's health efforts and addresses critical women's health issues.
+                                    OWH</a> coordinates women&apos;s health efforts and addresses critical women&apos;s health issues.
                                     They inform and advance policies, educate health care professionals and consumers, and support innovative programs. 
                                     Their goal is for <strong>all women and girls to achieve the best possible health</strong>.
                                 </p>
