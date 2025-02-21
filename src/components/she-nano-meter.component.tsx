@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRive, Layout, Fit, Alignment, useStateMachineInput } from '@rive-app/react-canvas';
 import { createClient } from "@supabase/supabase-js";
 import comicBg from "@/../public/comic-bg.jpg";
+import SpringCounter from '@/components/spring-counter.component';
 import './she-nano-meter.component.css';
 
 const supabaseClient = createClient(
@@ -14,7 +15,7 @@ const supabaseClient = createClient(
 export default function Shenanometer() {
     const [totalFunds, setTotalFunds] = useState(0);
     const { rive, RiveComponent } = useRive({
-        src: '@/../public/new-meter.riv',
+        src: '../../rive-animations/new-meter.riv',
         stateMachines: "main",
         autoplay: true,
     });
@@ -57,7 +58,7 @@ export default function Shenanometer() {
                 </h1>
                 <div className="h-full flex flex-row justify-center items-center gap-2">
                     <div className="text-2xl p-3 rounded-full bg-red-700">$
-                        <span className="text-4xl p-1">{ totalFunds }</span>
+                        <span className="text-4xl p-1"><SpringCounter target={ totalFunds } speed={7}/></span>
                     </div>
                     <div className="h-[20rem] w-[10rem] flex justify-center">
                         <RiveComponent className="h-full w-full"/>

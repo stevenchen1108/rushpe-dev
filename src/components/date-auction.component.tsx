@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRive, Layout, Fit, Alignment, useStateMachineInput } from '@rive-app/react-canvas';
 import { createClient } from "@supabase/supabase-js";
-import comicBg from "@/../public/comic-bg.jpg";
+import SpringCounter from '@/components/spring-counter.component';
 
 const supabaseClient = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -13,7 +13,7 @@ const supabaseClient = createClient(
 export default function DateAuction() {
     const [totalFunds, setTotalFunds] = useState(100);
     const { rive, RiveComponent } = useRive({
-        src: '../../date-auction-ani.riv',
+        src: '../../rive-animations/date-auction-ani.riv',
         stateMachines: "main",
         autoplay: true,
     });
@@ -43,11 +43,11 @@ export default function DateAuction() {
                 <div className="h-[20rem] w-full sm:h-[35rem] sm:w-[49rem] lg:h-[30rem] lg:w-[30rem] xl:h-[30rem] xl:w-[40rem]">
                     <RiveComponent className="h-full w-full"/>
                 </div>
-                {/* <div className="text-center text-2xl">
+                <div className="text-center text-2xl">
                     <h1 className="italic font-bold">$
-                    <span className="text-pink-400 text-4xl">{totalFunds}
-                        </span>  raised from our Alumni!<br/>Thank you!</h1>
-                </div> */}
+                    <span className="text-pink-400 text-4xl"><SpringCounter target={4436} />
+                        </span>  raised!<br/>Thank you to all our bidders!</h1>
+                </div>
             </div>
         </section>
         </>
