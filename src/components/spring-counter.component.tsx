@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function SpringCounter ({ target, speed = 17 }: { target: number, speed: number }) {
+export default function SpringCounter ({ target, speed = 17 }: { target: number, speed?: number }) {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
