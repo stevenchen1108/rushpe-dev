@@ -14,7 +14,7 @@ const supabaseClient = createClient(
 export default function Shenanometer() {
     const [totalFunds, setTotalFunds] = useState(0);
     const { rive, RiveComponent } = useRive({
-        src: '../../new-meter.riv',
+        src: '@/../public/new-meter.riv',
         stateMachines: "main",
         autoplay: true,
     });
@@ -39,7 +39,7 @@ export default function Shenanometer() {
 
     useEffect(() => {
         getTotalFunds();
-    }, [getTotalFunds]);
+    }, [donationsTotalInput]);
     return (
         <>
         <section className="comic-style relative overflow-hidden">

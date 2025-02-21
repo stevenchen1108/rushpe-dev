@@ -2,8 +2,9 @@ import Professionalism from '@/components/professionalism.component';
 import Academics from '@/components/academics.component';
 import Networking from '@/components/networking.component';
 import Events from '@/components/event-calendar.component';
-import SMUpdater from '@/components/shenanometer-updater.component';
+import DonationsUpdater from '@/components/donations-updater.component';
 import ImmigrantsRights from '@/components/immigrant.component';
+import ShpetinasComp from '@/components/resources-shpetinas.component';
 
 
 export default function InfoPage( { params } : {
@@ -11,7 +12,7 @@ export default function InfoPage( { params } : {
 } ) {
     const linkMap: any = { professionalism: <Professionalism/>,
         academics: <Academics/>, networking: <Networking/>, events: <Events/>,
-        smupdater: <SMUpdater/>, 'know-your-rights': <ImmigrantsRights /> };
+        'donations-updater': <DonationsUpdater/>, 'know-your-rights': <ImmigrantsRights />, 'shpetinas': <ShpetinasComp /> };
     const linkPage: any = params.infoPage;
     return (
         <>
