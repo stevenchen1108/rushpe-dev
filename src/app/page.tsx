@@ -34,7 +34,7 @@ export default function Home () {
       link: 'events'
     }, {
       id: 1,
-      title: 'Send Us A Message',
+      title: 'Contact Us',
       desc: 'Deliver questions, comments, or concerns.',
       link: 'contact'
     }, {
@@ -42,6 +42,11 @@ export default function Home () {
       title: 'Estamos Aqui',
       desc: 'Know your rights regardless of your citizenship status',
       link: 'info/know-your-rights'
+    }, {
+      id: 3,
+      title: 'SHPEtinas',
+      desc: 'Visit our SHPEtinas page!',
+      link: '/shpetinas'
     }
   ];
   const offeringLinks = [
@@ -95,13 +100,13 @@ export default function Home () {
             </p>
           </div>
         </div>
-        <div className="absolute bottom-0 sm:gap-4 flex justify-center flex-wrap sm:py-3">
+        <div className="absolute bottom-0 sm:gap-4 flex justify-center sm:py-3">
           {
             frontPageLinks.map( link => {
               return (
-                <a key={link.id} className="bg-white min-h-12 w-1/2 rounded-t-md sm:w-56 sm:h-40 px-3 shadow-2xl sm:rounded-md text-center hover:scale-105 hover:bg-gray-100 ease-linear"
-                    href={link.link}>
-                  <h1 className="h-full sm:p-3 sm:h-auto sm:w-auto sm:text-2xl text-black text-xl font-semibold tracking-wide">
+                <a key={link.id} href={link.link}
+                  className="bg-white flex flex-row sm:flex-col items-center rounded-2xl text-sm h-20 w-1/2 sm:w-56 sm:h-40 px-3 sm:rounded-md text-center hover:scale-105 hover:bg-gray-100 ease-linear">
+                  <h1 className="sm:p-3 sm:h-auto sm:w-auto sm:text-2xl text-black font-semibold tracking-wide">
                     {link.title}
                   </h1>
                   <p className="hidden sm:block text-sm text-gray-500 h-0 sm:h-auto">

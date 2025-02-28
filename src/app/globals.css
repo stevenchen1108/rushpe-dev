@@ -23,6 +23,12 @@
   src: url('/fonts/badabb.ttf') format('truetype');
 }
 
+@font-face {
+  font-family: 'knewave';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/knewave.ttf') format('truetype');
+}
 
 body {
   color: rgb(var(--foreground-rgb));
@@ -42,4 +48,8 @@ body {
 
 .comic-style {
   font-family: 'badabb';
+}
+
+.shpetinas-font {
+  font-family: 'knewave';
 }

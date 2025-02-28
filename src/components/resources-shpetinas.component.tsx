@@ -10,20 +10,20 @@ export default function ShpetinasResources () {
                     <h1 className="text-center font-bold tracking-wide text-5xl mx-auto my-auto">RESOURCES</h1>
                 </div>
 
-                <div className="flex flex-col bg-white rounded-md text-black mb-8 xl:mx-56 lg:mx-48 md:mx-16 sm:mx-8">
-                    <ul className="flex flex-col list-none text-left shadow-md">
+                <div className="flex flex-row flex-wrap bg-white rounded-md text-black p-3">
+                    <ul className="flex flex-row flex-wrap justify-center gap-4 list-none text-left">
                         
-                        <li className="flex flex-col bg-[#ffa6a6] rounded-md mt-7 p-6" style={{minHeight: "300px"}}>
+                        <li className="sm:w-[35rem] flex flex-col bg-[#ffa6a6] rounded-md p-6" style={{minHeight: "300px"}}>
                             
                             <div className="flex flex-col md:flex-row items-center justify-center px-8 py-6 w-full lg:space-x-4">
-                                <img className="rounded-2xl mx-auto sm:w-8 md:w-32 lg:w-56 md:mr-5 mb-4 md:mb-0" src={ResourceImage1.src} alt="event-img-1"/>
+                                <img className="rounded-2xl mx-auto sm:w-28 lg:w-56 md:mr-5 mb-4 md:mb-0" src={ResourceImage1.src} alt="event-img-1"/>
                                 <div className="text-center flex-grow max-w-[90%] md:max-w-[60%]">
                                     <h2 className="font-bold text-black text-5xl">RICAP</h2>
-                                    <h1 className="text-3xl font-semibold">Rutgers Immigrant Community Assistance Project</h1>
+                                    <h1 className="text-xl font-semibold">Rutgers Immigrant Community Assistance Project</h1>
                                 </div>
                             </div>
 
-                            <div className="text-left text-2xl mt-3 mb-3">
+                            <div className="text-left text-md mt-3 mb-3">
                                 <p> <a className="underline text-blue-700 font-bold" href="https://law.rutgers.edu/information-for/get-legal-help/rutgers-immigrant-community-assistance-project">
                                     RICAP</a> strives to foster a safe environment on campus and to remove barriers to student success by <strong>providing immigration legal services</strong>.
                                     They host community forums, informational Immigration presentations, and Know-Your-Rights training on all Rutgers campuses. <br/>
@@ -41,7 +41,7 @@ export default function ShpetinasResources () {
 
                         </li>  
                         
-                        <li className="flex flex-col bg-[#ffc7a6] rounded-md mt-7" style={{minHeight: "300px"}}>
+                        <li className="sm:w-[35rem] flex flex-col bg-[#ffc7a6] rounded-md" style={{minHeight: "300px"}}>
                             
                             <div className="flex flex-col md:flex-row items-center justify-center px-8 py-6 w-full lg:space-x-4">
                                 <img className="rounded-2xl mx-auto sm:w-8 md:w-32 lg:w-56 md:mr-5 mb-4 md:mb-0" src={ResourceImage2.src} alt="event-img-2"/>
@@ -51,7 +51,7 @@ export default function ShpetinasResources () {
                                 </div>
                             </div>
                             
-                            <div className="text-left text-2xl px-4 mt-3 mb-3">
+                            <div className="text-left text-2xl px-4">
                                 <p> <a className="underline text-blue-700 font-bold" href="https://www.hesaa.org/Pages/aboutus.aspx">
                                     HESAA</a> is the only New Jersey state agency with the soles mission of providing students and families with <strong>financial and informational resources</strong> for students to pursue their education beyond high school.
                                 </p>
@@ -63,7 +63,7 @@ export default function ShpetinasResources () {
 
                         </li> 
                         
-                        <li className="flex flex-col bg-[#ffeca6] rounded-md mt-7 mb-7" style={{minHeight: "300px"}}>
+                        <li className="sm:w-[35rem] flex flex-col bg-[#ffeca6] rounded-md mt-7 mb-7" style={{minHeight: "300px"}}>
                             <div className="flex flex-col md:flex-row items-center justify-center px-8 py-6 w-full lg:space-x-4">
                                 <img className="rounded-2xl mx-auto sm:w-8 md:w-32 lg:w-56 md:mr-5 mb-4 md:mb-0" src={ResourceImage3.src} alt="event-img-3"/>
                                 <div className="text-center flex-grow max-w-[90%] md:max-w-[60%]">

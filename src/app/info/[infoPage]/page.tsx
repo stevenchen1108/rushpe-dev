@@ -12,7 +12,7 @@ export default function InfoPage( { params } : {
 } ) {
     const linkMap: any = { professionalism: <Professionalism/>,
         academics: <Academics/>, networking: <Networking/>, events: <Events/>,
-        'donations-updater': <DonationsUpdater/>, 'know-your-rights': <ImmigrantsRights />, 'shpetinas': <ShpetinasComp /> };
+        'donations-updater': <DonationsUpdater/>, 'know-your-rights': <ImmigrantsRights /> };
     const linkPage: any = params.infoPage;
     return (
         <>

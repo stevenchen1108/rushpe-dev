@@ -4,18 +4,18 @@ import EventImage2 from '@/../public/shpetinas/events/shadow.png';
 export default function ShpetinasEvents() {
     return (
         <>
-            <div className="flex flex-col bg-[#ffdbf8] text-black p-4 mx-auto">
+            <div className="flex flex-row flex-wrap justify-center bg-[#ffdbf8] text-black p-4">
                 <div className="flex flex-col bg-white rounded-3xl p-5 mb-5 lg:mx-80 md:mx-8 sm:mx-0">
                     <h1 className="text-center font-bold tracking-wide text-5xl mx-auto my-auto">UPCOMING EVENTS</h1>
                 </div>
-                <ul className="flex flex-col gap-6 xl:mx-56 lg:mx-48 md:mx-16 sm:mx-8">
-                    <li className="bg-white rounded-md shadow-md p-6">
-                        <div className="flex flex-col w-full text-center items-center tracking-wide">
+                <ul className="flex flex-row flex-wrap justify-center gap-3">
+                    <li className="bg-white rounded-md shadow-md p-6 sm:w-5/12">
+                        <div className="flex flex-col w-full text-center items-center">
                             <div className="flex justify-center">
                                 <img className="rounded-2xl" src={EventImage1.src} alt="event-img-1" width={500} height={500} />
                             </div>
                             <div className="text-center">
-                                <h2 className="mt-5 mb-3 font-bold text-[#841f70] text-3xl">Women&apos;s Day at Douglass</h2>
+                                <h2 className="mt-5 mb-3 font-bold text-[#841f70] text-3xl tracking-wide">Women&apos;s Day at Douglass</h2>
                                 <div className="text-3xl">                                    
                                     <p><strong>Date:</strong> March 6th</p>
                                     <p><strong>Location:</strong> Kathleen W. Ludwig Global Village Living Learning (Jameson Complex)</p>
@@ -23,9 +23,9 @@ export default function ShpetinasEvents() {
                                 </div>
                                 <div className="mt-5 text-2xl">
                                     <p> <strong>Celebrate International Womanhood!</strong><br />
-                                        The annual Women’s Day at Douglass, presented by the Douglass Diversity, Equity, and Inclusion Program, 
+                                        The annual Women&apos;s Day at Douglass, presented by the Douglass Diversity, Equity, and Inclusion Program, 
                                         will highlight the accomplishments of Douglass students, alumnae, and women within the Rutgers community. 
-                                        Women’s Day at Douglass will include messages from special 
+                                        Women&apos;s Day at Douglass will include messages from special 
                                         guests, activities, prizes, food, and more.
                                     </p>
                                 </div>
@@ -33,13 +33,13 @@ export default function ShpetinasEvents() {
                         </div>
                     </li>
 
-                    <li className="bg-white rounded-md shadow-md p-6">
-                        <div className="flex flex-col w-full text-center items-center tracking-wide">
+                    <li className="bg-white rounded-md shadow-md p-6 sm:w-5/12">
+                        <div className="flex flex-col w-full text-center items-center">
                             <div className="flex justify-center">
                                 <img className="rounded-3xl" src={EventImage2.src} alt="event-img-2" width={500} height={500} />
                             </div>
                             <div className="text-center">
-                                <h2 className="mt-5 mb-3 font-bold text-[#841f70] text-3xl">Spring Shadow Program</h2>
+                                <h2 className="mt-5 mb-3 font-bold text-[#841f70] text-3xl tracking-wide">Spring Shadow Program</h2>
                                 <div className="text-2xl">   
                                     <p><strong>Dates: </strong> April 10th - 12th</p>
                                     <p><strong>Location: </strong> Busch Campus</p>
