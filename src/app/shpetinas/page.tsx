@@ -36,7 +36,7 @@ export default function Shpetinas () {
                         <div className="text-md sm:text-left p-3 sm:p-5">
                             <h1 className="text-xl sm:text-2xl font-semibold py-2">Who Are We?</h1>
                             <p>SHPEtinas is an initiative and program designed to
-                                “<i>accelerate and affirm Latina representation at all levels of STEM corporate and academic leadership.</i>"
+                                &quot;<i>accelerate and affirm Latina representation at all levels of STEM corporate and academic leadership.</i>&quot;
                             </p>
                             <p><br/>At Rutgers, the <b>SHPEtinas committee</b> aims to empower ALL women in STEM through mentorship,
                                 professional development, and community collaboration.

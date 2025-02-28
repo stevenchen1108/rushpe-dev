@@ -4,7 +4,7 @@ export default function ProfessionalismInfo() {
             <h1 className="text-4xl font-bold tracking-wider">Scholarship Opportunity!</h1>
             <div>
                 <p className="text-xs text-white">Put the fries in the bag</p>
-                <p className="text-left text-lg font-semibold">MCDonald's HACER National Scholarship - </p>
+                <p className="text-left text-lg font-semibold">MCDonald&apos;s HACER National Scholarship - </p>
                 <p className="text-md">Awarded to 30 Hispanic students all over the country.<br/>Recipients are selected based on their academic achievement, community involvement, personal statement and financial need.
                     Must submit: <br/> <b>Transcript, Personal statement, Letter of recommendation to be submitted online, and  List of community service projects.</b></p>
             </div>
