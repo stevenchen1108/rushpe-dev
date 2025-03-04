@@ -16,6 +16,7 @@ class Event {
     color: string;
     image: string;
     text: string;
+    location: string;
 
     constructor() {
         this.summary = '';
@@ -27,6 +28,7 @@ class Event {
         this.color = '';
         this.image = '';
         this.text = '';
+        this.location = '';
     }
 }
 
@@ -87,7 +89,7 @@ export default function Calendar() {
                     if (desc) {
                         desc = desc.replace(/<br>/g, '\n');
                         desc = desc.replace(/(<a href=".*">)|(<\/a>)/g, '');
-                        const optionsList: Array<string> = ['RSVP', 'COLOR', 'IMAGE', 'TEXT'];
+                        const optionsList: Array<string> = ['RSVP', 'COLOR', 'IMAGE', 'TEXT', 'ID'];
                         optionsList.forEach( (option) => {
                             const regex = new RegExp("\\s*" + option + ":\\s*([^\\s]+)", 'g');
                             const matches = regex.exec('' + desc);
@@ -182,6 +184,7 @@ export default function Calendar() {
                                 </div>
                                 <p className="text-sm font-medium tracking-wide"><i>{!eventSelected.start.date ? (format(new Date(eventSelected.start.dateTime), 'EE, h:mm a - ') +
                                     format(new Date(eventSelected.end.dateTime), 'h:mm a')) : format(new Date(eventSelected.start.dateTime), 'EEEE')}</i></p>
+                                <p className="pt-1 text-sm whitespace-pre-line">{eventSelected.location}</p>
                                 <p className="pt-1 text-sm whitespace-pre-line">{eventSelected.description}</p>
                                 { (eventSelected.attachments || eventSelected.image) &&
                                 <img alt="event image" className="pt-2" src={eventSelected.image ? eventSelected.image :
