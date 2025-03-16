@@ -4,9 +4,8 @@ import Image from 'next/image';
 import shpetinasBanner1 from '@/../public/shpetinas/shpetinas-banner1.jpg';
 import shpetinasBanner2 from '@/../public/shpetinas/shpetinas-banner2.jpg';
 import shpetinasPhoto1 from '@/../public/shpetinas/shpetinas-commitee.jpeg';
-import shpetinasPhoto2 from '@/../public/shpetinas/shpetinas-at-convention1.jpg';
-import shpetinasPhoto3 from '@/../public/shpetinas/shpetinas-at-convention2.jpg';
 import shapeherPhoto from '@/../public/shpetinas/shapeher-photo.jpg';
+import shapeherGroupPhoto from '@/../public/shpetinas/shapeher-group-photo.jpg';
 
 export default function Shpetinas () {
     return (
@@ -56,7 +55,7 @@ export default function Shpetinas () {
                         <h1 className="block sm:hidden text-2xl font-semibold font-mono p-2">SHaPE Her Program</h1>
                         <div className="relative w-full sm:w-[65rem] h-[17rem]">
                             <Image
-                            src={shapeherPhoto.src}
+                            src={shapeherGroupPhoto.src}
                             alt="shape her image" fill
                             objectFit="cover"
                             ></Image>

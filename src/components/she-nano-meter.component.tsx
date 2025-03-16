@@ -68,16 +68,15 @@ export default function Shenanometer() {
                         @973-486-5118 THANK YOU!!
                     </div>
                 </div>
-                <div className="flex flex-col w-3/4 lg:w-1/2 gap-4">
+                {/* <div className="flex flex-col w-3/4 lg:w-1/2 gap-4">
                     <div className="bg-main rounded-lg items-center text-xl">
-                        <h1 className="p-2 text-center">TIER 4 | FLAME OR FROST</h1>
+                        <h1 className="p-2 text-center">TIER 7 | Circus Showdown ($700)</h1>
                     </div>
                     <div className="bg-dark-main rounded-lg flex flex-col text-md tracking-wide text-center p-2">
-                        <h1>Watch as out E-board suddenly comes together for a surprice chereographed routine...
-                            Will they captivate the crowd or fade into the background as quickly as they appeared?
+                        <h1>Our brave President will exchange their usual attire for something a bit… louder. A Clown Suit! 
                         </h1>
                     </div>
-                </div>
+                </div> */}
                 <div className="sm:hidden self-stretch text-lg tracking-wider bg-red-700 text-center">
                     <span className="text-xl text-yellow-300">TO DONATE:</span><br/>Zelle our to treasurer <span className="text-blue-300">Luke! </span>
                     @973-486-5118 THANK YOU!!

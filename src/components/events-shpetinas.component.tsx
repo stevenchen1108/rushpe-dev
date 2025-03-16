@@ -1,7 +1,71 @@
+'use client'
+import { useState, useEffect } from 'react';
 import EventImage1 from '@/../public/shpetinas/events/womens-day-2025.jpg';
 import EventImage2 from '@/../public/shpetinas/events/shadow.png';
 
 export default function ShpetinasEvents() {
+
+    var [isMounted, setMount] = useState(false);
+    var [shpetinasEvents, setEvents] = useState([]);
+
+    const fetchEvents = async () => {
+        const calendarId = 'c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com';
+        try {
+            const response = await fetch(
+                `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${process.env.NEXT_PUBLIC_GOOGLE_CAL_API_KEY ? process.env.NEXT_PUBLIC_GOOGLE_CAL_API_KEY : 'AIzaSyBCIOf5yqU8ThEm-h95QvynRXrM4H7wnUs'}&supportsAttachments=true&singleEvents=true&orderBy=startTime`, {
+                    method: 'GET',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    }
+                },
+            ).then( (res) => {
+                return res.json();
+            });
+            if (!isMounted) {
+                response.items.forEach( (calendarEvent: any) => {
+                    if (calendarEvent.start.date) {
+                        // all day event, default it to 12am
+                        calendarEvent.start.dateTime = calendarEvent.start.date + 'T12:00:00Z';
+                        calendarEvent.end.dateTime = calendarEvent.end.date + 'T12:00:00Z';
+                    }
+                    // default color
+                    calendarEvent.color = '#D27D7C';
+                    var desc: String = "";
+                    if (calendarEvent.description) {
+                        desc = calendarEvent.description;
+                    } else {
+                        desc = " ";
+                    }
+                    if (desc) {
+                        desc = desc.replace(/<br>/g, '\n');
+                        desc = desc.replace(/(<a href=".*">)|(<\/a>)/g, '');
+                        const optionsList: Array<string> = ['RSVP', 'COLOR', 'IMAGE', 'TEXT', 'ID', 'SHPETINAS'];
+                        optionsList.forEach( (option) => {
+                            const regex = new RegExp("\\s*" + option + ":\\s*([^\\s]+)", 'g');
+                            const matches = regex.exec('' + desc);
+                            if (matches) {
+                                const optionValue = matches[1];
+                                calendarEvent[option.toLowerCase()] = optionValue;
+                            }
+                            desc = desc.replace(regex, '');
+                        });
+                        calendarEvent.description = desc;
+                    }
+                });
+                setEvents(response.items.filter( (calendarEvent: any) => calendarEvent.shpetinas != null ));
+            }
+            console.log(shpetinasEvents);
+            setMount(true);
+        } catch (e) {
+            console.log(e);
+        }
+
+    };
+
+    useEffect(() => {
+        fetchEvents();
+    });
+
     return (
         <>
             <div className="flex flex-row flex-wrap justify-center bg-[#ffdbf8] text-black p-4">
@@ -9,29 +73,35 @@ export default function ShpetinasEvents() {
                     <h1 className="text-center font-bold tracking-wide text-5xl mx-auto my-auto">UPCOMING EVENTS</h1>
                 </div>
                 <ul className="flex flex-row flex-wrap justify-center gap-3">
-                    <li className="bg-white rounded-md shadow-md p-6 sm:w-5/12">
-                        <div className="flex flex-col w-full text-center items-center">
-                            <div className="flex justify-center">
-                                <img className="rounded-2xl" src={EventImage1.src} alt="event-img-1" width={500} height={500} />
-                            </div>
-                            <div className="text-center">
-                                <h2 className="mt-5 mb-3 font-bold text-[#841f70] text-3xl tracking-wide">Women&apos;s Day at Douglass</h2>
-                                <div className="text-3xl">                                    
-                                    <p><strong>Date:</strong> March 6th</p>
-                                    <p><strong>Location:</strong> Kathleen W. Ludwig Global Village Living Learning (Jameson Complex)</p>
-                                    <p><strong>Time:</strong> 12pm - 3pm</p>
-                                </div>
-                                <div className="mt-5 text-2xl">
-                                    <p> <strong>Celebrate International Womanhood!</strong><br />
-                                        The annual Women&apos;s Day at Douglass, presented by the Douglass Diversity, Equity, and Inclusion Program, 
-                                        will highlight the accomplishments of Douglass students, alumnae, and women within the Rutgers community. 
-                                        Women&apos;s Day at Douglass will include messages from special 
-                                        guests, activities, prizes, food, and more.
-                                    </p>
-                                </div>
-                            </div>                      
-                        </div>
-                    </li>
+                    {
+                        shpetinasEvents.map( (event: any, index) => {
+                            return (
+                                <li className="bg-white rounded-md shadow-md p-6 sm:w-5/12">
+                                    <div className="flex flex-col w-full text-center items-center">
+                                        <div className="flex justify-center">
+                                            <img className="rounded-2xl" src={EventImage1.src} alt="event-img-1" width={500} height={500} />
+                                        </div>
+                                        <div className="text-center">
+                                            <h2 className="mt-5 mb-3 font-bold text-[#841f70] text-3xl tracking-wide">{event.summary}</h2>
+                                            <div className="text-3xl">                                    
+                                                <p><strong>Date:</strong> March 6th</p>
+                                                <p><strong>Location:</strong> Kathleen W. Ludwig Global Village Living Learning (Jameson Complex)</p>
+                                                <p><strong>Time:</strong> 12pm - 3pm</p>
+                                            </div>
+                                            <div className="mt-5 text-2xl">
+                                                <p> <strong>Celebrate International Womanhood!</strong><br />
+                                                    The annual Women&apos;s Day at Douglass, presented by the Douglass Diversity, Equity, and Inclusion Program, 
+                                                    will highlight the accomplishments of Douglass students, alumnae, and women within the Rutgers community. 
+                                                    Women&apos;s Day at Douglass will include messages from special 
+                                                    guests, activities, prizes, food, and more.
+                                                </p>
+                                            </div>
+                                        </div>                      
+                                    </div>
+                                </li>
+                            );
+                        })
+                    }
 
                     <li className="bg-white rounded-md shadow-md p-6 sm:w-5/12">
                         <div className="flex flex-col w-full text-center items-center">
