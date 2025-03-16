@@ -76,7 +76,7 @@ export default function ShpetinasEvents() {
                     {
                         shpetinasEvents.map( (event: any, index) => {
                             return (
-                                <li className="bg-white rounded-md shadow-md p-6 sm:w-5/12">
+                                <li key={index} className="bg-white rounded-md shadow-md p-6 sm:w-5/12">
                                     <div className="flex flex-col w-full text-center items-center">
                                         <div className="flex justify-center">
                                             <img className="rounded-2xl" src={EventImage1.src} alt="event-img-1" width={500} height={500} />
