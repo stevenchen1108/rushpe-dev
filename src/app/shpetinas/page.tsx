@@ -52,7 +52,7 @@ export default function Shpetinas () {
                 </div>
                 <div className="relative flex flex-col sm:p-4 p-2 gap-1">
                     <div className="relative flex flex-col sm:flex-row items-center bg-white">
-                        <h1 className="block sm:hidden text-2xl font-semibold font-mono p-2">SHaPE Her Program</h1>
+                        <h1 className="block sm:hidden text-3xl font-semibold font-mono p-2">SHaPE Her Program</h1>
                         <div className="relative w-full sm:w-[65rem] h-[17rem]">
                             <Image
                             src={shapeherGroupPhoto.src}

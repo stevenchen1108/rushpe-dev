@@ -8,13 +8,6 @@
   --background-end-rgb: 0, 0, 0;
 }
 
-/* @media (prefers-color-scheme: light) {
-  :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-  }
-} */
 
 @font-face {
   font-family: 'badabb';
@@ -28,6 +21,13 @@
   font-style: normal;
   font-weight: 400;
   src: url('/fonts/knewave.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'neiko';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/neikoregular.otf') format('opentype');
 }
 
 body {
@@ -52,4 +52,8 @@ body {
 
 .shpetinas-font {
   font-family: 'knewave';
+}
+
+.neiko-font {
+  font-family: 'neiko';
 }
