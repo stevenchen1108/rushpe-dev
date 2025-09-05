@@ -119,10 +119,6 @@ export default function Home () {
         </div>
       </section>
       <div className="w-full h-2 bg-blue-900"></div>
-      <section className="relative flex flex-col lg:flex-row">
-        <Shenanometer></Shenanometer>
-        <DateAuctionComp></DateAuctionComp>
-      </section>
       <div className="relative overflow-hidden h-[40rem]">
         <div className="absolute flex flex-col align-middle h-full w-full z-10 py-24 bg-black bg-opacity-30 right-0 text-center
         md:justify-center md:w-1/2 md:min-w-[35rem] sm:p-24 md:text-left">
