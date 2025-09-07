@@ -6,7 +6,10 @@ import bofaLogo from '@/../public/she-swe-meet/bofa-logo.png';
 import verizonLogo from '@/../public/she-swe-meet/verizon-logo.png';
 import infiniteumLogo from '@/../public/she-swe-meet/infineum-logo.svg'
 import navalLogo from '@/../public/she-swe-meet/naval-nuclear-logo.png';
+import nationalConventionLogo from '@/../public/national-convention/shpe-national-convention-2025.webp';
+import groupPhoto from '@/../public/national-convention/group-photo-2025.webp';
 import ImgBook from '@/components/img-book.component';
+
 
 import './corporate-page.css';
 
@@ -14,10 +17,16 @@ export default function Corporate() {
     return (
         <>
             <section className="flex flex-col gap-3 justify-center items-center text-center bg-white text-black sm:p-12">
+                <h1 className="text-4xl p-4 sm:text-6xl font-semibold tracking-wide">SHPE National Convention 2025</h1>
+                <div className="relative flex flex-row h-96 max-w-full">
+                    <img className="h-full object-contain" src={nationalConventionLogo.src} />
+                    <img className="h-full object-contain" src={groupPhoto.src} />
+                </div>
+            </section>
+            <section className="flex flex-col gap-3 justify-center items-center text-center bg-white text-black sm:p-12">
                 <h1 className="text-4xl p-4 sm:text-6xl font-semibold tracking-wide">SHE-SWE-MEET Career Fair</h1>
                 <div className="relative w-full h-auto sm:w-1/2 sm:h-auto shadow-md sm:rounded-md overflow-hidden">
-                    <Image src={ssmImg} alt="Career fair photo"
-                    placeholder="blur" className="object-cover"></Image>
+                    <img src={ssmImg.src} alt="Career fair photo" className="object-cover"></img>
                 </div>
                 <p className="text-lg lg:w-2/3">
                 The SHE-SWE-MEET Engineering and Computer Science Career Fair is an annual event where we partner up with other Rutgers

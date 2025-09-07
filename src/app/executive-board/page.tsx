@@ -1,3 +1,4 @@
+'use client'
 import Image from 'next/image';
 import shpetinasHeadshot from '@/../public/executive-board-24_25/madeleyn-andrade.png';
 import communityHeadshot from '@/../public/executive-board-24_25/daniel-gonzalez.jpeg';
@@ -16,6 +17,8 @@ import historianHeadshot from '@/../public/executive-board-24_25/nathaly.jpeg';
 import outreachHeadshot from '@/../public/executive-board-24_25/ryan-muriel.jpeg';
 import { FaLinkedinIn } from "react-icons/fa";
 import { MdOutlineMail } from "react-icons/md";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import './executive-board.css';
 
 export default function ExecutiveBoard() {
@@ -109,7 +112,7 @@ export default function ExecutiveBoard() {
             email: 'webmaster@rushpe.org',
             linkedin: "https://www.linkedin.com/in/david-a-fabian/",
             desc: "I am currently a senior studying computer science in Rutgers University. I've had previous leadership roles that helped me transition into this position, as well as experience with web development. I enjoy biking, cooking, and spending time with friends.",
-            index: 9
+            index: 10
         }, {
             position: 'Outreach Chair',
             name: 'Ryan Muriel',
@@ -117,7 +120,7 @@ export default function ExecutiveBoard() {
             email: 'outreach@rushpe.org',
             linkedin: "https://www.linkedin.com/in/ryanmuriel",
             desc: "I am a sophomore, Ecuadorian, and studying Electrical and Computer Engineer.",
-            index: 10
+            index: 11
         }, {
             position: 'Collegiate Chair',
             name: 'Michael Cardenas',
@@ -125,7 +128,7 @@ export default function ExecutiveBoard() {
             email: 'collegiate@rushpe.org',
             linkedin: "https://www.linkedin.com/in/michaelc1252",
             desc: "As an Electrical and Computer Engineering student, I am committed to delivering high quality work and continuously supporting my SHPE chapter. With experience in IT Support and leadership skills gained from previous roles, I am excited to welcome incoming freshmen and promote collegiate-level events in my role as this year's Collegiate Chair.",
-            index: 11
+            index: 12
         }, {
             position: 'Fundraising Chair',
             name: 'Jose Santiago Barragan',
@@ -133,7 +136,7 @@ export default function ExecutiveBoard() {
             email: 'fundraising@rushpe.org',
             linkedin: 'https://www.linkedin.com/in/josesantiagob',
             desc: "I am a Sophomore Majoring in Electrical Engineering and working towards a minor in Computer Science. This year, I am the Fundraising Chair for the chapter. I got involved with SHE during my freshmen year and got the opportunity to be part of the Community Service Committee. I enjoy going to the gym, playing soccer, and exploring new cities for fun!",
-            index: 12
+            index: 13
         }, {
             position: 'Historian',
             name: 'Nathaly Alpapucho',
@@ -141,9 +144,24 @@ export default function ExecutiveBoard() {
             email: 'historian@rushpe.org',
             linkedin: 'https://www.linkedin.com/in/nathaly-a16alp',
             desc: null,
-            index: 13
+            index: 14
         },
     ];
+
+    const [showLegacy, updateLegacyDropdown] = useState(false);
+
+    const updateDropDown = function () {
+        console.log("printing");
+        if (showLegacy) {
+            return {
+                maxWidth: "auto",
+            };
+        }
+        return {
+                maxWidth: "0",
+            };
+    };
+
     return (
         <>
             <section className="flex flex-col justify-center items-center text-center p-4 bg-white text-black sm:p-12">
@@ -175,6 +193,11 @@ export default function ExecutiveBoard() {
                     })
                 }
             </section>
+            <motion.div
+                onClick={ () => { updateLegacyDropdown(!showLegacy) } }
+                layout
+                style={ updateDropDown() }
+                >Click Here!</motion.div>
         </>
     );
 }
