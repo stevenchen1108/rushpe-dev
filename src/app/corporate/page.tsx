@@ -20,7 +20,7 @@ export default function Corporate() {
                 <h1 className="text-4xl p-4 sm:text-6xl font-semibold tracking-wide">SHPE National Convention 2025</h1>
                 <div className="relative flex flex-row h-96 max-w-full">
                     <img className="h-full object-contain" src={nationalConventionLogo.src} />
-                    <img className="h-full object-contain" src={groupPhoto.src} />
+                    <img className="h-full w-2/3 object-contain flex-1" src={groupPhoto.src} />
                 </div>
             </section>
             <section className="flex flex-col gap-3 justify-center items-center text-center bg-white text-black sm:p-12">
