@@ -9,7 +9,7 @@ import navalLogo from '@/../public/she-swe-meet/naval-nuclear-logo.png';
 import nationalConventionLogo from '@/../public/national-convention/shpe-national-convention-2025.webp';
 import groupPhoto from '@/../public/national-convention/group-photo-2025.webp';
 import ImgBook from '@/components/img-book.component';
-
+import Link from 'next/link';
 
 import './corporate-page.css';
 
@@ -17,11 +17,20 @@ export default function Corporate() {
     return (
         <>
             <section className="flex flex-col gap-3 justify-center items-center text-center bg-white text-black sm:p-12">
-                <h1 className="text-4xl p-4 sm:text-6xl font-semibold tracking-wide">SHPE National Convention 2025</h1>
+            
+                    < button className = "px-4 py-2 bg-white-500 text-black rounded text-5xl font-semibold">
+                SHPE National Convention 2025
+                </button>   
                 <div className="relative flex flex-row h-96 max-w-full">
-                    <img className="h-full object-contain" src={nationalConventionLogo.src} />
-                    <img className="h-full w-2/3 object-contain flex-1" src={groupPhoto.src} />
+                   <div className="max-h-full  w-1/4 object-contain relative" > <img className="object-contain inset-0" src={nationalConventionLogo.src} /></div>
+                    <div className="overflow-hidden max-h-full w-2/3 object-contain flex-1 rounded-full relative"> <img className="object-contain inset-0" src={groupPhoto.src} /></div>
                 </div>
+                <p className="text-lg lg:w-2/3">
+                The SHPE National Convention 2025 is taking place from October 29 to November 1 in Philadelphia, Pennsylvania! Join us for one of the largest annual gatherings of top STEM talent where professional development and unparalleled opportunities await.
+                At this signature SHPE event, experience inspiring keynotes, engaging workshops, and dynamic networking with industry leaders and organizations. Get ready for exciting competitions and the ever-popular Career Fair featuring over 250 exhibitors!
+                This is a life-changing convention where fun, opportunities, and Familia come together. See you in Philly! ✈️
+                </p>
+
             </section>
             <section className="flex flex-col gap-3 justify-center items-center text-center bg-white text-black sm:p-12">
                 <h1 className="text-4xl p-4 sm:text-6xl font-semibold tracking-wide">SHE-SWE-MEET Career Fair</h1>
