@@ -38,7 +38,7 @@ export default function AboutUs() {
             <section className="flex flex-col items-center justify-center gap-8 bg-white text-black
             text-3xl font-bold tracking-wide p-6">
                 <h1>View Our Consitution Here</h1>
-                <Link href="https://86a86efc-320b-46b2-94e8-dd1980d85076.filesusr.com/ugd/65eba6_e140d782f90b4d95b50de77266162ca7.pdf"
+                <Link target="_blank" rel="noopener noreferrer" href="https://86a86efc-320b-46b2-94e8-dd1980d85076.filesusr.com/ugd/65eba6_e140d782f90b4d95b50de77266162ca7.pdf"
                     className="text-7xl">
                     <FaRegFilePdf/>
                 </Link>
