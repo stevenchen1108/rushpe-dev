@@ -105,7 +105,7 @@ export const eBoardData2025 = [
         headshot: webmasterHeadshot2025,
         email: 'webmaster@rushpe.org',
         linkedin: "https://www.linkedin.com/in/steven-chen-0193ba295/",
-        desc: "Hi! My name is Steven Chen and I'm currently a junior studying Computer Science. I'm excited to be part of SHPE and look forward to using technology to uplift underrepresented communities and inspire the next generation of innovators. I enjoy running, hiking, and eating food.",
+        desc: "Hi! My name is Steven and I'm currently a junior studying Computer Science. I'm excited to be part of SHPE and look forward to using technology to uplift underrepresented communities and inspire the next generation of innovators. I enjoy running, hiking, and eating food.",
         index: 9
     }, {
         position: 'Outreach Chair',
