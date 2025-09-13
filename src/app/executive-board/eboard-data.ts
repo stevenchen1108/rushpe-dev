@@ -1,6 +1,6 @@
 // Executive Board 2025-2026 Imports
 
-import shpetinasHeadshot2025 from '@/../public/executive-board-24_25/Ana-Maria-Moreno.jpeg';
+import shpetinasHeadshot2025 from '@/../public/executive-board-24_25/ana-maria-moreno.jpeg';
 import communityHeadshot2025 from '@/../public/executive-board-24_25/ricardo-rodriguez.jpg';
 import webmasterHeadshot2025 from '@/../public/executive-board-24_25/steven-chen.jpg';
 import academicHeadshot2025 from '@/../public/executive-board-24_25/axel-pillacela.jpg';
@@ -13,7 +13,7 @@ import treasurerHeadshot2025 from '@/../public/executive-board-24_25/edwin-espin
 import presidentHeadshot2025 from '@/../public/executive-board-24_25/nathaly.jpeg';
 import externalVpHeadshot2025 from '@/../public/executive-board-24_25/daniel-gonzalez.jpeg';
 import collegiateHeadshot2025 from '@/../public/executive-board-24_25/daniela-reyes.jpeg';
-import historianHeadshot2025 from '@/../public/executive-board-24_25/Fabiana-Angulo-La-Rosa.jpeg';
+import historianHeadshot2025 from '@/../public/executive-board-24_25/fabiana-angulo-la-rosa.jpeg';
 import outreachHeadshot2025 from '@/../public/executive-board-24_25/kevin-pena.jpg';
 
 export const eBoardData2025 = [
