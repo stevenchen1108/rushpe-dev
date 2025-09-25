@@ -16,7 +16,7 @@ import collegiateHeadshot2025 from '@/../public/executive-board-24_25/daniela-re
 import historianHeadshot2025 from '@/../public/executive-board-24_25/fabiana-angulo-la-rosa.jpeg';
 import outreachHeadshot2025 from '@/../public/executive-board-24_25/kevin-pena.jpg';
 
-export const eBoardData2025 = [
+export const eBoardData2025_2026 = [
     {
         position: 'President',
         name: 'Nathaly Alpapucho',
