@@ -1,73 +1,398 @@
-import Image from 'next/image';
-import ssmImg from '@/../public/she-swe-meet/she-swe-meet-logo.jpeg';
-import bloomLogo from '@/../public/she-swe-meet/bloomburg-logo.png';
-import whitingLogo from '@/../public/she-swe-meet/wt-logo.png';
-import bofaLogo from '@/../public/she-swe-meet/bofa-logo.png';
-import verizonLogo from '@/../public/she-swe-meet/verizon-logo.png';
-import infiniteumLogo from '@/../public/she-swe-meet/infineum-logo.svg'
-import navalLogo from '@/../public/she-swe-meet/naval-nuclear-logo.png';
-import nationalConventionLogo from '@/../public/national-convention/shpe-national-convention-2025.webp';
-import groupPhoto from '@/../public/national-convention/group-photo-2025.webp';
-import ImgBook from '@/components/img-book.component';
-import Link from 'next/link';
+'use client';
 
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 import './corporate-page.css';
 
+/* -------------------------------- Fonts -------------------------------- */
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
+});
+
+/* ------------------------------- Hero image ----------------------------- */
+import ssmImg from '@/../public/she-swe-meet/she-swe-meet-logo.jpeg';
+
+/* -------------------------------- Data --------------------------------- */
+// types (optional, for IntelliSense only)
+import type { Company, SponsorTiers, LogoLink, Organizer } from './data/types';
+
+// sponsor tiers (Platinum/Gold/Silver/Bronze)
+import { SPONSORS } from './data/sponsor-tiers';
+
+// attending companies & universities (generic, no year suffix)
+import { ATTENDING_COMPANIES } from './data/attending-companies';
+import { ATTENDING_UNIS } from './data/attending-unis';
+
+// marquee (component lives in data/marquee.tsx)
+import { LogoMarquee } from './data/marquee';
+
+/* ----------------------------- Organizers ------------------------------ */
+import ruShpeLogo from '@/../public/she-swe-meet/ru-shpe-logo.jpg';
+import ruMeetLogo from '@/../public/she-swe-meet/ru-meet-logo.jpg';
+import ruSweLogo  from '@/../public/she-swe-meet/ru-swe-logo.jpg';
+
+const ORGANIZERS: Organizer[] = [
+  { name: 'Rutgers SHE (SHPE)', href: 'https://www.rushpe.org/', logo: ruShpeLogo, cta: 'About Rutgers SHE' },
+  { name: 'Rutgers SWE',        href: 'https://swe.rutgers.edu/', logo: ruSweLogo,  cta: 'About Rutgers SWE' },
+  { name: 'Rutgers MEET',       href: 'https://rutgers.campuslabs.com/engage/organization/MEET', logo: ruMeetLogo, cta: 'About Rutgers MEET' },
+];
+
+/* -------------------------------- Icons -------------------------------- */
+function SparkleIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+      <path strokeWidth="1.5" d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4L12 3z" />
+    </svg>
+  );
+}
+
+/* -------------------------------- Hooks -------------------------------- */
+// Reveal-on-scroll (reveals once, with a no-IO fallback)
+function useReveal() {
+  useEffect(() => {
+    const els = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('show'));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach(({ isIntersecting, target }) => {
+          if (isIntersecting) {
+            (target as HTMLElement).classList.add('show');
+            observer.unobserve(target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -10% 0px' }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+}
+
+// Lightweight parallax (respects reduced motion)
+function useParallax(multiplier = 0.12) {
+  const [shift, setShift] = useState(0);
+  const raf = useRef<number | null>(null);
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+    const onScroll = () => {
+      if (raf.current) cancelAnimationFrame(raf.current);
+      raf.current = requestAnimationFrame(() => setShift(window.scrollY * multiplier));
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      if (raf.current) cancelAnimationFrame(raf.current);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [multiplier]);
+  return shift;
+}
+
+/* ------------------------------ UI Components -------------------------- */
+function CompanyTile({ company }: { company: Company }) {
+  return (
+    <Link
+      href={company.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={company.name}
+      className="soft-card glass-card relative flex items-center justify-center
+                 rounded-2xl bg-white/65 border border-white/60
+                 hover:bg-white/80 hover:shadow-xl hover:-translate-y-0.5
+                 transition-all duration-200 focus:outline-none
+                 focus-visible:ring-2 focus-visible:ring-sky-400"
+    >
+      <div className="pointer-events-none flex h-24 w-full items-center justify-center px-6 sm:h-28">
+        {company.logo ? (
+          <Image
+            src={company.logo}
+            alt={`${company.name} logo`}
+            className={`max-h-12 sm:max-h-14 w-auto object-contain ${company.logoClassName ?? ''}`}
+            sizes="(max-width:640px)50vw,(max-width:1024px)25vw,200px"
+          />
+        ) : (
+          <span className="text-lg font-semibold text-slate-700">
+            {company.textFallback ?? company.name}
+          </span>
+        )}
+      </div>
+    </Link>
+  );
+}
+
+function CompanyGrid({ items }: { items: Company[] }) {
+  return (
+    <div className="grid gap-5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      {items.map((c) => (
+        <CompanyTile key={c.name} company={c} />
+      ))}
+    </div>
+  );
+}
+
+function OrgCard({ name, logo, href, cta }: Organizer) {
+  return (
+    <div
+      data-reveal
+      className="reveal group relative rounded-3xl bg-white/70 backdrop-blur-md border border-white/60
+                 shadow-[0_10px_30px_rgba(2,6,23,.08)] transition-all duration-300
+                 hover:shadow-[0_20px_50px_rgba(2,6,23,.14)] hover:-translate-y-1"
+    >
+      <div className="p-8 sm:p-10 flex flex-col items-center text-center gap-6">
+        <div className="relative h-44 w-full flex items-center justify-center">
+          <Image
+            src={logo}
+            alt={`${name} logo`}
+            className="max-h-44 w-auto object-contain drop-shadow-sm"
+            sizes="(max-width:640px)80vw,320px"
+          />
+        </div>
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-pill inline-flex items-center gap-2"
+          aria-label={cta}
+        >
+          {cta}
+          <svg className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path strokeWidth="1.5" d="M5 12h14M13 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+      <div className="pointer-events-none absolute inset-x-6 top-0 h-12 rounded-b-[2rem] bg-white/50 blur-2xl opacity-40" />
+    </div>
+  );
+}
+
+/* Mini (dense) logo cards for Attending Companies/Universities */
+function MiniLogoTile({ item }: { item: LogoLink }) {
+  return (
+    <Link
+      href={item.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={item.name}
+      className="logo-tile-mini"
+    >
+      <Image
+        src={item.logo}
+        alt={`${item.name} logo`}
+        className="logo-img-mini"
+        sizes="(max-width: 640px) 30vw, (max-width: 1024px) 15vw, 120px"
+      />
+    </Link>
+  );
+}
+
+function MiniLogoGrid({ items }: { items: LogoLink[] }) {
+  return (
+    <div className="logo-grid-mini">
+      {items.map((x) => (
+        <MiniLogoTile key={x.name} item={x} />
+      ))}
+    </div>
+  );
+}
+
+/* --------------------------------- Page -------------------------------- */
 export default function Corporate() {
-    return (
-        <>
-            <section className="flex flex-col gap-3 justify-center items-center text-center bg-white text-black sm:p-12">
-                <h1 className="text-4xl p-4 sm:text-6xl font-semibold tracking-wide">SHE-SWE-MEET Career Fair</h1>
-                <div className="relative w-full h-auto sm:w-1/2 sm:h-auto shadow-md sm:rounded-md overflow-hidden">
-                    <img src={ssmImg.src} alt="Career fair photo" className="object-cover"></img>
-                </div>
-                <p className="text-lg lg:w-2/3">
+  useReveal();
+  const shift = useParallax(0.12);
+
+  const { platinum, gold, silver, bronze } = SPONSORS as SponsorTiers;
+
+  return (
+    <main className={`${plusJakarta.className} bg-gradient-to-b from-slate-50 via-slate-50 to-slate-100`}>
+      {/* -------------------------------- HERO ------------------------------- */}
+      <section className="relative overflow-hidden">
+        {/* decorative gradient blobs */}
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute -top-40 -left-24 h-80 w-80 rounded-full blur-3xl opacity-30 bg-gradient-to-br from-sky-400 to-fuchsia-400" />
+          <div className="absolute -bottom-40 -right-24 h-80 w-80 rounded-full blur-3xl opacity-25 bg-gradient-to-br from-amber-300 to-rose-300" />
+        </div>
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+          <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 lg:grid-cols-12">
+            {/* Left: copy */}
+            <div className="lg:col-span-6 text-center lg:text-left">
+              <h1
+                data-reveal
+                className="reveal text-[42px] leading-[1.05] sm:text-6xl font-extrabold tracking-tight
+                           bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent"
+              >
+                SHE–SWE–MEET Career Fair
+              </h1>
+
+              <p data-reveal className="reveal mt-5 text-[17px] leading-7 text-slate-700 font-medium max-w-2xl">
                 The SHE-SWE-MEET Engineering and Computer Science Career Fair is an annual event where we partner up with other Rutgers
-                engineering minority societies (National Society of Black Engineers and the Society of Women Engineers). This is one of
+                engineering minority societies including the National Society of Black Engineers and the Society of Women Engineers. This is one of
                 the largest student-run career fairs on campus! With over 50 companies and hundreds of students attending the career fair
                 seeking corporate opportunities. Please contact our External Vice President at external.vp@rushpe.org for further information.
-                </p>
-                <div className="flex flex-col items-stretch gap-7 py-5 px-3 lg:w-2/3 rounded-md bg-slate-100 shadow-md">
-                    <h1 className="tracking-wide text-xl border-b-2 border-black"><i>Special Thanks To Our Sponsors</i></h1>
-                    <h1 className="tracking-wider text-3xl font-bold shiny-platinum">Platinum Sponsors</h1>
-                    <div className="self-center relative flex flex-row items-center gap-6 w-5/6">
-                        <a href="https://mycareer.verizon.com/">
-                            <Image src={verizonLogo} height={2000} alt="verizon logo"></Image>
-                        </a>
-                        <a href="https://careers.bankofamerica.com/en-us">
-                            <Image src={bofaLogo} height={4000} alt="bank of america logo"></Image>
-                        </a>
-                    </div>
-                    <h1 className="tracking-wider text-3xl font-bold text-yellow-500">Gold Sponsor</h1>
-                    <div className="self-center justify-center relative flex flex-row items-center gap-6 w-5/6">
-                        <a href="https://www.infineum.com/careers/">
-                            <Image src={infiniteumLogo} height={200} alt="infiniteum logo"></Image>
-                        </a>
-                    </div>
-                    <h1 className="self-start tracking-wider text-3xl font-bold text-gray-400">Silver Sponsor</h1>
-                    <div className="self-center justify-center relative flex flex-row items-center gap-6 w-5/6">
-                        <a href="https://navalnuclearlab.energy.gov/careers/">
-                            <Image src={navalLogo} height={200} alt="naval nuclear logo"></Image>
-                        </a>
-                    </div>
-                    <h1 className="self-start tracking-wider text-3xl font-bold text-yellow-600">Bronze Sponsors</h1>
-                    <div className="self-center relative flex flex-row items-center gap-6 w-5/6">
-                        <a href="https://www.whiting-turner.com/careers/">
-                            <Image src={whitingLogo} height={2400} alt="whiting turner logo"></Image>
-                        </a>
-                        <a href="https://www.bloomberg.com/">
-                            <Image src={bloomLogo} alt="bloomburg logo"></Image>
-                        </a>
-                    </div>
-                </div>
-            </section>
-            <section className="flex flex-col justify-center items-center text-center p-4 bg-white text-black sm:p-12">
-                <h1 className="text-5xl p-4 sm:text-6xl font-semibold tracking-wider">Corporate Opportunities</h1>
-                <p className="text-lg lg:w-2/3">
-                We encourage companies to reach out to us especially when it comes to our professional development events.
-                Exposing our members to these opportunities is a great way to help students hone their professional development skills.
-                </p>
-            </section>
-        </>
-    );
+              </p>
+
+              <div data-reveal className="reveal mt-6 flex flex-wrap items-center lg:justify-start justify-center gap-2">
+                <span className="chip">40th Annual</span>
+                <span className="chip">October 3, 2025</span>
+                <span className="chip">10AM – 2PM</span>
+                <span className="chip">50+ Companies</span>
+                <span className="chip">Internship Opportunities</span>
+                <span className="chip">Full-time Positions</span>
+                <span className="chip">Networking</span>
+                <span className="chip">Resume Building</span>
+                <span className="chip">Professional Development</span>
+                <span className="chip">Hundreds of Students</span>
+              </div>
+            </div>
+
+            {/* Right: parallax image */}
+            <div className="lg:col-span-6">
+              <div
+                data-reveal
+                className="reveal relative w-full overflow-hidden rounded-3xl shadow-2xl ring-1 ring-black/5 bg-white/70 backdrop-blur
+                           transition-transform duration-300 will-change-transform"
+                style={{ transform: `translateY(${shift * -1}px)` }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={ssmImg.src} alt="Career fair photo" className="h-full w-full object-cover" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ----------------------- Sponsors ribbon header --------------------- */}
+      <section className="relative">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-4 pb-10">
+          <div className="relative flex items-center justify-center">
+            <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="sponsor-ribbon-lg">
+                <SparkleIcon className="h-5 w-5 mr-3 opacity-80" />
+                Special Thanks to Our Sponsors
+                <SparkleIcon className="h-5 w-5 ml-3 opacity-80" />
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------- Marquee ---------------------------- */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-6">
+        <LogoMarquee />
+      </div>
+
+      {/* --------------------------- Sponsor grids -------------------------- */}
+      <section className="relative">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <div className="flex flex-col gap-10">
+            <div className="flex flex-col gap-5" data-reveal>
+              <h3 className="text-3xl font-extrabold shiny-platinum text-center">Platinum Sponsors</h3>
+              <CompanyGrid items={platinum} />
+            </div>
+
+            <div className="flex flex-col gap-5" data-reveal>
+              <h3 className="text-3xl font-extrabold text-amber-500 text-center">Gold Sponsor</h3>
+              <CompanyGrid items={gold} />
+            </div>
+
+            <div className="flex flex-col gap-5" data-reveal>
+              <h3 className="text-3xl font-extrabold text-slate-400 text-center">Silver Sponsor</h3>
+              <CompanyGrid items={silver} />
+            </div>
+
+            <div className="flex flex-col gap-5" data-reveal>
+              <h3 className="text-3xl font-extrabold text-amber-600 text-center">Bronze Sponsors</h3>
+              <CompanyGrid items={bronze} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================= Attending Companies ====================== */}
+      <section className="relative">
+        <div className="container-default py-8 sm:py-12">
+          <div className="text-center mb-6 sm:mb-8" data-reveal>
+            <h3 className="text-3xl font-extrabold text-slate-900">Attending Companies</h3>
+            <p className="mt-2 text-slate-600">Tap a card to visit the company site.</p>
+          </div>
+          <MiniLogoGrid items={ATTENDING_COMPANIES} />
+        </div>
+      </section>
+
+      {/* ======================== Attending Universities ==================== */}
+      <section className="relative">
+        <div className="container-default pb-4 sm:pb-10">
+          <div className="text-center mb-6 sm:mb-8" data-reveal>
+            <h3 className="text-3xl font-extrabold text-slate-900">Attending Universities</h3>
+            <p className="mt-2 text-slate-600">Tap a card to visit the university site.</p>
+          </div>
+          <MiniLogoGrid items={ATTENDING_UNIS} />
+        </div>
+      </section>
+
+      {/* ----------------------- Corporate Opportunities -------------------- */}
+      <section className="section-surface">
+        <div className="container-default stack-center">
+          <h2 className="heading-display">Corporate Opportunities</h2>
+          <p className="copy-lead">
+            We encourage companies to reach out to us especially when it comes to our professional development events.
+            Exposing our members to these opportunities is a great way to help students hone their professional development skills.
+          </p>
+          <div className="mt-10 flex justify-center">
+            <a
+              href={`mailto:external.vp@rushpe.org?subject=${encodeURIComponent('Corporate Partnership Inquiry')}&body=${encodeURIComponent('Hi SHPE at Rutgers,\n\nI’m reaching out about corporate opportunities.')}`}
+              className="mail-cta"
+              aria-label="Email our External Vice President"
+            >
+              <span className="mail-icon-wrap" aria-hidden="true">
+                <svg className="mail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                  <rect x="3" y="5" width="18" height="14" rx="3" className="text-white/95" />
+                  <path d="M3 8.5l9 6 9-6" className="text-white" />
+                </svg>
+              </span>
+              <span className="mail-cta-text">
+                <span className="mail-cta-eyebrow">Questions?</span>
+                <span className="mail-cta-title">Email external.vp@rushpe.org</span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------------- Organized by Us, for You -------------------- */}
+      <section className="relative overflow-hidden" aria-labelledby="organized-title">
+        {/* soft gradient blobs */}
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute -top-28 -left-24 h-72 w-72 rounded-full blur-3xl opacity-30 bg-gradient-to-br from-sky-400 to-indigo-400" />
+          <div className="absolute -bottom-28 -right-24 h-72 w-72 rounded-full blur-3xl opacity-25 bg-gradient-to-br from-emerald-300 to-cyan-300" />
+        </div>
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+          <div className="text-center max-w-3xl mx-auto">
+            <h2 id="organized-title" data-reveal className="reveal text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
+              Organized by Us, for You
+            </h2>
+            <p data-reveal className="reveal mt-4 text-slate-700 leading-relaxed">
+              Meet the Rutgers chapters that collaborate to build this experience.
+            </p>
+          </div>
+
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {ORGANIZERS.map((org) => (
+              <OrgCard key={org.name} {...org} />
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
+  );
 }

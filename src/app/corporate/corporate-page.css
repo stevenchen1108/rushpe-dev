@@ -3,30 +3,116 @@
 @tailwind utilities;
 
 @layer components {
-    .shiny-platinum {
-        background: linear-gradient(to right,
-        rgb(186, 225, 243),
-        rgb(97, 201, 249),
-        rgb(186, 225, 243),
-        rgb(186, 225, 243),
-        rgb(186, 225, 243),
-        rgb(186, 225, 243),
-        rgb(186, 225, 243));
-        -webkit-background-clip: text;
-        color: transparent;
-        background-position: -30rem;
-        animation: shineText 5s infinite;
-    }
+  /* ---------- Platinum shimmer headline ---------- */
+  .shiny-platinum {
+    background: linear-gradient(to right, rgb(186,225,243), rgb(97,201,249), rgb(186,225,243));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-position: -30rem;
+    animation: shineText 5s infinite;
+  }
+  @keyframes shineText {
+    0% { background-position: -30rem; }
+    75% { background-position: 30rem; }
+    100% { background-position: 30rem; }
+  }
 
-    @keyframes shineText {
-        0% {
-            background-position: -30rem;
-        }
-        75% {
-            background-position: 30rem;
-        }
-        100% {
-            background-position: 30rem;
-        }
-    }
+  /* ---------- Pill button (used in Org cards) ---------- */
+  .btn-pill {
+    @apply rounded-full px-5 py-2.5 text-[15px] font-semibold text-slate-800
+           bg-white border border-white/70
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400
+           transition-all duration-200;
+    box-shadow: 0 8px 24px rgba(15,23,42,0.10);
+  }
+  .btn-pill:hover {
+    box-shadow: 0 14px 32px rgba(15,23,42,0.16);
+    background-color: rgba(255,255,255,0.95);
+  }
+
+  /* ---------- Glass + soft shadow cards ---------- */
+  .glass-card { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .soft-card  { box-shadow: 0 10px 20px rgba(15,23,42,0.08), 0 2px 6px rgba(15,23,42,0.06); }
+
+  /* ---------- Small info chips (hero) ---------- */
+  .chip {
+    @apply rounded-full px-3 py-1.5 text-sm font-semibold text-slate-700 bg-white/70 backdrop-blur
+           border border-white/60 shadow-[0_1px_2px_rgba(15,23,42,.06),0_8px_24px_rgba(15,23,42,.06)];
+  }
+
+  /* ---------- Sponsor ribbon ---------- */
+  .sponsor-ribbon-lg {
+    @apply inline-flex items-center rounded-full bg-white text-slate-800
+           px-6 py-3 text-[16px] font-extrabold tracking-tight
+           border border-white/70 backdrop-blur-sm;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.10);
+  }
+
+  /* ---------- Marquee (optional) ---------- */
+  .marquee-mask {
+    position: relative;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  }
+  .marquee-track { display: flex; gap: 3rem; width: max-content; animation: scrollX 22s linear infinite; opacity: 0.9; }
+  .marquee-item  { display: grid; place-items: center; min-width: 140px; }
+  @keyframes scrollX { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ---------- Reveal-on-scroll ---------- */
+  .reveal { opacity: 0; transform: translateY(12px); transition: opacity 600ms ease, transform 600ms ease; will-change: opacity, transform; }
+  .reveal.show { opacity: 1; transform: translateY(0); }
+
+  /* ---------- Section helpers ---------- */
+  .container-default { @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8; }
+  .section-surface   { @apply bg-white/80 backdrop-blur-sm border-t border-slate-200; }
+  .stack-center      { @apply text-center py-12 sm:py-16; }
+
+  /* ---------- Typography helpers ---------- */
+  .heading-display { @apply text-5xl sm:text-6xl font-extrabold tracking-tight text-slate-900; }
+  .copy-lead       { @apply mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-slate-700 font-medium; }
+
+  /* ---------- Email CTA ---------- */
+  .mail-cta {
+    @apply inline-flex items-center gap-4 rounded-2xl px-6 py-4
+           bg-gradient-to-r from-sky-500 to-indigo-600 text-white
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300;
+    box-shadow: 0 12px 30px rgba(2,6,23,0.16);
+    transition: transform 300ms ease, box-shadow 300ms ease;
+    will-change: transform, box-shadow;
+  }
+  .mail-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(2,6,23,0.22);
+  }
+  .mail-icon-wrap { @apply grid place-items-center rounded-xl bg-white/15 ring-1 ring-white/25 p-2; }
+  .mail-icon      { @apply h-6 w-6 text-white; transform: rotate(-3deg); transition: transform 300ms ease; }
+  .mail-cta:hover .mail-icon { transform: rotate(0deg); }
+  .mail-cta-text    { @apply text-left leading-tight; }
+  .mail-cta-eyebrow { @apply block text-[12px] uppercase tracking-wider text-white/85; }
+  .mail-cta-title   { @apply block text-[15px] sm:text-[16px] font-semibold; }
+
+  /* ---------- Dense logo grid (Attending Companies/Universities) ---------- */
+  .logo-grid-mini {
+    @apply grid gap-4 sm:gap-5 grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8;
+  }
+  .logo-tile-mini {
+    @apply flex items-center justify-center rounded-2xl bg-white/80 border border-white/70
+           transition-all duration-200;
+    box-shadow: 0 8px 22px rgba(2,6,23,0.06);
+    padding: 1.1rem;
+  }
+  .logo-tile-mini:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 34px rgba(2,6,23,0.12);
+    background-color: rgba(255,255,255,0.95);
+  }
+  .logo-img-mini { @apply max-h-10 sm:max-h-12 w-auto object-contain opacity-95; }
+
+  /* ---------- Motion safety ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .mail-cta, .mail-icon, .logo-tile-mini { transition: none !important; }
+    .mail-cta:hover, .logo-tile-mini:hover { transform: none !important; }
+  }
 }

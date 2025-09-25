@@ -3,19 +3,159 @@
 @tailwind utilities;
 
 @layer components {
-    .e-board {
-        grid-template-columns: 1fr 1.5em;
-    }
-    .desc:hover {
-        opacity: 1;
-        background-color: rgba(255, 255, 255, 0.6);
-    }
+  /* ------------------ Brand palette (from your logo) ------------------ */
+  :root {
+    --brand-red: #d94c2a;
+    --brand-orange: #f26d21;
+    --brand-blue: #6ba6bf;       /* light blue */
+    --brand-blue-dark: #0d5cab;  /* deep blue */
+  }
 
-    .desc {
-        position: absolute;
-        inset: 0;
-        opacity: 0;
-        transition: all;
-        transition-duration: 0.4s;
-    }
+  /* ------------------ Page surface ------------------ */
+
+  /* make the list of years scroll if long */
+  .eb-year-list { @apply max-h-[60vh] overflow-auto pr-1; }
+
+  .eb-surface { @apply bg-gradient-to-b from-slate-50 via-slate-50 to-slate-100; }
+
+  /* ------------------ Hero ------------------ */
+  .eb-hero { @apply relative overflow-hidden; }
+
+  /**
+   * Hero background accents:
+   *  - ::before: a very soft conic gradient using your brand colors
+   *  - ::after : a faint top glow so the header feels lifted
+   * Both are low-opacity so color stays subtle and only in the hero.
+   */
+  .eb-hero::before,
+  .eb-hero::after {
+    content: "";
+    @apply absolute -z-10 rounded-full blur-3xl;
+  }
+
+  /* brand color halo (subtle) */
+  .eb-hero::before {
+    /* size + position roughly behind the title */
+    inset: auto auto 8rem -10rem;        /* bottom, right, top, left shorthand won't work here; use explicit */
+    left: -10rem;
+    top: -6rem;
+    width: 36rem;
+    height: 36rem;
+
+    background:
+      conic-gradient(
+        from 140deg,
+        color-mix(in oklab, var(--brand-blue) 30%, white 70%) 0deg 100deg,
+        color-mix(in oklab, var(--brand-orange) 28%, white 72%) 100deg 210deg,
+        color-mix(in oklab, var(--brand-red) 26%, white 74%) 210deg 300deg,
+        color-mix(in oklab, var(--brand-blue-dark) 32%, white 68%) 300deg 360deg
+      );
+    opacity: .28;
+    filter: blur(34px);
+  }
+
+  /* faint top strip glow */
+  .eb-hero::after {
+    left: 0;
+    right: 0;
+    top: -6rem;
+    height: 12rem;
+    background: radial-gradient(
+      120% 100% at 50% 0%,
+      color-mix(in oklab, var(--brand-blue-dark) 12%, white 88%) 0%,
+      transparent 60%
+    );
+    opacity: .35;
+  }
+
+  .eb-hero-inner { @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-24 text-center; }
+
+  /* a touch more breathing room under the title */
+  .eb-title {
+    @apply text-[42px] sm:text-6xl font-extrabold tracking-normal text-slate-900 mb-6 sm:mb-4;
+  }
+
+  .eb-lead { @apply mx-auto mt-5 max-w-3xl text-[17px] leading-7 text-slate-700 font-medium; }
+
+  .eb-hero-chips { @apply mt-6 flex flex-wrap justify-center gap-2; }
+
+  .eb-chip {
+    @apply rounded-full px-3 py-1.5 text-sm font-semibold text-slate-700 bg-white/70 backdrop-blur
+           border border-white/60 shadow-[0_1px_2px_rgba(15,23,42,.06),0_8px_24px_rgba(15,23,42,.06)];
+    /* subtle brand-tinted border so chips tie into the hero colors */
+    border-color: color-mix(in oklab, var(--brand-blue) 25%, white 75%);
+  }
+
+  /* ------------------ Grid ------------------ */
+  .eb-grid-wrap { @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16; }
+  .eb-grid { @apply grid gap-6 sm:gap-7 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4; }
+
+  /* ------------------ Member Card ------------------ */
+  .eb-card {
+    @apply relative overflow-hidden rounded-3xl bg-white/70 backdrop-blur ring-1 ring-white/60
+           shadow-[0_10px_30px_rgba(2,6,23,.08)] transition-all duration-300;
+  }
+  .eb-card:hover { @apply -translate-y-1 shadow-[0_20px_50px_rgba(2,6,23,.14)]; }
+
+  .eb-card-media { @apply relative h-[22rem]; }
+  .eb-card-gradient {
+    @apply pointer-events-none absolute inset-0 rounded-3xl;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(2,6,23,.55) 85%);
+  }
+  .eb-card-bottom { @apply absolute inset-x-0 bottom-0 p-4 sm:p-5 text-white; }
+  .eb-card-name   { @apply text-lg font-semibold leading-tight drop-shadow; }
+  .eb-card-role   { @apply text-[13px] font-medium opacity-90 drop-shadow; }
+
+  /* Hover description */
+  .eb-card-desc {
+    @apply absolute inset-0 p-5 sm:p-6 text-white/95 opacity-0 transition-opacity duration-300
+           bg-gradient-to-b from-slate-900/10 via-slate-900/40 to-slate-900/80;
+  }
+  .eb-card:hover .eb-card-desc { @apply opacity-100; }
+  .eb-card-desc p { @apply text-sm leading-relaxed; }
+
+  /* Actions */
+  .eb-actions { @apply absolute right-3 top-3 flex gap-2; }
+  .eb-icon-btn {
+    @apply grid place-items-center h-9 w-9 rounded-xl bg-white text-slate-800 ring-1 ring-slate-200
+           hover:bg-slate-100 transition;
+    box-shadow: 0 8px 18px rgba(2, 6, 23, .10);
+  }
+
+  /* ------------------ CTA Button ------------------ */
+  .eb-archive-trigger {
+    @apply rounded-full px-5 py-2.5 text-[15px] font-semibold text-white
+           bg-slate-900 shadow-[0_12px_28px_rgba(2,6,23,.18)]
+           hover:bg-slate-800 hover:shadow-[0_16px_36px_rgba(2,6,23,.22)]
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300
+           transition;
+  }
+
+  /* Hint under the button */
+  .eb-archive-hint { @apply text-sm font-medium text-slate-600 select-none; }
+
+  /* ------------------ Modal ------------------ */
+  .eb-modal-overlay { @apply fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4; }
+  .eb-modal         { @apply w-[min(92vw,64rem)] rounded-2xl bg-white p-4 sm:p-6 ring-1 ring-slate-200 shadow-2xl; }
+  .eb-modal-header  { @apply mb-4 flex items-center justify-between; }
+
+  /* Year list item */
+  .eb-year-card {
+    @apply flex items-center justify-between rounded-xl border border-slate-200 bg-white
+           px-4 py-3 text-left hover:bg-slate-50 transition
+           shadow-[0_8px_18px_rgba(2,6,23,.06)];
+  }
+  .eb-year-title { @apply text-base font-semibold text-slate-800; }
+  .eb-year-sub   { @apply text-xs text-slate-500; }
+
+  .eb-archive-back { @apply inline-flex items-center gap-1 text-xl font-semibold text-slate-700 hover:text-slate-900; }
+
+  /* ------------------ Reduce motion safety ------------------ */
+  @media (prefers-reduced-motion: reduce) {
+    .eb-card,
+    .eb-icon-btn,
+    .eb-archive-trigger { transition: none !important; }
+  }
+
+  
 }
