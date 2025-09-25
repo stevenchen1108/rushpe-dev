@@ -37,7 +37,7 @@ export const eBoardData2025_2026 = [
         position: 'Internal Vice President',
         name: 'Michael Cardenas',
         headshot: internalVpHeadshot2025,
-        email: 'internalnp@rushpe.org',
+        email: 'internalvp@rushpe.org',
         linkedin: 'https://www.linkedin.com/in/michaelc1252',
         desc: "As an Electrical and Computer Engineering student, I am committed to delivering high quality work and continuously supporting my SHPE chapter. With experience in IT Support and leadership skills gained from previous roles, I am excited to prepare everyone for the National SHPE convention and work on the Multicultural festival in my role as this year's Internal Vice President.",
         index: 2
