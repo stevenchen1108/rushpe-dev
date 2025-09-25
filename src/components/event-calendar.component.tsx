@@ -1,259 +1,462 @@
-'use client'
-import { eachDayOfInterval, addDays, subDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek, set, getWeekOfMonth, format } from 'date-fns';
-import { useState, useEffect } from 'react';
+'use client';
+
+import {
+  eachDayOfInterval,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  set,
+  format,
+} from 'date-fns';
+import { useState, useEffect, useMemo, MouseEvent } from 'react';
 import './event-calendar.component.css';
-import { VscChromeClose } from "react-icons/vsc";
-import { SiGooglecalendar } from "react-icons/si";
-import Image from 'next/image';
+import { VscChromeClose } from 'react-icons/vsc';
+import { SiGooglecalendar } from 'react-icons/si';
 
-class Event {
-    summary: string;
-    description: string;
-    start: {date: string, dateTime: string};
-    end: {date: string, dateTime: string};
-    attachments: Array<{fileId: String}>;
-    rsvp: string;
-    color: string;
-    image: string;
-    text: string;
-    location: string;
+/* ======================== Types ======================== */
 
-    constructor() {
-        this.summary = '';
-        this.description = '';
-        this.start = {date: '', dateTime: ''};
-        this.end = {date: '', dateTime: ''};
-        this.attachments = [];
-        this.rsvp = '';
-        this.color = '';
-        this.image = '';
-        this.text = '';
-        this.location = '';
-    }
+type GCalDate = { date?: string; dateTime?: string };
+
+type GCalAttachment = { fileId: string };
+
+type GCalItem = {
+  summary?: string;
+  description?: string;
+  start: GCalDate;
+  end: GCalDate;
+  attachments?: GCalAttachment[];
+  location?: string;
+};
+
+type EventItem = {
+  summary: string;
+  description: string;
+  startISO: string; // ISO string
+  endISO: string;   // ISO string
+  attachments: string[]; // fileId list
+  rsvp?: string;
+  color?: string;
+  image?: string;
+  text?: string;
+  location?: string;
+};
+
+type DayCell = {
+  date: Date;
+  selected: boolean;
+  events: EventItem[];
+};
+
+/* ======================== Small icons ======================== */
+
+function ClockIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v6l4 2" />
+    </svg>
+  );
+}
+function PinIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" {...props}>
+      <path d="M12 22s7-5.33 7-12a7 7 0 1 0-14 0c0 6.67 7 12 7 12Z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  );
+}
+function CalendarIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" {...props}>
+      <rect x="3" y="4" width="18" height="17" rx="2" />
+      <path d="M16 2v4M8 2v4M3 10h18" />
+    </svg>
+  );
 }
 
-class CalendarDay extends Date {
-    selected: boolean;
-    events: Array<Event>;
+/* ======================== Linkify helpers ======================== */
 
-    constructor(date: Date = new Date(), selected: boolean = false) {
-        super(date);
-        this.selected = selected;
-        this.events = [];
-    }
+function escapeHtml(s: string) {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
-export default function Calendar() {
-    const weekArray: Array<String> = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
-    const today: Date = set(new Date(), { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
-    const firstDayOfMonth: Date = startOfMonth(today);
-    const firstDayOfFirstWeek: Date = startOfWeek(firstDayOfMonth);
-    const lastDayOfLastWeek: Date = endOfWeek(endOfMonth(today), { weekStartsOn: 0 });
-    const dayArray: Array<CalendarDay> = eachDayOfInterval({
-        start: firstDayOfFirstWeek,
-        end: lastDayOfLastWeek
-    }).map( date => {
-        return new CalendarDay(date, false);
-    });
-    const dateIndexOffset: number = firstDayOfMonth.getDay() - 1;
-    var [daySelected, updateDaySelected] = useState(dayArray[today.getDate() + dateIndexOffset]);
-    var [eventSelected, updateEventSelected] = useState(new Event());
-    var [calendarData, setCalendar] = useState<CalendarDay[]>(dayArray);
-    var [eventPopup, setEventPopup] = useState(false);
-    var [isMounted, setMount] = useState(false);
-    daySelected.selected = true;
+// Convert URLs/emails to anchors and preserve newlines
+function linkify(text: string): string {
+  const escaped = escapeHtml(text);
 
-    const fetchEvents = async () => {
-        const calendarId = 'c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com';
-        try {
-            const response = await fetch(
-                `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${process.env.NEXT_PUBLIC_GOOGLE_CAL_API_KEY ? process.env.NEXT_PUBLIC_GOOGLE_CAL_API_KEY : 'AIzaSyBCIOf5yqU8ThEm-h95QvynRXrM4H7wnUs'}&supportsAttachments=true&singleEvents=true&orderBy=startTime`, {
-                    method: 'GET',
-                    headers: {
-                    'Content-Type': 'application/json',
-                    }
-                },
-            ).then( (res) => {
-                return res.json();
-            });
-            console.log(response);
-            if (!isMounted) {
-                response.items.forEach( (calendarEvent: any) => {
-                    if (calendarEvent.start.date) {
-                        calendarEvent.start.dateTime = calendarEvent.start.date + 'T12:00:00Z';
-                        calendarEvent.end.dateTime = calendarEvent.end.date + 'T12:00:00Z';
-                    }
-                    // default color
-                    calendarEvent.color = '#D27D7C';
-                    var desc: String = calendarEvent.description;
-                    if (desc) {
-                        desc = desc.replace(/<br>/g, '\n');
-                        desc = desc.replace(/(<a href=".*">)|(<\/a>)/g, '');
-                        const optionsList: Array<string> = ['RSVP', 'COLOR', 'IMAGE', 'TEXT', 'ID'];
-                        optionsList.forEach( (option) => {
-                            const regex = new RegExp("\\s*" + option + ":\\s*([^\\s]+)", 'g');
-                            const matches = regex.exec('' + desc);
-                            if (matches) {
-                                const optionValue = matches[1];
-                                calendarEvent[option.toLowerCase()] = optionValue;
-                            }
-                            desc = desc.replace(regex, '');
-                        });
-                        calendarEvent.description = desc;
-                    }
-                    const startDate = new Date(calendarEvent.start.dateTime);
-                    if (startDate.getMonth() === today.getMonth() && startDate.getFullYear() === today.getFullYear()) {
-                        dayArray[startDate.getDate() + dateIndexOffset].events.push(calendarEvent);
-                    }
-                });
-                setCalendar(dayArray);
-                setMount(true);
-            }
-        } catch (e) {
-            console.log(e);
-        }
-
-    };
-
-    const selectDate = function (dayObj: CalendarDay) {
-        daySelected.selected = false;
-        updateDaySelected(dayObj);
-        dayObj.selected = true;
-        if (!dayObj.events.length) {
-            setEventPopup(false);
-        }
-        // console.log(dayObj.events, dayArray[dayObj.getDate() + dateIndexOffset].events);
-    };
-
-    const selectEvent = function (eventObj: Event) {
-        updateEventSelected(eventObj);
-        setEventPopup(true);
+  // URLs (http/https or www.)
+  const withUrls = escaped.replace(
+    /\b(https?:\/\/[^\s<]+|\bwww\.[^\s<]+)\b/gi,
+    (m) => {
+      const href = m.startsWith('http') ? m : `https://${m}`;
+      return `<a class="cal-link" href="${href}" target="_blank" rel="noopener noreferrer">${m}</a>`;
     }
+  );
 
-    const toolTipPosition = function () {
-        const eventObj: any = eventSelected;
-        const focusedDay: Date = new Date(eventObj.start.dateTime ? eventObj.start.dateTime : today);
-        const weekOfMonth = getWeekOfMonth(focusedDay) + (focusedDay.getMonth() - today.getMonth()) * (getWeekOfMonth(endOfMonth(today)) - 1);
-        const stylingObj = {left: 'auto', right: 'auto', top: 'auto', bottom: 'auto'};
-        if (focusedDay.getDay() < 4) {
-            stylingObj.left = (14.28 * (focusedDay.getDay() + 1) + 1) + '%';
-        } else {
-            stylingObj.right = (14.28 * (7 - focusedDay.getDay()) + 1) + '%';
-        }
-        if (weekOfMonth > 3) {
-            stylingObj.bottom = (3 * weekOfMonth) + '%';
-        } else {
-            stylingObj.top = (12 * weekOfMonth) + '%';
-        }
-        return stylingObj;
+  // Emails
+  const withEmails = withUrls.replace(
+    /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi,
+    (m) => `<a class="cal-link" href="mailto:${m}">${m}</a>`
+  );
+
+  // new lines → <br>
+  return withEmails.replace(/\n/g, '<br/>');
+}
+
+/* ======================== Helpers ======================== */
+
+// Normalize possibly-all-day google times into ISO strings
+function toISO(d: GCalDate): string {
+  if (d.dateTime) return d.dateTime;
+  if (d.date) return `${d.date}T12:00:00Z`;
+  return new Date().toISOString();
+}
+
+// Extract an image URL from anchors in description; strip anchors; parse tokens
+function extractTokens(desc: string): { clean: string; tokens: Partial<EventItem> } {
+  let working = (desc ?? '').replace(/<br\s*\/?>/gi, '\n');
+
+  const tokens: Partial<EventItem> = {};
+
+  // capture image URLs inside anchors
+  const imageAnchorRx = /<a[^>]*href="([^"]+\.(?:png|jpe?g|webp|gif))"[^>]*>.*?<\/a>/i;
+  const imgAnchorMatch = working.match(imageAnchorRx);
+  if (imgAnchorMatch && !tokens.image) {
+    tokens.image = imgAnchorMatch[1];
+    working = working.replace(imageAnchorRx, '');
+  }
+
+  // replace any remaining anchors with their href
+  working = working.replace(/<a[^>]*href="([^"]+)"[^>]*>.*?<\/a>/gi, '$1');
+
+  (['RSVP', 'COLOR', 'IMAGE', 'TEXT', 'ID'] as const).forEach((opt) => {
+    const rx = new RegExp(`\\s*${opt}:\\s*([^\\s]+)`, 'g');
+    const m = rx.exec(working);
+    if (m) {
+      const v = m[1];
+      if (opt === 'RSVP') tokens.rsvp = v;
+      if (opt === 'COLOR') tokens.color = v;
+      if (opt === 'IMAGE' && !tokens.image) tokens.image = v;
+      if (opt === 'TEXT') tokens.text = v;
     }
+    working = working.replace(rx, '');
+  });
 
-    useEffect(() => {
-        fetchEvents();
-    });
+  return { clean: working.trim(), tokens };
+}
 
-    return (
-        <>
-            <section className="bg-white text-black p-2 sm:p-12">
-                <div className="relative py-1">
-                    <div className="flex flex-row justify-between py-3">
-                        <h1 className="text-left tracking-widest text-3xl">{ format(today, 'LLLL').toUpperCase() }</h1>
-                        <a className="flex flex-row gap-2 px-3 items-center text-lg bg-main text-white rounded-md hover:bg-main-hover"
-                            href="https://calendar.google.com/calendar/u/0/r?cid=c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com">
-                            <SiGooglecalendar />
-                            <h1 className="text-xs sm:hidden">Subscribe!</h1>
-                            <h1 className="text-xs hidden sm:block">Subscribe to our calendar!</h1>
-                        </a>
-                    </div>
-                    <div className="grid grid-cols-7 text-center text-sm">
-                        {
-                            weekArray.map( (day, index) => {
-                                return (
-                                    <span key={index + 'weekName'}>{day}</span>
-                                )
-                            })
-                        }
-                    </div>
-                    {
-                        (
-                            eventPopup && <div className="hidden sm:flex z-10 absolute flex-col bg-slate-100 min-w-1/6 max-w-[28rem] p-3 transition-all shadow-md"
-                            style={toolTipPosition()}>
-                                <div className="flex flex-row justify-between items-center text-lg gap-3">
-                                    <h1 className="font-bold">{eventSelected.summary}</h1>
-                                    <VscChromeClose className="rounded-lg hover:bg-slate-300" onClick={ () => setEventPopup(false) }/>
-                                </div>
-                                <p className="text-sm font-medium tracking-wide"><i>{!eventSelected.start.date ? (format(new Date(eventSelected.start.dateTime), 'EE, h:mm a - ') +
-                                    format(new Date(eventSelected.end.dateTime), 'h:mm a')) : format(new Date(eventSelected.start.dateTime), 'EEEE')}</i></p>
-                                <p className="pt-1 text-sm whitespace-pre-line">{eventSelected.location}</p>
-                                <p className="pt-1 text-sm whitespace-pre-line">{eventSelected.description}</p>
-                                { (eventSelected.attachments || eventSelected.image) &&
-                                <img alt="event image" className="pt-2" src={eventSelected.image ? eventSelected.image :
-                                    ('https://lh3.googleusercontent.com/d/' + eventSelected.attachments[0].fileId)}></img> }
-                                { eventSelected.rsvp &&
-                                <a className="p-1 my-2 hover:bg-main-hover self-center bg-main text-white tracking-wider text-center w-32"
-                                    href={eventSelected.rsvp}>RSVP</a> }
-                            </div>
-                        )
-                    }
-                    <div className="calendar-grid text-xs text-center rounded-md">
-                        {
-                            calendarData.map( (dayObj, index) => {
-                                return (
-                                    <div className={"relative hover:bg-slate-50 min-h-16 transition-all date-panel" + (dayObj.getTime() === daySelected.getTime() ? " selected-panel" : "") + (dayObj.getMonth() === today.getMonth() ? "" : " opacity-50")}
-                                        key={index + 'panel'} onClick={ () => selectDate(dayObj) }>
-                                        <div className={"relative p-[0.1rem] size-4" + (dayObj.getTime() === today.getTime() ? " today-panel text-white" : "")}>
-                                            <span className={"absolute inset-0"}>{dayObj.getDate()}</span>
-                                        </div>
-                                        <div className="flex flex-col inset-x-0 gap-1 pt-1 my-1">
-                                            {
-                                                dayObj.events.map( (eventObj, index) => {
-                                                    return (
-                                                        <div key={index}>
-                                                            <div className="md:hidden bg-light-main inset-x-0 min-h-1 rounded-md" style={eventObj.color ? {'backgroundColor': eventObj.color} : {}}></div>
-                                                            <div className="hidden md:block hover:brightness-95 bg-light-main inset-x-0 min-h-1 rounded-sm text-sm transition-colors"
-                                                            style={{  ...eventObj.color && {'backgroundColor': eventObj.color}, ...eventObj.text && {'color': eventObj.text} }}
-                                                            onClick={ () => selectEvent(eventObj) }>
-                                                                {eventObj.summary}
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })
-                                            }
-                                        </div>
-                                    </div>
-                                );
-                            })
-                        }
-                    </div>
-                </div>
-                <h1 className={'w-fit text-sm px-2 bg-slate-100 rounded-md sm:mx-auto' + (daySelected.events.length ? '': ' hidden')}>{format(daySelected, 'EEEE, MMM do')}</h1>
-                <div className="flex flex-col gap-2 py-1 text-sm sm:text-md sm:items-center">
-                    {
-                        daySelected.events.map( (eventObj, index) => {
-                            const eventDate: Date = new Date(eventObj.start.dateTime);
-                            const endTime: Date = new Date(eventObj.end.dateTime);
-                            return (
-                                <div key={index} className="relative sm:w-4/5 p-2 sm:p-3 min-h-8 rounded-md overflow-hidden bg-slate-100 shadow-sm"
-                                    style={ eventObj.color ? {borderColor: eventObj.color, borderLeft: '8px solid ' + eventObj.color} : {} }>
-                                    <div className="flex flex-row justify-between">
-                                        <h1 className="text-md font-bold">{eventObj.summary}</h1>
-                                        <h1 className="sm:text-md"><i>{format(eventDate, 'h:mm aaa') + format(endTime, ' - h:mm aaa')}</i></h1>
-                                    </div>
-                                    <div className="relative w-full flex flex-row justify-between">
-                                        <p className="text-xs sm:text-sm bottom-event-details">{eventObj.description}</p>
-                                    </div>
-                                    {
-                                        // (eventObj.attachments) ? (
-                                        // <img src={`https://drive.google.com/uc?export=${eventObj.attachments[0].fileId}`}
-                                        // className="object-cover"></img>
-                                        // ) : (<></>)
-                                    }
-                                </div>
-                            );
-                        })
-                    }
-                </div>
-            </section>
-        </>
+function buildMonthGrid(forDate: Date): DayCell[] {
+  const firstDOM = startOfMonth(forDate);
+  const firstOfGrid = startOfWeek(firstDOM, { weekStartsOn: 0 });
+  const lastOfGrid = endOfWeek(endOfMonth(forDate), { weekStartsOn: 0 });
+  return eachDayOfInterval({ start: firstOfGrid, end: lastOfGrid }).map((d) => ({
+    date: d,
+    selected: false,
+    events: [],
+  }));
+}
+
+/* ======================== Component ======================== */
+
+export default function Events() {
+  const WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
+  const today = useMemo(
+    () => set(new Date(), { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 }),
+    [],
+  );
+
+  const initialGrid = useMemo(() => buildMonthGrid(today), [today]);
+  const firstDOM = startOfMonth(today);
+  const dateIndexOffset = firstDOM.getDay() - 1;
+
+  const [calendarData, setCalendar] = useState<DayCell[]>(initialGrid);
+  const [daySelected, setDaySelected] = useState<DayCell>(
+    initialGrid[today.getDate() + dateIndexOffset],
+  );
+  const [eventSelected, setEventSelected] = useState<EventItem | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // mark selected
+  useEffect(() => {
+    setCalendar((prev) =>
+      prev.map((c) => ({ ...c, selected: c.date.getTime() === daySelected.date.getTime() })),
     );
+  }, [daySelected]);
+
+  // Fetch Google Calendar once
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const calendarId =
+        'c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com';
+      const apiKey =
+        process.env.NEXT_PUBLIC_GOOGLE_CAL_API_KEY ??
+        'AIzaSyBCIOf5yqU8ThEm-h95QvynRXrM4H7wnUs';
+
+      try {
+        const res = await fetch(
+          `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${apiKey}&supportsAttachments=true&singleEvents=true&orderBy=startTime`,
+          { headers: { 'Content-Type': 'application/json' } },
+        );
+        const data: { items?: GCalItem[] } = await res.json();
+
+        const next = buildMonthGrid(today);
+
+        (data.items ?? []).forEach((item) => {
+          const startISO = toISO(item.start);
+          const endISO = toISO(item.end);
+          const startDate = new Date(startISO);
+
+          if (
+            startDate.getMonth() === today.getMonth() &&
+            startDate.getFullYear() === today.getFullYear()
+          ) {
+            const { clean, tokens } = extractTokens(item.description ?? '');
+
+            const event: EventItem = {
+              summary: item.summary ?? 'Untitled Event',
+              description: clean,
+              startISO,
+              endISO,
+              attachments: Array.isArray(item.attachments)
+                ? item.attachments.map((a) => a.fileId)
+                : [],
+              location: item.location,
+              color: tokens.color ?? '#D27D7C',
+              rsvp: tokens.rsvp,
+              image: tokens.image,
+              text: tokens.text,
+            };
+
+            const idx = startDate.getDate() + dateIndexOffset;
+            if (next[idx]) next[idx].events.push(event);
+          }
+        });
+
+        setCalendar(next);
+        setDaySelected(next[today.getDate() + dateIndexOffset]);
+      } catch (e) {
+        console.error('Calendar fetch failed', e);
+      }
+    };
+
+    fetchEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // modal ESC close
+  useEffect(() => {
+    if (!modalOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setModalOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [modalOpen]);
+
+  const onDayClick = (cell: DayCell) => {
+    setDaySelected(cell);
+    if (!cell.events.length) setModalOpen(false);
+  };
+
+  const onEventClick = (ev: EventItem, e: MouseEvent) => {
+    e.stopPropagation();
+    setEventSelected(ev);
+    setModalOpen(true);
+  };
+
+  return (
+    <section className="cal-shell">
+      {/* Header */}
+      <div className="cal-header">
+        <h1 className="cal-month">{format(today, 'LLLL').toUpperCase()}</h1>
+        <a
+          className="cal-subscribe"
+          href="https://calendar.google.com/calendar/u/0/r?cid=c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com"
+        >
+          <SiGooglecalendar className="h-[1.1rem] w-[1.1rem]" />
+          <span className="sm:hidden">Subscribe</span>
+          <span className="hidden sm:inline">Subscribe to our calendar</span>
+        </a>
+      </div>
+
+      {/* Week labels */}
+      <div className="cal-weeklabels">
+        {WEEK.map((d) => (
+          <span key={d}>{d}</span>
+        ))}
+      </div>
+
+      {/* Centered modal (opens on click only) */}
+      {modalOpen && eventSelected && (
+        <div
+          className="cal-modal"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => e.target === e.currentTarget && setModalOpen(false)}
+        >
+          <div className="cal-modal-card">
+            <div className="cal-modal-head">
+              <h3 className="cal-modal-title">{eventSelected.summary}</h3>
+              <button className="cal-close" onClick={() => setModalOpen(false)} aria-label="Close">
+                <VscChromeClose />
+              </button>
+            </div>
+
+            <div className="cal-modal-meta">
+              <div className="meta">
+                <CalendarIcon className="meta-ic" />
+                <span>{format(new Date(eventSelected.startISO), 'EEEE, MMM d')}</span>
+              </div>
+              <div className="meta">
+                <ClockIcon className="meta-ic" />
+                <span>
+                  {format(new Date(eventSelected.startISO), 'h:mm a')} –{' '}
+                  {format(new Date(eventSelected.endISO), 'h:mm a')}
+                </span>
+              </div>
+              {eventSelected.location && (
+                <div className="meta">
+                  <PinIcon className="meta-ic" />
+                  <span>{eventSelected.location}</span>
+                </div>
+              )}
+            </div>
+
+            {eventSelected.description && (
+              <p
+                className="cal-modal-desc"
+                dangerouslySetInnerHTML={{ __html: linkify(eventSelected.description) }}
+              />
+            )}
+
+            {(eventSelected.image || eventSelected.attachments.length) && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                alt="event"
+                className="cal-modal-img"
+                src={
+                  eventSelected.image
+                    ? eventSelected.image
+                    : 'https://lh3.googleusercontent.com/d/' + eventSelected.attachments[0]
+                }
+              />
+            )}
+
+            {eventSelected.rsvp && (
+              <a className="cal-rsvp" href={eventSelected.rsvp} target="_blank" rel="noreferrer">
+                RSVP
+              </a>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Month grid */}
+      <div className="calendar-grid">
+        {calendarData.map((cell) => {
+          const isToday = cell.date.getTime() === today.getTime();
+          const isDim = cell.date.getMonth() !== today.getMonth();
+
+          return (
+            <div
+              key={cell.date.toISOString()}
+              className={`day-cell${cell.selected ? ' day-cell--selected' : ''}${
+                isToday ? ' day-cell--today' : ''
+              }${isDim ? ' day-cell--dim' : ''}`}
+              onClick={() => onDayClick(cell)}
+            >
+              <div className="day-number">{cell.date.getDate()}</div>
+              <div className="event-stack">
+                {cell.events.map((ev) => (
+                  <div key={`${ev.startISO}-${ev.summary}`}>
+                    <div
+                      className="event-bar sm:hidden"
+                      style={ev.color ? { backgroundColor: ev.color } : undefined}
+                      aria-hidden
+                    />
+                    <button
+                      className="event-pill hidden sm:block"
+                      style={{
+                        ...(ev.color ? { backgroundColor: ev.color } : {}),
+                        ...(ev.text ? { color: ev.text } : {}),
+                      }}
+                      onClick={(e) => onEventClick(ev, e)}
+                      title={ev.summary}
+                    >
+                      {ev.summary}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Under-grid day details */}
+      <h2 className={`day-detail-date${daySelected.events.length ? '' : ' hidden'}`}>
+        {format(daySelected.date, 'EEEE, MMM do')}
+      </h2>
+
+      <div className="day-detail-list">
+        {daySelected.events.map((ev) => {
+          const start = new Date(ev.startISO);
+          const end = new Date(ev.endISO);
+          return (
+            <article
+              key={`${ev.startISO}-${ev.summary}-detail`}
+              className="detail-card"
+              style={ev.color ? { borderLeft: `8px solid ${ev.color}` } : undefined}
+            >
+              <header className="detail-head">
+                <h3 className="detail-title">{ev.summary}</h3>
+                <p className="detail-when">
+                  {format(start, 'EEE, MMM d')} · {format(start, 'h:mm a')} – {format(end, 'h:mm a')}
+                </p>
+              </header>
+
+              <div className="detail-meta">
+                {ev.location && (
+                  <div className="meta">
+                    <PinIcon className="meta-ic" />
+                    <span>{ev.location}</span>
+                  </div>
+                )}
+              </div>
+
+              {ev.description && (
+                <p
+                  className="detail-text"
+                  dangerouslySetInnerHTML={{ __html: linkify(ev.description) }}
+                />
+              )}
+
+              {(ev.image || ev.attachments.length) && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  alt="event"
+                  className="detail-img"
+                  src={ev.image ? ev.image : 'https://lh3.googleusercontent.com/d/' + ev.attachments[0]}
+                />
+              )}
+
+              {ev.rsvp && (
+                <footer className="detail-footer">
+                  <a className="cal-rsvp" href={ev.rsvp} target="_blank" rel="noreferrer">
+                    RSVP
+                  </a>
+                </footer>
+              )}
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
 }

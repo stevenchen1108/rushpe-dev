@@ -3,41 +3,90 @@
 @tailwind utilities;
 
 @layer components {
-    .calendar-grid {
-        position: relative;
-        display: grid;
-        grid-template-columns: repeat(7, minmax(0, 1fr));
-        grid-auto-rows: 1fr;
-    }
-    .date-panel {
-        border-width: 2px;
-        border-style: solid;
-        border-image: 
-            linear-gradient(
-                45deg,
-                rgba(0, 0, 0, 0) 45%,
-                rgb(207, 207, 207)
-            ) 1;
-    }
-    .selected-panel {
-        border-image: none;
-        border-style: solid;
-        border-color: rgb(75, 75, 75);
-        border-width: 2px;
-        box-shadow: 1px 2px 3px;
-    }
-    .today-panel::before {
-        position: absolute;
-        content: '';
-        width: fit-content;
-        height: fit-content;
-        border-radius: 50%;
-        background-color: grey;
-        inset: 0;
-        padding: 0.5rem;
-    }
-    .bottom-event-details {
-        overflow-wrap: anywhere;
-        white-space: pre-line;
-    }
+  /* ---------- Shell ---------- */
+  .cal-shell { @apply bg-white text-slate-900 px-4 sm:px-6 lg:px-8 py-8 sm:py-12; }
+
+  /* ---------- Header ---------- */
+  .cal-header { @apply flex items-center justify-between gap-4 pb-4; }
+  .cal-month  { @apply text-3xl tracking-widest font-extrabold; }
+  .cal-subscribe{
+    @apply inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-white bg-sky-600
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300;
+    box-shadow: 0 8px 22px rgba(2, 6, 23, 0.15);
+    transition: transform 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
+  }
+  .cal-subscribe:hover{ transform: translateY(-1px); background-color: rgb(2 132 199); box-shadow: 0 12px 30px rgba(2,6,23,.22); }
+
+  /* ---------- Week labels ---------- */
+  .cal-weeklabels { @apply grid grid-cols-7 text-center text-xs text-slate-500 pb-2; }
+
+  /* ---------- Grid ---------- */
+  .calendar-grid{
+    position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 0;
+    @apply rounded-2xl overflow-hidden ring-1 ring-slate-200;
+  }
+  .day-cell{ @apply relative min-h-20 bg-white transition-colors; border-right:1px solid rgb(226,232,240); border-bottom:1px solid rgb(226,232,240); }
+  .day-cell--dim{ @apply opacity-60; }
+  .day-cell--selected{ @apply bg-slate-50; }
+  .day-cell--today{ @apply bg-sky-50; }
+  .day-number{ @apply absolute top-1 left-1 text-[11px] text-slate-500 w-6 h-6 grid place-items-center; border-radius: 8px; }
+  .event-stack{ @apply flex flex-col gap-1 pt-6 px-1 pb-2; }
+  .event-bar{ @apply h-1 rounded-md bg-slate-200; }
+  .event-pill{
+    @apply w-full text-left text-[12px] leading-tight rounded-md px-2 py-1 bg-slate-200/80 hover:brightness-95 transition;
+    box-shadow: 0 1px 0 rgba(2,6,23,.08);
+  }
+
+  /* ---------- Centered modal ---------- */
+  .cal-modal{
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4;
+    animation: fadeIn 180ms ease-out;
+  }
+  .cal-modal-card{
+    @apply w-[min(92vw,42rem)] max-h-[85vh] overflow-auto rounded-2xl bg-white/90 ring-1 ring-slate-200 shadow-2xl p-5;
+    animation: popIn 160ms ease-out;
+  }
+  .cal-modal-head{ @apply flex items-center justify-between gap-3 mb-2; }
+  .cal-modal-title{ @apply text-lg font-semibold text-slate-900; }
+  .cal-close{ @apply grid place-items-center h-8 w-8 rounded-lg text-slate-600 hover:bg-slate-200/70 transition; }
+
+  .cal-modal-meta{ @apply grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-slate-700 mb-3; }
+  .meta{ @apply inline-flex items-center gap-2; }
+  .meta-ic{ @apply h-4 w-4 text-slate-600; }
+
+  .cal-modal-desc{ @apply text-[14px] leading-relaxed text-slate-700; }
+  .cal-modal-img{ @apply mt-3 rounded-lg ring-1 ring-slate-200 object-cover; }
+
+  .cal-rsvp{
+    @apply mt-4 inline-flex items-center gap-2 self-start rounded-lg px-3 py-1.5 text-sm font-semibold text-white bg-sky-600
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300;
+    transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease; box-shadow: 0 8px 20px rgba(2,6,23,.12);
+  }
+  .cal-rsvp:hover{ transform: translateY(-1px); background-color: rgb(2 132 199); }
+
+  @keyframes fadeIn{ from{ opacity:0 } to{ opacity:1 } }
+  @keyframes popIn{ from{ transform: translateY(6px) scale(.98); opacity:.8 } to{ transform:none; opacity:1 } }
+
+  /* ---------- Under-grid detail list ---------- */
+  .day-detail-date{ @apply w-fit mx-auto mt-6 text-xs px-2 py-1 bg-slate-100 rounded-md; }
+  .day-detail-list{ @apply flex flex-col gap-4 py-3 sm:items-center; }
+  .detail-card{
+    @apply relative w-full sm:w-4/5 p-4 rounded-2xl bg-white ring-1 ring-slate-200;
+    box-shadow: 0 10px 24px rgba(2,6,23,.06);
+  }
+  .detail-head{ @apply flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1; }
+  .detail-title{ @apply text-base sm:text-lg font-semibold text-slate-900; }
+  .detail-when{ @apply text-sm text-slate-600; }
+  .detail-meta{ @apply mt-1 flex flex-wrap gap-3 text-sm text-slate-700; }
+  .detail-text{ @apply mt-2 text-[14px] leading-relaxed text-slate-700; }
+
+  /* smaller images under the grid */
+  .detail-img{
+    @apply mt-3 rounded-lg ring-1 ring-slate-200 mx-auto object-cover;
+    width: min(100%, 360px);
+    height: auto;
+  }
+
+  /* clickable links inside descriptions */
+  .cal-link { @apply underline text-sky-700 hover:text-sky-900; }
 }
