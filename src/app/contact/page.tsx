@@ -97,8 +97,8 @@ export default function ContactUs() {
             <dl className="mt-8 space-y-4 text-slate-700">
               <div className="flex items-center gap-3">
                 <Mail className="h-5 w-5 opacity-80" aria-hidden />
-                <a href="mailto:shpe.rutgers@gmail.com" className="underline-offset-2 hover:underline">
-                  shpe.rutgers@gmail.com
+                <a href="mailto:rushpe@gmail.com" className="underline-offset-2 hover:underline">
+                  rushpe@gmail.com
                 </a>
               </div>
               <div className="flex items-center gap-3">
