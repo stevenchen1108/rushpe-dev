@@ -4,7 +4,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { createClient } from "@supabase/supabase-js";
-import Image from "next/image";
+// system icons
+import { Mail, MapPin, CheckCircle2, Loader2 } from "lucide-react";
+// brand icons
+import { FaInstagram, FaLinkedin, FaFacebook, FaTiktok } from "react-icons/fa6";
 
 const supabaseClient = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -17,20 +20,20 @@ type ContactFields = {
   email: string;
   phoneNum?: string;
   desc: string;
+  honey?: string; // honeypot
 };
 
 export default function ContactUs() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
+    setError,
   } = useForm<ContactFields>();
 
   const [hasSubmitted, setSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  // keep your badge-removal effect
   useEffect(() => {
     const removeBottomLeftBadge = () => {
       const all = document.querySelectorAll<HTMLElement>("*");
@@ -53,201 +56,277 @@ export default function ContactUs() {
   const sendContactFormData = useCallback(
     async (userInput: ContactFields) => {
       try {
-        setIsLoading(true);
-        await supabaseClient.from("GeneralQuestions").insert({
+        if (userInput.honey) return; // honeypot
+
+        const { error } = await supabaseClient.from("GeneralQuestions").insert({
           first_name: userInput.firstName,
           last_name: userInput.lastName,
           email: userInput.email,
           phone_num: userInput.phoneNum ?? null,
           desc: userInput.desc,
         });
+
+        if (error) {
+          setError("root", { message: "Something went wrong. Please try again." });
+          return;
+        }
+
         setSubmitted(true);
         reset();
-      } finally {
-        setIsLoading(false);
+        setTimeout(() => setSubmitted(false), 6000);
+      } catch {
+        setError("root", { message: "Network error. Please try again." });
       }
     },
-    [reset]
+    [reset, setError]
   );
 
   return (
-    <>
-      {/* Background via URL path (no import) */}
-      <style jsx global>{`
-        body {
-          background-image: url(/about-pg-assets/contact-pg-geese.jpg);
-          background-repeat: repeat;
-          background-attachment: fixed;
-          background-position: center top;
-          background-size: clamp(420px, 32vw, 560px) auto;
-          background-color: #fbf8f4;
-        }
-      `}</style>
-
-      <section className="relative py-28 px-4 md:px-16 lg:px-72">
-        <div className="relative bg-white text-black flex flex-col items-center p-5 md:p-8 gap-6 text-center rounded-3xl shadow-lg">
-          <h3 className="text-4xl tracking-wide font-bold">Contact Us!</h3>
-
-          <p className="w-4/5 max-w-2xl">
-            Get in touch with us if you have any questions, comments, or concerns!
-            <br />
-            <br />
-            Click the icons for our socials below!
-          </p>
-
-          {/* Socials via URL paths (no import) */}
-          <div className="flex flex-row items-center justify-center gap-5 md:gap-9">
-            <a
-              href="https://www.instagram.com/shpe_ru/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="inline-block"
+    <main className="relative min-h-[100svh] bg-white">
+      {/* Section */}
+      <section className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+        <div className="grid gap-10 lg:grid-cols-2">
+          {/* LEFT: Title + contact info */}
+          <aside className="text-slate-900">
+            <h1
+              className="text-5xl/tight sm:text-6xl font-extrabold tracking-tight
+                         bg-gradient-to-r from-red-600 via-orange-500 to-blue-600
+                         bg-clip-text text-transparent"
             >
-              <Image
-                src="/socials/instagram-logo.png"
-                alt="Instagram"
-                width={48}
-                height={48}
-                className="w-10 h-10 md:w-12 md:h-12"
-                priority
-              />
-            </a>
+              Contact Us
+            </h1>
 
-            <a
-              href="https://www.linkedin.com/in/rutgers-university-shpe-686bba295"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="inline-block"
-            >
-              <Image
-                src="/socials/linkedin-logo.png"
-                alt="LinkedIn"
-                width={48}
-                height={48}
-                className="w-10 h-10 md:w-12 md:h-12"
-              />
-            </a>
+            <p className="mt-4 max-w-prose text-slate-600">
+              Questions, comments, or ideas? Send us a message and we’ll get back to you.
+              You can also reach us directly or follow our socials below.
+            </p>
 
-            <a
-              href="https://www.facebook.com/rutgers.she/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="inline-block"
-            >
-              <Image
-                src="/socials/facebook-logo.png"
-                alt="Facebook"
-                width={48}
-                height={48}
-                className="w-10 h-10 md:w-12 md:h-12"
-              />
-            </a>
+            <dl className="mt-8 space-y-4 text-slate-700">
+              <div className="flex items-center gap-3">
+                <Mail className="h-5 w-5 opacity-80" aria-hidden />
+                <a
+                  href="mailto:shpe.rutgers@gmail.com"
+                  className="underline-offset-2 hover:underline"
+                >
+                  shpe.rutgers@gmail.com
+                </a>
+              </div>
 
-            <a
-              href="https://www.tiktok.com/@shpe_ru"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="TikTok"
-              className="inline-block"
-            >
-              <Image
-                src="/socials/tiktok-logo.png"
-                alt="TikTok"
-                width={48}
-                height={48}
-                className="w-10 h-10 md:w-12 md:h-12"
-              />
-            </a>
+              {/* Location: linked to Google Maps */}
+              <div className="flex items-center gap-3">
+                <MapPin className="h-5 w-5 opacity-80" aria-hidden />
+                <a
+                  href="https://www.google.com/maps?q=600+Bartholomew+Rd+Piscataway+NJ+08854"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline-offset-2 hover:underline"
+                >
+                  600 Bartholomew Rd, Piscataway, NJ
+                </a>
+              </div>
+            </dl>
+
+            {/* Socials */}
+            <div className="mt-8 flex items-center gap-5">
+              <a
+                href="https://www.instagram.com/shpe_ru/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full
+                           bg-slate-100 ring-1 ring-slate-200 transition hover:bg-slate-200"
+                title="Instagram"
+              >
+                <FaInstagram className="h-5 w-5" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/rutgers-university-shpe-686bba295"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full
+                           bg-slate-100 ring-1 ring-slate-200 transition hover:bg-slate-200"
+                title="LinkedIn"
+              >
+                <FaLinkedin className="h-5 w-5" />
+              </a>
+              <a
+                href="https://www.facebook.com/rutgers.she/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full
+                           bg-slate-100 ring-1 ring-slate-200 transition hover:bg-slate-200"
+                title="Facebook"
+              >
+                <FaFacebook className="h-5 w-5" />
+              </a>
+              <a
+                href="https://www.tiktok.com/@shpe_ru"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full
+                           bg-slate-100 ring-1 ring-slate-200 transition hover:bg-slate-200"
+                title="TikTok"
+              >
+                <FaTiktok className="h-5 w-5" />
+              </a>
+            </div>
+          </aside>
+
+          {/* RIGHT: Form card */}
+          <div className="relative">
+            <div className="rounded-3xl bg-white p-6 shadow-2xl ring-1 ring-black/5 sm:p-8">
+              <h2 className="text-xl font-semibold text-slate-900">Send us a message</h2>
+              <p className="mt-1 text-sm text-slate-600">Fields marked * are required.</p>
+
+              {hasSubmitted && (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="mt-4 flex items-center gap-2 rounded-xl bg-green-50 px-3 py-2 text-green-800 ring-1 ring-green-200"
+                >
+                  <CheckCircle2 className="h-5 w-5" />
+                  <span>Message submitted! Thank you.</span>
+                </div>
+              )}
+
+              {"root" in errors && errors.root?.message && (
+                <div
+                  role="alert"
+                  className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-red-800 ring-1 ring-red-200"
+                >
+                  {errors.root.message}
+                </div>
+              )}
+
+              <form
+                onSubmit={handleSubmit(sendContactFormData)}
+                className="mt-6 grid grid-cols-1 gap-5"
+                noValidate
+              >
+                {/* Honeypot */}
+                <input
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  className="hidden"
+                  aria-hidden="true"
+                  {...register("honey")}
+                />
+
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <label htmlFor="firstName" className="text-sm font-medium text-slate-700">
+                      First Name *
+                    </label>
+                    <input
+                      id="firstName"
+                      autoComplete="given-name"
+                      placeholder="Jane"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm outline-none transition focus:ring-4 focus:ring-sky-300/40"
+                      {...register("firstName", { required: true, minLength: 2 })}
+                    />
+                    {errors.firstName && (
+                      <p className="text-sm text-red-600">Enter a valid first name.</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <label htmlFor="lastName" className="text-sm font-medium text-slate-700">
+                      Last Name *
+                    </label>
+                    <input
+                      id="lastName"
+                      autoComplete="family-name"
+                      placeholder="Doe"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm outline-none transition focus:ring-4 focus:ring-sky-300/40"
+                      {...register("lastName", { required: true, minLength: 2 })}
+                    />
+                    {errors.lastName && (
+                      <p className="text-sm text-red-600">Enter a valid last name.</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-sm font-medium text-slate-700">
+                    Email *
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@rutgers.edu"
+                    className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm outline-none transition focus:ring-4 focus:ring-sky-300/40"
+                    {...register("email", {
+                      required: true,
+                      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/i,
+                    })}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-red-600">Enter a valid email address.</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="phoneNum" className="text-sm font-medium text-slate-700">
+                    Phone (optional)
+                  </label>
+                  <input
+                    id="phoneNum"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="(555) 123-4567"
+                    className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm outline-none transition focus:ring-4 focus:ring-sky-300/40"
+                    {...register("phoneNum", { minLength: 7, maxLength: 20 })}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="desc" className="text-sm font-medium text-slate-700">
+                    Message *
+                  </label>
+                  <textarea
+                    id="desc"
+                    rows={5}
+                    placeholder="Tell us a bit about your question…"
+                    className="w-full resize-y rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm outline-none transition focus:ring-4 focus:ring-sky-300/40"
+                    {...register("desc", { required: true, minLength: 10 })}
+                  />
+                  {errors.desc && (
+                    <p className="text-sm text-red-600">Please enter at least 10 characters.</p>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-slate-500">
+                    By submitting, you agree we may contact you about your inquiry.
+                  </p>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Sending…
+                      </>
+                    ) : (
+                      "Send Message"
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div className="pointer-events-none absolute -inset-x-4 -bottom-6 h-6 rounded-b-3xl bg-slate-200/40 blur-xl" />
           </div>
-
-          {/* Contact form */}
-          <form
-            onSubmit={handleSubmit(sendContactFormData)}
-            className="flex flex-col items-center my-2 gap-5 w-full lg:p-5"
-            noValidate
-          >
-            <div className="flex flex-col sm:flex-row gap-5 w-full">
-              <div className="w-full">
-                <input
-                  {...register("firstName", { required: true })}
-                  placeholder="First Name *"
-                  className="p-3 w-full shadow-md rounded-2xl"
-                  autoComplete="given-name"
-                />
-                {errors.firstName && (
-                  <span className="text-red-500 text-sm">First name is required.</span>
-                )}
-              </div>
-
-              <div className="w-full">
-                <input
-                  {...register("lastName", { required: true })}
-                  placeholder="Last Name *"
-                  className="p-3 w-full shadow-md rounded-2xl"
-                  autoComplete="family-name"
-                />
-                {errors.lastName && (
-                  <span className="text-red-500 text-sm">Last name is required.</span>
-                )}
-              </div>
-            </div>
-
-            <div className="w-full">
-              <input
-                {...register("email", { required: true })}
-                placeholder="Email *"
-                type="email"
-                className="p-3 w-full shadow-md rounded-2xl"
-                autoComplete="email"
-              />
-              {errors.email && (
-                <span className="text-red-500 text-sm">Valid email is required.</span>
-              )}
-            </div>
-
-            <input
-              {...register("phoneNum")}
-              placeholder="Phone Number"
-              className="p-3 w-full shadow-md rounded-2xl"
-              autoComplete="tel"
-              inputMode="tel"
-            />
-
-            <div className="w-full">
-              <textarea
-                {...register("desc", { required: true })}
-                placeholder="Message..."
-                rows={5}
-                className="p-3 w-full shadow-md rounded-2xl text-wrap"
-              />
-              {errors.desc && (
-                <span className="text-red-500 text-sm">Please enter a message.</span>
-              )}
-            </div>
-
-            {Object.keys(errors).length > 0 && (
-              <span className="text-red-600">Please complete all required fields.</span>
-            )}
-            {hasSubmitted && (
-              <span className="text-green-600 text-center font-semibold">
-                Message submitted! Thank you!
-              </span>
-            )}
-
-            <input
-              type="submit"
-              value={isLoading ? "Sending..." : "Submit"}
-              disabled={isLoading}
-              className={`p-3 w-2/3 shadow-md rounded-2xl bg-red-700 text-white font-bold transition-colors ${
-                isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-800"
-              }`}
-            />
-          </form>
         </div>
       </section>
-    </>
+    </main>
   );
 }

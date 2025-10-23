@@ -115,9 +115,7 @@ export default function AboutPage() {
       >
         <div className="flex items-end justify-between gap-4">
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Our Pillars</h2>
-          <span className="hidden rounded-full bg-slate-900/5 px-3 py-1 text-xs font-semibold text-slate-700 ring-1 ring-slate-200 sm:inline-block">
-            Guided by SHPE’s national mission
-          </span>
+          
         </div>
 
         <p className="mt-3 max-w-3xl text-slate-700">

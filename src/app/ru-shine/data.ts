@@ -1,4 +1,12 @@
 // src/app/ru-shine/data.ts
+import type { StaticImageData } from "next/image";
+
+// ---- Static imports from /public (recommended) ----
+// Place your files at: /public/ru-shine/david-fabian.jpg, /public/home-pg-assets/rushine.jpg
+import davidFabian from "@/../public/ru-shine/david-fabian.jpg";
+import rushineAvatar from "@/../public/ru-shine/alumni-geese.jpg";
+
+/** Full spotlight record used by the hub and detail pages */
 export type Alumni = {
   slug: string;
   name: string;
@@ -9,42 +17,47 @@ export type Alumni = {
   major?: string;
   gradYear?: number;
   company?: string;
+
   /** Optional square/portrait image for hub card (falls back to imageSrc) */
-  avatar?: string;
+  avatar?: string | StaticImageData;
 
   tagline?: string;
   story: string;
-  now: string; // e.g., "Software Engineer · Atlassian (Platform)"
+  now: string;                // e.g., "Software Engineer · Atlassian (Platform)"
   roles?: string[];
   memory?: string;
   advice?: string;
-  imageSrc: string; // spotlight hero image
+
+  /** Spotlight hero image (also used on the card when avatar missing) */
+  imageSrc: string | StaticImageData;
+
   linkedin?: string;
   email?: string;
 };
 
 export const alumni: Alumni[] = [
-//   {
-//     slug: "marisol-alvarez",
-//     name: "Marisol Alvarez",
-//     grad: "Class of 2022 · B.S. Computer Engineering",
-//     major: "Computer Engineering",
-//     gradYear: 2022,
-//     company: "Atlassian",
-//     avatar: "/home-pg-assets/rushine.jpg",
-//     tagline: "Say yes early, specialize later.",
-//     story:
-//       "At RU SHPE, Marisol led SHPEtinas outreach and built mentorship rings that paired first-years with upper-class mentors. Those weekly coffees turned into internships, research matches, and a sense of belonging. She credits the community’s feedback culture—ship, learn, repeat—for accelerating her growth as an engineer and leader.",
-//     now: "Software Engineer · Atlassian (Platform Experience)",
-//     roles: ["SHPEtinas Chair (2020–2021)", "Mentorship Lead (2019–2020)"],
-//     memory:
-//       "Road-tripping to SHPE National and cheering as three members landed on-site interviews in the expo hall.",
-//     advice:
-//       "Treat every semester like a mini-startup: pick one problem, form a small team, ship outcomes, and tell the story.",
-//     imageSrc: "/home-pg-assets/rushine.jpg",
-//     linkedin: "https://www.linkedin.com/",
-//     email: "marisol@example.com",
-//   },
+  {
+    slug: "david-fabian",
+    name: "David Fabian",
+    grad: "Class of 2025 · B.S. Computer Science",
+    major: "Computer Science",
+    gradYear: 2025,
+    company: "Lockheed Martin",
+    avatar: davidFabian,                                // static import (safe)
+    tagline:
+      "The day you plant the seed is probably not the day you eat the fruit.",
+    story:
+      "Hi everyone! I was involved in SHE throughout my entire undergraduate life at Rutgers, especially during my last year. The conventions/career fairs I attended with the organization kickstarted my professional career as a software engineer! I've made many fun memories as a member and I'm grateful for the opportunities it has given me. Currently, I work as a software engineering associate at Lockheed Martin.",
+    now: "Software Engineer · Lockheed Martin",
+    roles: ["Webmaster (2024-2025)"],
+    memory:
+      "Networking in Anaheim and traveling around the convention hanging with friends.",
+    advice:
+      "Have a growth-mindset and constantly invest in your professional development! Progressing in your career isn't based on luck, but rather on consistency!",
+    imageSrc: davidFabian,                             // static import (safe)
+    linkedin: "https://www.linkedin.com/in/david-a-fabian",
+    email: "daf217@scarletmail.rutgers.edu",
+  },
 ];
 
 export const getAllSlugs = () => alumni.map((a) => a.slug);
