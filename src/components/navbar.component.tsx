@@ -1,68 +1,291 @@
-'use client'
-import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { VscMenu, VscChromeClose } from "react-icons/vsc";
-import './navbar.component.css';
+"use client";
 
-export default function NavBar({ currLink, isTransparent }: { currLink: string, isTransparent: boolean }) {
-    let [menuDropped, setMenu] = useState(false);
-    const pages = [
-        {
-            name: 'Home',
-            link: '',
-            id: 0
-        }, {
-            name: 'About Us',
-            link: 'about-us',
-            id: 1
-        }, {
-            name: 'Executive Board',
-            link: 'executive-board',
-            id: 2
-        }, {
-            name: 'Events',
-            link: 'events',
-            id: 3
-        }, {//
-            name: 'Corporate',
-            link: 'corporate',
-            id: 4
-        }, {
-            name: 'Contact Us',
-            link: 'contact',
-            id: 5
-        }
-    ]
-    return (
-        <header className={"md:top-0 z-20" + (isTransparent ? ' absolute left-0 right-0' : '')}>
-            <div className={'flex flex-col overflow-auto' + (isTransparent ? '' : ' bg-dark-main')}>
-                <div className="flex justify-between md:justify-center items-stretch h-24 sm:h-28">
-                    <div className='flex flex-row gap-2 sm:gap-3 items-center font-bold px-2 sm:px-6'>
-                        <Image src="/she-logo.png" alt="she logo"
-                        width={80} height={80} className="shrink-0"></Image>
-                        <h1 className="block w-20 sm:w-4/5 md:w-auto text-md sm:text-4xl">Society of Hispanic Engineers</h1>
-                    </div>
-                    <div className="relative flex md:hidden text-5xl justify-end items-center grow px-6
-                    cursor-pointer" onClick={() => setMenu(!menuDropped)}>
-                        <VscMenu className={"absolute duration-300 " + (menuDropped ? 'icon-spin-fade-out' : 'icon-spin-fade-in')} />
-                        <VscChromeClose className={"absolute duration-300 " + (menuDropped ? 'icon-spin-fade-in' : 'icon-spin-fade-out')} />
-                    </div>
-                </div>
-                <div className={(menuDropped ? 'open-nav' : 'close-nav') +
-                    " md:max-h-none flex flex-col justify-start md:flex-row md:divide-x-2 flex-grow divide-white items-stretch overflow-y-hidden transition-all duration-300"}>
-                    {
-                    pages.map( pageName => {
-                        return (
-                            <Link className={"flex justify-center items-center basis-0 grow p-6 md:p-3 shrink-0 px-2 hover:shadow-lg" + (isTransparent ? ' hover:bg-slate-700 hover:bg-opacity-30' : ' hover:bg-main')}
-                            key={pageName.id} href={'/' + pageName.link} onClick={() => setMenu(!menuDropped)}>
-                                <h1 className="text-3xl md:text-base font-semibold text-center">{pageName.name.toUpperCase()}</h1>
-                            </Link>
-                        );
-                    })
-                    }
-                </div>
+import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { createPortal } from "react-dom";
+
+type NavItem = { name: string; href: string };
+
+const LINKS: NavItem[] = [
+  { name: "Home", href: "/" },
+  { name: "About Us", href: "/about-us" },
+  { name: "Executive Board", href: "/executive-board" },
+  { name: "Events", href: "/events" },
+  { name: "Corporate", href: "/corporate" },
+  { name: "Contact Us", href: "/contact" },
+];
+
+const ACTIVE_UNDERLINE_COLOR = "bg-slate-900";
+const HEADER_H_MOBILE = "h-16"; // 4rem
+const HEADER_TOP = "top-16";    // keep in sync with HEADER_H_MOBILE
+
+export default function NavBar({ isTransparent = false }: { isTransparent?: boolean }) {
+  const pathname = usePathname() || "/";
+
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [collapse, setCollapse] = useState(false);
+  const [mounted, setMounted] = useState(false); // for portal
+
+  const barRef = useRef<HTMLDivElement | null>(null);
+  const logoRef = useRef<HTMLAnchorElement | null>(null);
+  const ghostRef = useRef<HTMLUListElement | null>(null);
+
+  useEffect(() => setMounted(true), []);
+
+  const prefersReducedMotion = useMemo(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches,
+    []
+  );
+
+  // Hide on scroll down / show on scroll up
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    let lastY = window.scrollY;
+    const DOWN = 6, UP = 6, HIDE_AT = 0;
+
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 2);
+
+      if (open) {
+        setHidden(false);
+        lastY = y;
+        return;
+      }
+      const goingDown = y > lastY + DOWN;
+      const goingUp = y < lastY - UP;
+
+      if (goingDown && y > HIDE_AT) setHidden(true);
+      else if (goingUp || y <= HIDE_AT) setHidden(false);
+
+      lastY = y;
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [open, prefersReducedMotion]);
+
+  // Close on route change; Esc closes
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Auto-collapse to hamburger when tabs don’t fit
+  useEffect(() => {
+    const calc = () => {
+      const bar = barRef.current;
+      const logo = logoRef.current;
+      const ghost = ghostRef.current;
+      if (!bar || !logo || !ghost) return;
+
+      const barW = bar.clientWidth;
+      const logoW = logo.clientWidth;
+      const linksW = Math.ceil(ghost.getBoundingClientRect().width);
+
+      const rightControlsW = 48; // h-10 w-10 hamburger
+      const gutters = 28;
+
+      const availableForLinks = barW - logoW - rightControlsW - gutters;
+      setCollapse(linksW > availableForLinks);
+    };
+
+    const bar = barRef.current;
+    if (!bar) return;
+    const ro = new ResizeObserver(() => requestAnimationFrame(calc));
+    ro.observe(bar);
+
+    requestAnimationFrame(calc);
+    // @ts-ignore
+    document?.fonts?.ready?.then(calc).catch(() => {});
+    window.addEventListener("resize", calc);
+    window.addEventListener("orientationchange", calc);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", calc);
+      window.removeEventListener("orientationchange", calc);
+    };
+  }, []);
+
+  // Scroll-lock when mobile menu is open
+  useEffect(() => {
+    const root = document.documentElement;
+    if (open) root.classList.add("overflow-hidden");
+    else root.classList.remove("overflow-hidden");
+    return () => root.classList.remove("overflow-hidden");
+  }, [open]);
+
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+
+  const headerBg = isTransparent
+    ? scrolled
+      ? "bg-white/95 shadow-sm ring-1 ring-black/5"
+      : "bg-white/70"
+    : "bg-white shadow-sm ring-1 ring-black/5";
+
+  const headerMotion = hidden ? "-translate-y-full opacity-0" : "opacity-100";
+
+  return (
+    <>
+      <header
+        className={[
+          "sticky top-0 z-[1000]",
+          headerBg,
+          "transition-[transform,opacity] duration-300",
+          headerMotion,
+          "supports-[backdrop-filter]:backdrop-blur-md",
+        ].join(" ")}
+      >
+        {/* Skip link */}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-[1100] focus:rounded-md focus:bg-white focus:px-3 focus:py-1.5 focus:text-sm focus:shadow"
+        >
+          Skip to content
+        </a>
+
+        {/* Top Bar */}
+        <div
+          ref={barRef}
+          className={`relative mx-auto flex ${HEADER_H_MOBILE} sm:h-18 lg:h-20 max-w-7xl items-center gap-3 px-3 sm:px-5 lg:px-6`}
+        >
+          {/* Logo (left) */}
+          <Link
+            ref={logoRef}
+            href="/"
+            aria-label="Rutgers SHPE Home"
+            className="relative inline-grid aspect-square h-12 sm:h-14 lg:h-16 shrink-0 place-items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-scarlet"
+          >
+            <Image
+              src="/she-logo.png"
+              alt="Rutgers SHPE logo"
+              width={360}
+              height={360}
+              className="h-12 sm:h-14 lg:h-16 w-auto object-contain"
+              priority
+            />
+          </Link>
+
+          {/* Ghost width measurer */}
+          <ul
+            ref={ghostRef}
+            aria-hidden="true"
+            className="pointer-events-none invisible absolute -z-50 left-[-9999px] top-0 whitespace-nowrap flex gap-5 lg:gap-6 px-1.5 py-1 text-[16px] font-medium"
+          >
+            {LINKS.map((item) => (
+              <li key={`ghost-${item.href}`} className="px-2 whitespace-nowrap">
+                {item.name}
+              </li>
+            ))}
+          </ul>
+
+          {/* Desktop nav (perfectly centered, independent of logo & hamburger) */}
+          {!collapse && (
+            <div className="pointer-events-none absolute inset-0 hidden md:flex items-center justify-center">
+              <nav aria-label="Primary" className="pointer-events-auto">
+                <ul className="flex items-center gap-5 lg:gap-6">
+                  {LINKS.map((item) => {
+                    const active = isActive(item.href);
+                    return (
+                      <li key={item.href} className="relative">
+                        <Link
+                          href={item.href}
+                          aria-current={active ? "page" : undefined}
+                          className="group relative rounded-md px-1.5 py-1 text-[16px] font-medium text-slate-700 transition hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-scarlet"
+                        >
+                          <span aria-hidden className="pointer-events-none absolute -inset-y-1.5 -inset-x-2 rounded-xl bg-slate-100 opacity-0 shadow-sm transition group-hover:opacity-100" />
+                          <span className="relative whitespace-nowrap">{item.name}</span>
+                          <span
+                            aria-hidden
+                            className={[
+                              "absolute left-2 right-2 -bottom-0.5 h-0.5 origin-left rounded-full transition-transform",
+                              active ? `${ACTIVE_UNDERLINE_COLOR} scale-x-100` : "scale-x-0 bg-transparent",
+                            ].join(" ")}
+                          />
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
             </div>
-        </header>
-    );
+          )}
+
+          {/* "=" morphing to "X" (header button) — border removed */}
+          <button
+            onClick={() => setOpen((o) => !o)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            className={[
+              "ml-auto md:hidden h-10 w-10 inline-flex items-center justify-center rounded-md bg-white text-slate-900 shadow-sm hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-scarlet",
+              "relative z-[1100]",
+            ].join(" ")}
+          >
+            <span
+              aria-hidden
+              className={[
+                "absolute h-[2px] w-6 bg-slate-900 transition-transform duration-300",
+                open ? "rotate-45" : "-translate-y-[5px]",
+              ].join(" ")}
+            />
+            <span
+              aria-hidden
+              className={[
+                "absolute h-[2px] w-6 bg-slate-900 transition-transform duration-300",
+                open ? "-rotate-45" : "translate-y-[5px]",
+              ].join(" ")}
+            />
+          </button>
+        </div>
+      </header>
+
+      {/* MOBILE MENU via PORTAL (outside header to avoid transform issues) */}
+      {mounted &&
+        createPortal(
+          <div
+            id="mobile-menu"
+            className={[
+              "fixed inset-x-0 bottom-0 z-[100] md:hidden",
+              HEADER_TOP,
+              "transition-transform duration-300 ease-out origin-top",
+              open ? "translate-y-0 pointer-events-auto" : "-translate-y-full pointer-events-none",
+            ].join(" ")}
+            aria-hidden={!open}
+          >
+            <nav aria-label="Mobile" className="h-full bg-neutral-900 text-white/90">
+              <ul className="mx-auto h-full max-w-3xl overflow-auto divide-y divide-white/10">
+                {LINKS.map((item) => {
+                  const active = isActive(item.href);
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setOpen(false)}
+                        className={[
+                          "block px-5 py-5 text-[1.6rem] font-semibold tracking-tight",
+                          active ? "text-white" : "text-white/90 hover:text-white",
+                        ].join(" ")}
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          </div>,
+          document.body
+        )}
+    </>
+  );
 }

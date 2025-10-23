@@ -1,3 +1,4 @@
+// src/app/corporate/page.tsx
 "use client";
 
 import Image from "next/image";
@@ -17,14 +18,10 @@ const plusJakarta = Plus_Jakarta_Sans({
 import ssmImg from "@/../public/she-swe-meet/she-swe-meet-logo.jpeg";
 
 /* -------------------------------- Data --------------------------------- */
-// types (optional, for IntelliSense only)
 import type { Company, SponsorTiers, LogoLink, Organizer } from "./data/types";
-// sponsor tiers (Platinum/Gold/Silver/Bronze)
 import { SPONSORS } from "./data/sponsor-tiers";
-// attending companies & universities (generic, no year suffix)
 import { ATTENDING_COMPANIES } from "./data/attending-companies";
 import { ATTENDING_UNIS } from "./data/attending-unis";
-// marquee (component lives in data/marquee.tsx)
 import { LogoMarquee } from "./data/marquee";
 
 /* ----------------------------- Organizers ------------------------------ */
@@ -33,24 +30,9 @@ import ruMeetLogo from "@/../public/she-swe-meet/ru-meet-logo.jpg";
 import ruSweLogo from "@/../public/she-swe-meet/ru-swe-logo.jpg";
 
 const ORGANIZERS: Organizer[] = [
-  {
-    name: "Rutgers SHE (SHPE)",
-    href: "https://www.rushpe.org/",
-    logo: ruShpeLogo,
-    cta: "About Rutgers SHE",
-  },
-  {
-    name: "Rutgers SWE",
-    href: "https://swe.rutgers.edu/",
-    logo: ruSweLogo,
-    cta: "About Rutgers SWE",
-  },
-  {
-    name: "Rutgers MEET",
-    href: "https://rutgers.campuslabs.com/engage/organization/MEET",
-    logo: ruMeetLogo,
-    cta: "About Rutgers MEET",
-  },
+  { name: "Rutgers SHE (SHPE)", href: "https://www.rushpe.org/", logo: ruShpeLogo, cta: "About Rutgers SHE" },
+  { name: "Rutgers SWE", href: "https://swe.rutgers.edu/", logo: ruSweLogo, cta: "About Rutgers SWE" },
+  { name: "Rutgers MEET", href: "https://rutgers.campuslabs.com/engage/organization/MEET", logo: ruMeetLogo, cta: "About Rutgers MEET" },
 ];
 
 /* -------------------------------- Icons -------------------------------- */
@@ -63,7 +45,6 @@ function SparkleIcon(props: React.SVGProps<SVGSVGElement>) {
 }
 
 /* -------------------------------- Hooks -------------------------------- */
-// Reveal-on-scroll (reveals once, with a no-IO fallback)
 function useReveal() {
   useEffect(() => {
     const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
@@ -87,7 +68,6 @@ function useReveal() {
   }, []);
 }
 
-// Lightweight parallax with mobile guard + clamping
 function useParallax(
   opts: { multiplier?: number; maxShift?: number; disableBelow?: number } = {}
 ) {
@@ -98,10 +78,8 @@ function useParallax(
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const check = () => setEnabled(!reduced && window.innerWidth >= disableBelow);
-
     check();
     window.addEventListener("resize", check);
     window.addEventListener("orientationchange", check);
@@ -117,7 +95,6 @@ function useParallax(
       setShift(0);
       return;
     }
-
     const onScroll = () => {
       if (raf.current) cancelAnimationFrame(raf.current);
       raf.current = requestAnimationFrame(() => {
@@ -126,7 +103,6 @@ function useParallax(
         setShift(clamped);
       });
     };
-
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
@@ -214,7 +190,6 @@ function OrgCard({ name, logo, href, cta }: Organizer) {
   );
 }
 
-/* Mini (dense) logo cards for Attending Companies/Universities */
 function MiniLogoTile({ item }: { item: LogoLink }) {
   return (
     <Link
@@ -247,8 +222,7 @@ export default function Corporate() {
   return (
     <main className={`${plusJakarta.className} bg-gradient-to-b from-slate-50 via-slate-50 to-slate-100`}>
       {/* -------------------------------- HERO ------------------------------- */}
-      <section className="relative overflow-hidden">
-        {/* decorative gradient blobs */}
+      <section className="hero-section relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute -top-40 -left-24 h-80 w-80 rounded-full blur-3xl opacity-30 bg-gradient-to-br from-sky-400 to-fuchsia-400" />
           <div className="absolute -bottom-40 -right-24 h-80 w-80 rounded-full blur-3xl opacity-25 bg-gradient-to-br from-amber-300 to-rose-300" />
@@ -256,18 +230,14 @@ export default function Corporate() {
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
           <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 lg:grid-cols-12">
-            {/* Left: copy */}
             <div className="lg:col-span-6 text-center lg:text-left">
               <h1
                 data-reveal
-                className="reveal text-[42px] leading-[1.05] sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent"
+                className="hero-title reveal text-[42px] leading-[1.05] sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent"
               >
                 SHE–SWE–MEET Career Fair
               </h1>
-              <p
-                data-reveal
-                className="reveal mt-5 text-[17px] leading-7 text-slate-700 font-medium max-w-2xl"
-              >
+              <p data-reveal className="reveal mt-5 text-[17px] leading-7 text-slate-700 font-medium max-w-2xl">
                 The SHE-SWE-MEET Engineering and Computer Science Career Fair is an annual event
                 where we partner up with other Rutgers engineering minority societies including the
                 National Society of Black Engineers and the Society of Women Engineers. This is one
@@ -276,10 +246,7 @@ export default function Corporate() {
                 Please contact our External Vice President at external.vp@rushpe.org for further
                 information.
               </p>
-              <div
-                data-reveal
-                className="reveal mt-6 flex flex-wrap items-center lg:justify-start justify-center gap-2"
-              >
+              <div data-reveal className="reveal mt-6 flex flex-wrap items-center lg:justify-start justify-center gap-2">
                 <span className="chip">40th Annual</span>
                 <span className="chip">October 3, 2025</span>
                 <span className="chip">10AM – 2PM</span>
@@ -293,7 +260,6 @@ export default function Corporate() {
               </div>
             </div>
 
-            {/* Right: parallax image */}
             <div className="lg:col-span-6">
               <div
                 data-reveal
@@ -326,7 +292,10 @@ export default function Corporate() {
 
       {/* ------------------------------- Marquee ---------------------------- */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-6">
-        <LogoMarquee />
+        {/* line removed: no ring/border, still clipped */}
+        <div className="marquee-clip relative overflow-hidden rounded-2xl isolate">
+          <LogoMarquee />
+        </div>
       </div>
 
       {/* --------------------------- Sponsor grids -------------------------- */}
@@ -337,17 +306,14 @@ export default function Corporate() {
               <h3 className="text-3xl font-extrabold shiny-platinum text-center">Platinum Sponsors</h3>
               <CompanyGrid items={platinum} />
             </div>
-
             <div className="flex flex-col gap-5" data-reveal>
               <h3 className="text-3xl font-extrabold text-amber-500 text-center">Gold Sponsor</h3>
               <CompanyGrid items={gold} />
             </div>
-
             <div className="flex flex-col gap-5" data-reveal>
               <h3 className="text-3xl font-extrabold text-slate-400 text-center">Silver Sponsor</h3>
               <CompanyGrid items={silver} />
             </div>
-
             <div className="flex flex-col gap-5" data-reveal>
               <h3 className="text-3xl font-extrabold text-amber-600 text-center">Bronze Sponsors</h3>
               <CompanyGrid items={bronze} />
@@ -388,23 +354,24 @@ export default function Corporate() {
             students hone their professional development skills.
           </p>
 
+        {/* CTA with explicit white strokes */}
           <div className="mt-10 flex justify-center">
             <a
               href={`mailto:external.vp@rushpe.org?subject=${encodeURIComponent(
                 "Corporate Partnership Inquiry"
               )}&body=${encodeURIComponent("Hi SHPE at Rutgers,\n\nI’m reaching out about corporate opportunities.")}`}
-              className="mail-cta"
+              className="mail-cta relative inline-flex items-center gap-3 rounded-2xl px-5 py-4 shadow-xl hover:shadow-2xl transition-all"
               aria-label="Email our External Vice President"
             >
-              <span className="mail-icon-wrap" aria-hidden="true">
-                <svg className="mail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-                  <rect x="3" y="5" width="18" height="14" rx="3" className="text-white/95" />
-                  <path d="M3 8.5l9 6 9-6" className="text-white" />
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/25 shadow-inner">
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <rect x="3" y="5" width="18" height="14" rx="3" strokeWidth="1.6" className="stroke-white" />
+                  <path d="M3 8.5l9 6 9-6" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="stroke-white" />
                 </svg>
               </span>
-              <span className="mail-cta-text">
-                <span className="mail-cta-eyebrow">Questions?</span>
-                <span className="mail-cta-title">Email external.vp@rushpe.org</span>
+              <span className="flex flex-col text-white">
+                <span className="text-xs/4 opacity-90">Questions?</span>
+                <span className="font-semibold">Email external.vp@rushpe.org</span>
               </span>
             </a>
           </div>
@@ -413,7 +380,6 @@ export default function Corporate() {
 
       {/* ---------------------- Organized by Us, for You -------------------- */}
       <section className="relative overflow-hidden" aria-labelledby="organized-title">
-        {/* soft gradient blobs */}
         <div className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute -top-28 -left-24 h-72 w-72 rounded-full blur-3xl opacity-30 bg-gradient-to-br from-sky-400 to-indigo-400" />
           <div className="absolute -bottom-28 -right-24 h-72 w-72 rounded-full blur-3xl opacity-25 bg-gradient-to-br from-emerald-300 to-cyan-300" />
@@ -421,11 +387,7 @@ export default function Corporate() {
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
           <div className="text-center max-w-3xl mx-auto">
-            <h2
-              id="organized-title"
-              data-reveal
-              className="reveal text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900"
-            >
+            <h2 id="organized-title" data-reveal className="reveal text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
               Organized by Us, for You
             </h2>
             <p data-reveal className="reveal mt-4 text-slate-700 leading-relaxed">

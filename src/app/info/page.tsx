@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import asImage from '/public/home-pg-assets/academic-support.jpg';
-import isImage from '/public/home-pg-assets/internship-scholarship.jpg';
-import prImage from '/public/home-pg-assets/professionalism.jpg';
-import neImage from '/public/home-pg-assets/networking.jpg';
 import faImage from '/public/home-pg-assets/fun-activities.jpg';
+import isImage from '/public/home-pg-assets/internship-scholarship.jpg';
+import neImage from '/public/home-pg-assets/networking.jpg';
+import prImage from '/public/home-pg-assets/professionalism.jpg';
 import vnImage from '/public/home-pg-assets/volunteering.jpg';
 
 export default function InfoHub() {

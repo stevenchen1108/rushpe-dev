@@ -13,16 +13,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  // console.log(children);
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NavBar currLink="home" isTransparent={false}></NavBar>
+        {/* Removed currLink. Let NavBar detect active route itself */}
+        <NavBar isTransparent={false} />
         {children}
-        <FooterBar></FooterBar>
+        <FooterBar />
       </body>
     </html>
   );

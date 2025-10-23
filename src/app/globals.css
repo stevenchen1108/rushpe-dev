@@ -3,26 +3,23 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 0, 0, 0;
+  --foreground-rgb: 15, 23, 42;   /* dark text */
+  --background-rgb: 255, 255, 255; /* white */
 }
 
-
+/* Fonts */
 @font-face {
   font-family: 'badabb';
   font-style: normal;
   font-weight: 400;
   src: url('/fonts/badabb.ttf') format('truetype');
 }
-
 @font-face {
   font-family: 'knewave';
   font-style: normal;
   font-weight: 400;
   src: url('/fonts/knewave.ttf') format('truetype');
 }
-
 @font-face {
   font-family: 'neiko';
   font-style: normal;
@@ -30,30 +27,27 @@
   src: url('/fonts/neikoregular.otf') format('opentype');
 }
 
+/* Site-wide light theme; no gradient backgrounds */
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-color: rgb(var(--background-rgb));
+  background-image: none;
+}
+
+/* Optional: ensure root of each page isolates its own stacking context
+   (we already add Tailwind `isolate` in the page component too). */
+#__next, main, .page-root {
+  isolation: isolate;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+  .text-balance { text-wrap: balance; }
 }
 
-.comic-style {
-  font-family: 'badabb';
-}
+.comic-style { font-family: 'badabb'; }
+.shpetinas-font { font-family: 'knewave'; }
+.neiko-font { font-family: 'neiko'; }
 
-.shpetinas-font {
-  font-family: 'knewave';
-}
-
-.neiko-font {
-  font-family: 'neiko';
-}
+/* Hide horizontal scrollbar on carousels */
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.hide-scrollbar::-webkit-scrollbar { display: none; height: 0; width: 0; background: transparent; }

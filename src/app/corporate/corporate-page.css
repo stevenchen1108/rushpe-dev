@@ -1,3 +1,4 @@
+/* src/app/corporate/corporate-page.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -26,7 +27,7 @@
 
   /* ---------- Glass + soft shadow cards ---------- */
   .glass-card { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-  .soft-card { box-shadow: 0 10px 20px rgba(15,23,42,0.08), 0 2px 6px rgba(15,23,42,0.06); }
+  .soft-card  { box-shadow: 0 10px 20px rgba(15,23,42,0.08), 0 2px 6px rgba(15,23,42,0.06); }
 
   /* ---------- Small info chips (hero) ---------- */
   .chip {
@@ -39,14 +40,18 @@
     box-shadow: 0 10px 30px rgba(2,6,23,0.10);
   }
 
-  /* ---------- Marquee ---------- */
-  .marquee-mask {
-    position: relative; overflow: hidden;
-    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  /* ---------- Marquee (edge fade ONLY here) ---------- */
+  .marquee-edge {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    contain: paint;
     -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+            mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
   }
+
   .marquee-track { display: flex; gap: 3rem; width: max-content; animation: scrollX 22s linear infinite; opacity: 0.9; }
-  .marquee-item { display: grid; place-items: center; min-width: 140px; }
+  .marquee-item  { display: grid; place-items: center; min-width: 140px; }
   @keyframes scrollX { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   /* ---------- Reveal-on-scroll ---------- */
@@ -55,41 +60,84 @@
 
   /* ---------- Section helpers ---------- */
   .container-default { @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8; }
-  .section-surface { @apply bg-white/80 backdrop-blur-sm border-t border-slate-200; }
-  .stack-center { @apply text-center py-12 sm:py-16; }
+  .section-surface  { @apply bg-white/80 backdrop-blur-sm border-t border-slate-200; }
+  .stack-center     { @apply text-center py-12 sm:py-16; }
 
   /* ---------- Typography helpers ---------- */
   .heading-display { @apply text-5xl sm:text-6xl font-extrabold tracking-tight text-slate-900; }
-  .copy-lead { @apply mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-slate-700 font-medium; }
+  .copy-lead       { @apply mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-slate-700 font-medium; }
 
-  /* ---------- Email CTA ---------- */
+  /* ---------- Email CTA (icon always visible) ---------- */
   .mail-cta {
     @apply inline-flex items-center gap-4 rounded-2xl px-6 py-4 bg-gradient-to-r from-sky-500 to-indigo-600 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300;
     box-shadow: 0 12px 30px rgba(2,6,23,0.16);
     transition: transform 300ms ease, box-shadow 300ms ease;
     will-change: transform, box-shadow;
+    color: #fff;
   }
   .mail-cta:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(2,6,23,0.22); }
   .mail-icon-wrap { @apply grid place-items-center rounded-xl bg-white/15 ring-1 ring-white/25 p-2; }
-  .mail-icon { @apply h-6 w-6 text-white; transform: rotate(-3deg); transition: transform 300ms ease; }
-  .mail-cta:hover .mail-icon { transform: rotate(0deg); }
-  .mail-cta-text { @apply text-left leading-tight; }
-  .mail-cta-eyebrow { @apply block text-[12px] uppercase tracking-wider text-white/85; }
-  .mail-cta-title { @apply block text-[15px] sm:text-[16px] font-semibold; }
+  .mail-cta svg [stroke] { stroke: #fff; }
+  .mail-cta svg [fill="currentColor"] { fill: #fff; }
+  .mail-cta .mail-icon,
+  .mail-cta .mail-icon-wrap,
+  .mail-cta svg { display: inline-flex !important; visibility: visible !important; opacity: 1 !important; }
 
   /* ---------- Dense logo grid ---------- */
   .logo-grid-mini { @apply grid gap-4 sm:gap-5 grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8; }
   .logo-tile-mini { @apply flex items-center justify-center rounded-2xl bg-white/80 border border-white/70 transition-all duration-200; box-shadow: 0 8px 22px rgba(2,6,23,0.06); padding: 1.1rem; }
   .logo-tile-mini:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(2,6,23,0.12); background-color: rgba(255,255,255,0.95); }
-  .logo-img-mini { @apply max-h-10 sm:max-h-12 w-auto object-contain opacity-95; }
+  .logo-img-mini  { @apply max-h-10 sm:max-h-12 w-auto object-contain opacity-95; }
 
   /* ---------- Motion safety ---------- */
-  @media (max-width: 640px) {
-    .marquee-track { animation-duration: 36s; }
-  }
+  @media (max-width: 640px) { .marquee-track { animation-duration: 36s; } }
   @media (prefers-reduced-motion: reduce) {
-    .reveal, .mail-cta, .mail-icon, .logo-tile-mini { transition: none !important; }
+    .reveal, .mail-cta, .logo-tile-mini { transition: none !important; }
     .mail-cta:hover, .logo-tile-mini:hover { transform: none !important; }
     .marquee-track, .shiny-platinum { animation: none !important; }
+  }
+
+  /* ---------- Remove hero-title fog/masks ---------- */
+  .hero-title, .heading-display {
+    -webkit-mask-image: none !important;
+            mask-image: none !important;
+    isolation: isolate;
+  }
+
+  /* ---------- Hard clipping wrapper for marquee; no lines ---------- */
+  .marquee-clip {
+    position: relative;
+    overflow: hidden !important;
+    isolation: isolate;
+    border-radius: 1rem;         /* matches rounded-2xl */
+    border: 0 !important;
+    box-shadow: none !important;
+    outline: none !important;
+    background-clip: padding-box;
+  }
+
+  /* Nuke any borders/rings that child components might add */
+  .marquee-clip .marquee,
+  .marquee-clip .logo-marquee,
+  .marquee-clip .marquee-track {
+    border: 0 !important;
+    box-shadow: none !important;
+    outline: none !important;
+    background-clip: padding-box;
+  }
+
+  /* GPU promote to avoid 1px hairlines during animation */
+  .marquee-track {
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  /* Opt-out utility if any mask was applied elsewhere */
+  .no-mask,
+  .marquee-mask {
+    -webkit-mask-image: none !important;
+            mask-image: none !important;
   }
 }

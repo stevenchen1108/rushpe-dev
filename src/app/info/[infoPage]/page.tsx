@@ -1,10 +1,9 @@
-import Professionalism from '@/components/professionalism.component';
 import Academics from '@/components/academics.component';
-import Networking from '@/components/networking.component';
-import Events from '@/components/event-calendar.component';
 import DonationsUpdater from '@/components/donations-updater.component';
-import ImmigrantsRights from '@/components/immigrant.component';
-import ShpetinasComp from '@/components/resources-shpetinas.component';
+import Events from '@/components/event-calendar.component';
+import ImmigrantsRights from '@/app/estamos-aqui/immigrant';
+import Networking from '@/components/networking.component';
+import Professionalism from '@/components/professionalism.component';
 
 
 export default function InfoPage( { params } : {

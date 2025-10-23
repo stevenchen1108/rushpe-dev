@@ -17,7 +17,6 @@ import { SiGooglecalendar } from 'react-icons/si';
 /* ======================== Types ======================== */
 
 type GCalDate = { date?: string; dateTime?: string };
-
 type GCalAttachment = { fileId: string };
 
 type GCalItem = {
@@ -32,9 +31,9 @@ type GCalItem = {
 type EventItem = {
   summary: string;
   description: string;
-  startISO: string; // ISO string
-  endISO: string;   // ISO string
-  attachments: string[]; // fileId list
+  startISO: string;
+  endISO: string;
+  attachments: string[];
   rsvp?: string;
   color?: string;
   image?: string;
@@ -109,22 +108,32 @@ function linkify(text: string): string {
   return withEmails.replace(/\n/g, '<br/>');
 }
 
+/* ======================== Pastel color helper ======================== */
+
+const PASTELS = ['#F8D7DA', '#FFE8CC', '#DDEBFF', '#DFF5E1', '#FFF7CC'] as const;
+
+function pickPastelKey(stableKey: string): string {
+  let hash = 5381;
+  for (let i = 0; i < stableKey.length; i++) {
+    hash = ((hash << 5) + hash) + stableKey.charCodeAt(i);
+  }
+  const idx = Math.abs(hash) % PASTELS.length;
+  return PASTELS[idx];
+}
+
 /* ======================== Helpers ======================== */
 
-// Normalize possibly-all-day google times into ISO strings
 function toISO(d: GCalDate): string {
   if (d.dateTime) return d.dateTime;
   if (d.date) return `${d.date}T12:00:00Z`;
   return new Date().toISOString();
 }
 
-// Extract an image URL from anchors in description; strip anchors; parse tokens
 function extractTokens(desc: string): { clean: string; tokens: Partial<EventItem> } {
   let working = (desc ?? '').replace(/<br\s*\/?>/gi, '\n');
 
   const tokens: Partial<EventItem> = {};
 
-  // capture image URLs inside anchors
   const imageAnchorRx = /<a[^>]*href="([^"]+\.(?:png|jpe?g|webp|gif))"[^>]*>.*?<\/a>/i;
   const imgAnchorMatch = working.match(imageAnchorRx);
   if (imgAnchorMatch && !tokens.image) {
@@ -132,7 +141,6 @@ function extractTokens(desc: string): { clean: string; tokens: Partial<EventItem
     working = working.replace(imageAnchorRx, '');
   }
 
-  // replace any remaining anchors with their href
   working = working.replace(/<a[^>]*href="([^"]+)"[^>]*>.*?<\/a>/gi, '$1');
 
   (['RSVP', 'COLOR', 'IMAGE', 'TEXT', 'ID'] as const).forEach((opt) => {
@@ -182,7 +190,13 @@ export default function Events() {
   const [eventSelected, setEventSelected] = useState<EventItem | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  // mark selected
+  // QUICK accessor for today's cell from current state
+  const todayCell = useMemo(
+    () => calendarData.find(c => c.date.getTime() === today.getTime())
+         ?? initialGrid[today.getDate() + dateIndexOffset],
+    [calendarData, today, initialGrid, dateIndexOffset]
+  );
+
   useEffect(() => {
     setCalendar((prev) =>
       prev.map((c) => ({ ...c, selected: c.date.getTime() === daySelected.date.getTime() })),
@@ -217,6 +231,8 @@ export default function Events() {
             startDate.getFullYear() === today.getFullYear()
           ) {
             const { clean, tokens } = extractTokens(item.description ?? '');
+            const stableKey = `${item.summary ?? ''}|${startISO}`;
+            const pastel = tokens.color ?? pickPastelKey(stableKey);
 
             const event: EventItem = {
               summary: item.summary ?? 'Untitled Event',
@@ -227,7 +243,7 @@ export default function Events() {
                 ? item.attachments.map((a) => a.fileId)
                 : [],
               location: item.location,
-              color: tokens.color ?? '#D27D7C',
+              color: pastel,
               rsvp: tokens.rsvp,
               image: tokens.image,
               text: tokens.text,
@@ -239,7 +255,9 @@ export default function Events() {
         });
 
         setCalendar(next);
-        setDaySelected(next[today.getDate() + dateIndexOffset]);
+        // also select today automatically so under-grid list is filled
+        const todayIdx = today.getDate() + dateIndexOffset;
+        setDaySelected(next[todayIdx]);
       } catch (e) {
         console.error('Calendar fetch failed', e);
       }
@@ -285,6 +303,34 @@ export default function Events() {
         </a>
       </div>
 
+      {/* ======= Today panel (auto-filled) ======= */}
+      <div className="today-panel">
+        <h2 className="today-title">
+          Today — {format(today, 'EEEE, MMM d')}
+        </h2>
+
+        {todayCell?.events?.length ? (
+          <ul className="today-list">
+            {todayCell.events.map((ev) => (
+              <li key={`${ev.startISO}-${ev.summary}-today`} className="today-item">
+                <span className="today-time">
+                  {format(new Date(ev.startISO), 'h:mm a')}
+                </span>
+                <button
+                  className="today-pill"
+                  style={{ backgroundColor: ev.color, color: '#000' }}
+                  onClick={(e) => onEventClick(ev, e)}
+                >
+                  {ev.summary}
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="today-empty">No events today.</p>
+        )}
+      </div>
+
       {/* Week labels */}
       <div className="cal-weeklabels">
         {WEEK.map((d) => (
@@ -292,7 +338,7 @@ export default function Events() {
         ))}
       </div>
 
-      {/* Centered modal (opens on click only) */}
+      {/* Centered modal */}
       {modalOpen && eventSelected && (
         <div
           className="cal-modal"
@@ -383,8 +429,8 @@ export default function Events() {
                     <button
                       className="event-pill hidden sm:block"
                       style={{
-                        ...(ev.color ? { backgroundColor: ev.color } : {}),
-                        ...(ev.text ? { color: ev.text } : {}),
+                        backgroundColor: ev.color,
+                        color: '#000',
                       }}
                       onClick={(e) => onEventClick(ev, e)}
                       title={ev.summary}
