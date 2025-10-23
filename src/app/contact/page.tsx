@@ -176,8 +176,8 @@ export default function ContactUs() {
           </aside>
 
           {/* RIGHT: Form card */}
-          <div className="relative">
-            <div className="rounded-3xl bg-white p-6 shadow-2xl ring-1 ring-black/5 sm:p-8">
+          <div className="relative overflow-hidden isolate">
+            <div className="relative z-10 rounded-3xl bg-white p-6 shadow-2xl ring-1 ring-black/5 sm:p-8">
               <h2 className="text-xl font-semibold text-slate-900">Send us a message</h2>
               <p className="mt-1 text-sm text-slate-600">Fields marked * are required.</p>
 
@@ -323,7 +323,8 @@ export default function ContactUs() {
               </form>
             </div>
 
-            <div className="pointer-events-none absolute -inset-x-4 -bottom-6 h-6 rounded-b-3xl bg-slate-200/40 blur-xl" />
+            {/* Confined, behind-the-card blur accent */}
+            <div className="pointer-events-none absolute inset-x-0 -bottom-6 h-6 rounded-b-3xl bg-slate-200/40 blur-xl -z-10" />
           </div>
         </div>
       </section>
