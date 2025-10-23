@@ -1,3 +1,4 @@
+// src/components/NavBar.tsx
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -43,7 +44,7 @@ export default function NavBar({ isTransparent = false }: { isTransparent?: bool
     []
   );
 
-  // Hide on scroll down / show on scroll up
+  // Hide header on scroll down / show on scroll up
   useEffect(() => {
     if (prefersReducedMotion) return;
     let lastY = window.scrollY;
@@ -72,7 +73,7 @@ export default function NavBar({ isTransparent = false }: { isTransparent?: bool
     return () => window.removeEventListener("scroll", onScroll);
   }, [open, prefersReducedMotion]);
 
-  // Close on route change; Esc closes
+  // Close menu on route change; Esc closes
   useEffect(() => setOpen(false), [pathname]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -188,7 +189,7 @@ export default function NavBar({ isTransparent = false }: { isTransparent?: bool
             ))}
           </ul>
 
-          {/* Desktop nav (perfectly centered, independent of logo & hamburger) */}
+          {/* Desktop nav (centered independent of logo & hamburger) */}
           {!collapse && (
             <div className="pointer-events-none absolute inset-0 hidden md:flex items-center justify-center">
               <nav aria-label="Primary" className="pointer-events-auto">
@@ -202,13 +203,18 @@ export default function NavBar({ isTransparent = false }: { isTransparent?: bool
                           aria-current={active ? "page" : undefined}
                           className="group relative rounded-md px-1.5 py-1 text-[16px] font-medium text-slate-700 transition hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-scarlet"
                         >
-                          <span aria-hidden className="pointer-events-none absolute -inset-y-1.5 -inset-x-2 rounded-xl bg-slate-100 opacity-0 shadow-sm transition group-hover:opacity-100" />
+                          <span
+                            aria-hidden
+                            className="pointer-events-none absolute -inset-y-1.5 -inset-x-2 rounded-xl bg-slate-100 opacity-0 shadow-sm transition group-hover:opacity-100"
+                          />
                           <span className="relative whitespace-nowrap">{item.name}</span>
                           <span
                             aria-hidden
                             className={[
                               "absolute left-2 right-2 -bottom-0.5 h-0.5 origin-left rounded-full transition-transform",
-                              active ? `${ACTIVE_UNDERLINE_COLOR} scale-x-100` : "scale-x-0 bg-transparent",
+                              active
+                                ? `${ACTIVE_UNDERLINE_COLOR} scale-x-100`
+                                : "scale-x-0 bg-transparent",
                             ].join(" ")}
                           />
                         </Link>
@@ -220,7 +226,7 @@ export default function NavBar({ isTransparent = false }: { isTransparent?: bool
             </div>
           )}
 
-          {/* "=" morphing to "X" (header button) — border removed */}
+          {/* "=" morphing to "X" (header button) */}
           <button
             onClick={() => setOpen((o) => !o)}
             aria-label={open ? "Close menu" : "Open menu"}
@@ -249,17 +255,12 @@ export default function NavBar({ isTransparent = false }: { isTransparent?: bool
         </div>
       </header>
 
-      {/* MOBILE MENU via PORTAL (outside header to avoid transform issues) */}
-      {mounted &&
+      {/* MOBILE MENU via PORTAL — UNMOUNT WHEN CLOSED (prevents black strip) */}
+      {mounted && open &&
         createPortal(
           <div
             id="mobile-menu"
-            className={[
-              "fixed inset-x-0 bottom-0 z-[100] md:hidden",
-              HEADER_TOP,
-              "transition-transform duration-300 ease-out origin-top",
-              open ? "translate-y-0 pointer-events-auto" : "-translate-y-full pointer-events-none",
-            ].join(" ")}
+            className={["fixed inset-x-0 bottom-0 z-[100] md:hidden", HEADER_TOP].join(" ")}
             aria-hidden={!open}
           >
             <nav aria-label="Mobile" className="h-full bg-neutral-900 text-white/90">

@@ -1,3 +1,4 @@
+// src/components/WidgetCard.tsx
 "use client";
 
 import Image, { StaticImageData } from "next/image";
@@ -24,19 +25,19 @@ export default function WidgetCard({ item, density = "comfortable" }: Props) {
     roomy: "px-6 pt-6 pb-6 sm:px-7 sm:pt-7 sm:pb-7",
   }[density];
 
-  // ↑ made each preset a touch roomier
-  // ↓ MEDIA made a bit taller overall (smaller ratios = taller cards)
+  // MEDIA height hint (kept for larger breakpoints); mobile uses the grid's 1fr row
   const MEDIA = {
-    compact: "aspect-[5/4] sm:aspect-[4/3] lg:aspect-[3/2]",
-    comfortable: "aspect-[5/4] sm:aspect-[4/3] lg:aspect-[3/2]",
-    roomy: "aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/3]", // use if you want clearly taller cards
+    compact: "sm:aspect-[4/3] lg:aspect-[3/2]",
+    comfortable: "sm:aspect-[4/3] lg:aspect-[3/2]",
+    roomy: "sm:aspect-[3/4] lg:aspect-[4/3]",
   }[density];
 
   return (
     <article
       className={[
         "relative w-full overflow-hidden rounded-xl sm:rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm",
-        "grid grid-rows-[auto,auto,auto]",
+        // Equal height on mobile; auto on sm+
+        "grid grid-rows-[auto,1fr,auto] h-[540px] sm:h-auto",
       ].join(" ")}
     >
       {/* Header */}
@@ -52,8 +53,14 @@ export default function WidgetCard({ item, density = "comfortable" }: Props) {
         </p>
       </div>
 
-      {/* Media — slightly taller */}
-      <div className={["relative mt-3 overflow-hidden rounded-lg sm:rounded-2xl mx-4 sm:mx-6", MEDIA].join(" ")}>
+      {/* Media — fills the 1fr row on mobile; uses aspect on sm+ */}
+      <div
+        className={[
+          "relative mt-3 overflow-hidden rounded-lg sm:rounded-2xl mx-4 sm:mx-6",
+          "min-h-0 h-full", // lets the middle row expand/contract
+          MEDIA,
+        ].join(" ")}
+      >
         <Image
           src={item.image}
           alt={item.title}
@@ -63,8 +70,8 @@ export default function WidgetCard({ item, density = "comfortable" }: Props) {
         />
       </div>
 
-      {/* CTA */}
-      <div className={PAD.replace("pt", "pt-3")}>
+      {/* CTA — extra space below image; pinned to card bottom via grid */}
+      <div className={[PAD.replace("pt", "pt-3"), "mt-5 sm:mt-6"].join(" ")}>
         <Link
           href={item.href}
           className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-4 py-2 text-sm text-white shadow-sm hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900"
