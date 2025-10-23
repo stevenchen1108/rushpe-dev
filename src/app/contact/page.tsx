@@ -316,7 +316,7 @@ export default function ContactUs() {
                         Sending…
                       </>
                     ) : (
-                      "Send Message"
+                      "Send"
                     )}
                   </button>
                 </div>
