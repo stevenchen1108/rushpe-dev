@@ -56,7 +56,7 @@ export const alumni: Alumni[] = [
       "Have a growth-mindset and constantly invest in your professional development! Progressing in your career isn't based on luck, but rather on consistency!",
     imageSrc: davidFabian,                             // static import (safe)
     linkedin: "https://www.linkedin.com/in/david-a-fabian",
-    email: "daf217@scarletmail.rutgers.edu",
+    email: "david.f2002@outlook.com",
   },
 ];
 
