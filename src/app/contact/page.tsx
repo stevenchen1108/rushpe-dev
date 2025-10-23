@@ -4,9 +4,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { createClient } from "@supabase/supabase-js";
-// system icons
 import { Mail, MapPin, CheckCircle2, Loader2 } from "lucide-react";
-// brand icons
 import { FaInstagram, FaLinkedin, FaFacebook, FaTiktok } from "react-icons/fa6";
 
 const supabaseClient = createClient(
@@ -20,7 +18,7 @@ type ContactFields = {
   email: string;
   phoneNum?: string;
   desc: string;
-  honey?: string; // honeypot
+  honey?: string;
 };
 
 export default function ContactUs() {
@@ -56,7 +54,7 @@ export default function ContactUs() {
   const sendContactFormData = useCallback(
     async (userInput: ContactFields) => {
       try {
-        if (userInput.honey) return; // honeypot
+        if (userInput.honey) return;
 
         const { error } = await supabaseClient.from("GeneralQuestions").insert({
           first_name: userInput.firstName,
@@ -83,16 +81,11 @@ export default function ContactUs() {
 
   return (
     <main className="relative min-h-[100svh] bg-white">
-      {/* Section */}
       <section className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         <div className="grid gap-10 lg:grid-cols-2">
-          {/* LEFT: Title + contact info */}
+          {/* LEFT */}
           <aside className="text-slate-900">
-            <h1
-              className="text-5xl/tight sm:text-6xl font-extrabold tracking-tight
-                         bg-gradient-to-r from-red-600 via-orange-500 to-blue-600
-                         bg-clip-text text-transparent"
-            >
+            <h1 className="text-5xl/tight sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-red-600 via-orange-500 to-blue-600 bg-clip-text text-transparent">
               Contact Us
             </h1>
 
@@ -104,15 +97,10 @@ export default function ContactUs() {
             <dl className="mt-8 space-y-4 text-slate-700">
               <div className="flex items-center gap-3">
                 <Mail className="h-5 w-5 opacity-80" aria-hidden />
-                <a
-                  href="mailto:shpe.rutgers@gmail.com"
-                  className="underline-offset-2 hover:underline"
-                >
+                <a href="mailto:shpe.rutgers@gmail.com" className="underline-offset-2 hover:underline">
                   shpe.rutgers@gmail.com
                 </a>
               </div>
-
-              {/* Location: linked to Google Maps */}
               <div className="flex items-center gap-3">
                 <MapPin className="h-5 w-5 opacity-80" aria-hidden />
                 <a
@@ -126,15 +114,13 @@ export default function ContactUs() {
               </div>
             </dl>
 
-            {/* Socials */}
             <div className="mt-8 flex items-center gap-5">
               <a
                 href="https://www.instagram.com/shpe_ru/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full
-                           bg-slate-100 ring-1 ring-slate-200 transition hover:bg-slate-200"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-slate-100 ring-1 ring-slate-200 transition hover:bg-slate-200"
                 title="Instagram"
               >
                 <FaInstagram className="h-5 w-5" />
@@ -144,8 +130,7 @@ export default function ContactUs() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full
-                           bg-slate-100 ring-1 ring-slate-200 transition hover:bg-slate-200"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-slate-100 ring-1 ring-slate-200 transition hover:bg-slate-200"
                 title="LinkedIn"
               >
                 <FaLinkedin className="h-5 w-5" />
@@ -155,8 +140,7 @@ export default function ContactUs() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full
-                           bg-slate-100 ring-1 ring-slate-200 transition hover:bg-slate-200"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-slate-100 ring-1 ring-slate-200 transition hover:bg-slate-200"
                 title="Facebook"
               >
                 <FaFacebook className="h-5 w-5" />
@@ -166,8 +150,7 @@ export default function ContactUs() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="TikTok"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full
-                           bg-slate-100 ring-1 ring-slate-200 transition hover:bg-slate-200"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-slate-100 ring-1 ring-slate-200 transition hover:bg-slate-200"
                 title="TikTok"
               >
                 <FaTiktok className="h-5 w-5" />
@@ -175,8 +158,9 @@ export default function ContactUs() {
             </div>
           </aside>
 
-          {/* RIGHT: Form card */}
-          <div className="relative overflow-hidden isolate">
+          {/* RIGHT */}
+          <div className="relative">
+            {/* Card stays fully rounded with visible shadow */}
             <div className="relative z-10 rounded-3xl bg-white p-6 shadow-2xl ring-1 ring-black/5 sm:p-8">
               <h2 className="text-xl font-semibold text-slate-900">Send us a message</h2>
               <p className="mt-1 text-sm text-slate-600">Fields marked * are required.</p>
@@ -193,34 +177,17 @@ export default function ContactUs() {
               )}
 
               {"root" in errors && errors.root?.message && (
-                <div
-                  role="alert"
-                  className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-red-800 ring-1 ring-red-200"
-                >
+                <div role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-red-800 ring-1 ring-red-200">
                   {errors.root.message}
                 </div>
               )}
 
-              <form
-                onSubmit={handleSubmit(sendContactFormData)}
-                className="mt-6 grid grid-cols-1 gap-5"
-                noValidate
-              >
-                {/* Honeypot */}
-                <input
-                  type="text"
-                  tabIndex={-1}
-                  autoComplete="off"
-                  className="hidden"
-                  aria-hidden="true"
-                  {...register("honey")}
-                />
+              <form onSubmit={handleSubmit(sendContactFormData)} className="mt-6 grid grid-cols-1 gap-5" noValidate>
+                <input type="text" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" {...register("honey")} />
 
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <label htmlFor="firstName" className="text-sm font-medium text-slate-700">
-                      First Name *
-                    </label>
+                    <label htmlFor="firstName" className="text-sm font-medium text-slate-700">First Name *</label>
                     <input
                       id="firstName"
                       autoComplete="given-name"
@@ -228,15 +195,11 @@ export default function ContactUs() {
                       className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm outline-none transition focus:ring-4 focus:ring-sky-300/40"
                       {...register("firstName", { required: true, minLength: 2 })}
                     />
-                    {errors.firstName && (
-                      <p className="text-sm text-red-600">Enter a valid first name.</p>
-                    )}
+                    {errors.firstName && <p className="text-sm text-red-600">Enter a valid first name.</p>}
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="lastName" className="text-sm font-medium text-slate-700">
-                      Last Name *
-                    </label>
+                    <label htmlFor="lastName" className="text-sm font-medium text-slate-700">Last Name *</label>
                     <input
                       id="lastName"
                       autoComplete="family-name"
@@ -244,36 +207,25 @@ export default function ContactUs() {
                       className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm outline-none transition focus:ring-4 focus:ring-sky-300/40"
                       {...register("lastName", { required: true, minLength: 2 })}
                     />
-                    {errors.lastName && (
-                      <p className="text-sm text-red-600">Enter a valid last name.</p>
-                    )}
+                    {errors.lastName && <p className="text-sm text-red-600">Enter a valid last name.</p>}
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-medium text-slate-700">
-                    Email *
-                  </label>
+                  <label htmlFor="email" className="text-sm font-medium text-slate-700">Email *</label>
                   <input
                     id="email"
                     type="email"
                     autoComplete="email"
                     placeholder="you@rutgers.edu"
                     className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm outline-none transition focus:ring-4 focus:ring-sky-300/40"
-                    {...register("email", {
-                      required: true,
-                      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/i,
-                    })}
+                    {...register("email", { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/i })}
                   />
-                  {errors.email && (
-                    <p className="text-sm text-red-600">Enter a valid email address.</p>
-                  )}
+                  {errors.email && <p className="text-sm text-red-600">Enter a valid email address.</p>}
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="phoneNum" className="text-sm font-medium text-slate-700">
-                    Phone (optional)
-                  </label>
+                  <label htmlFor="phoneNum" className="text-sm font-medium text-slate-700">Phone (optional)</label>
                   <input
                     id="phoneNum"
                     inputMode="tel"
@@ -285,9 +237,7 @@ export default function ContactUs() {
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="desc" className="text-sm font-medium text-slate-700">
-                    Message *
-                  </label>
+                  <label htmlFor="desc" className="text-sm font-medium text-slate-700">Message *</label>
                   <textarea
                     id="desc"
                     rows={5}
@@ -295,36 +245,27 @@ export default function ContactUs() {
                     className="w-full resize-y rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm outline-none transition focus:ring-4 focus:ring-sky-300/40"
                     {...register("desc", { required: true, minLength: 10 })}
                   />
-                  {errors.desc && (
-                    <p className="text-sm text-red-600">Please enter at least 10 characters.</p>
-                  )}
+                  {errors.desc && <p className="text-sm text-red-600">Please enter at least 10 characters.</p>}
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-slate-500">
-                    By submitting, you agree we may contact you about your inquiry.
-                  </p>
-
+                  <p className="text-xs text-slate-500">By submitting, you agree we may contact you about your inquiry.</p>
                   <button
                     type="submit"
                     disabled={isSubmitting}
                     className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        Sending…
-                      </>
-                    ) : (
-                      "Send"
-                    )}
+                    {isSubmitting ? (<><Loader2 className="h-4 w-4 animate-spin" />Sending…</>) : ("Send")}
                   </button>
                 </div>
               </form>
             </div>
 
-            {/* Confined, behind-the-card blur accent */}
-            <div className="pointer-events-none absolute inset-x-0 -bottom-6 h-6 rounded-b-3xl bg-slate-200/40 blur-xl -z-10" />
+            {/* Blur stays away from the side radii so curves remain perfect */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -z-10 left-6 right-6 -bottom-6 h-8 rounded-b-3xl bg-slate-200/40 blur-xl"
+            />
           </div>
         </div>
       </section>
