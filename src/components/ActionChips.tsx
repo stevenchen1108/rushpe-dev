@@ -17,10 +17,7 @@ export default function ActionChips({ items }: { items: QuickItem[] }) {
   return (
     <section
       className={[
-        // FULL BLEED on mobile; reintroduce modest edge padding above md+
         "w-full max-w-none mx-auto",
-        // ↓ smaller top gap, bigger bottom gap on mobile; scale up slightly on larger screens
-        // SIDE PADDING (edge == gutter from md and up). No side padding on mobile.
         "pt-3 pb-10 sm:pt-3 sm:pb-12 md:pt-4 md:pb-14 lg:pt-6 lg:pb-16",
         "px-0 md:px-4 lg:px-6 xl:px-6 2xl:px-6",
       ].join(" ")}
@@ -28,25 +25,27 @@ export default function ActionChips({ items }: { items: QuickItem[] }) {
       <div
         className={[
           "grid grid-cols-1 md:grid-cols-2",
-          // MUCH SMALLER GAPS: base 8px, md 16px, lg 24px
           "gap-3 md:gap-4 lg:gap-6",
         ].join(" ")}
       >
         {items.map((it) => (
-          <article
+          <Link
             key={it.id}
+            href={it.href}
             style={{ backgroundColor: it.bg ?? "#FFFFFF" }}
             className={[
-              "relative overflow-hidden rounded-none",
+              "group relative block overflow-hidden rounded-none",
               "ring-1 ring-slate-200/70 bg-white shadow-[0_1px_0_rgba(2,6,23,0.04)]",
-              // Slightly taller so reduced gutters don’t feel cramped
               "min-h-[380px] sm:min-h-[440px] md:min-h-[500px]",
+              "transition hover:shadow-md focus-visible:outline-none",
+              "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-900",
+              "cursor-pointer",
             ].join(" ")}
+            aria-label={`${it.title} — open ${it.href}`}
           >
             <div
               className={[
                 "flex h-full flex-col items-center text-center",
-                // Tighten top padding to remove the big void; keep nice breathing room
                 "px-4 md:px-6 pt-4 sm:pt-5 md:pt-6",
               ].join(" ")}
             >
@@ -55,23 +54,18 @@ export default function ActionChips({ items }: { items: QuickItem[] }) {
               </h3>
               <p className="mt-2 max-w-[50ch] text-slate-600">{it.desc}</p>
 
-              <Link
-                href={it.href}
-                className="mt-4 inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900"
-              >
+              {/* Visual CTA (not a separate link) */}
+              <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-white font-semibold transition group-hover:bg-slate-800">
                 Learn more <span aria-hidden>↗</span>
-              </Link>
+              </span>
 
-              {/* Only keep spacer from md+ so artwork isn't pushed too low on mobile */}
               <div className="hidden md:block md:flex-1" />
 
               {it.image && (
                 <div
                   className={[
                     "relative w-full",
-                    // Balanced artwork height; a bit taller as screen grows
                     "h-48 sm:h-56 md:h-64 lg:h-[18rem]",
-                    // Consistent vertical rhythm
                     "mt-5 md:mt-3 mb-6",
                   ].join(" ")}
                 >
@@ -79,15 +73,17 @@ export default function ActionChips({ items }: { items: QuickItem[] }) {
                     src={it.image}
                     alt=""
                     fill
-                    // Full width on mobile (no side whitespace), generous beyond
                     sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 720px"
-                    className="object-contain"
+                    className="object-contain transition-transform duration-300 group-hover:scale-[1.02]"
                     priority={false}
                   />
                 </div>
               )}
             </div>
-          </article>
+
+            {/* Expand hit area (doesn't change semantics) */}
+            <span className="absolute inset-0" aria-hidden="true" />
+          </Link>
         ))}
       </div>
     </section>
