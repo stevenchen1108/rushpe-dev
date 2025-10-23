@@ -23,7 +23,7 @@ import {
    Tokens
 --------------------------------------------- */
 const SCARLET = "#cc0033";
-const GOOGLE_FORM_URL = "https://YOUR_GOOGLE_FORM_URL"; // <— replace with your form
+const GOOGLE_FORM_URL = "https://YOUR_GOOGLE_FORM_URL"; // TODO: replace
 const SPONSOR_EMAIL = "community@rushpe.org";
 const SPONSOR_MAILTO =
   `mailto:${SPONSOR_EMAIL}` +
@@ -31,15 +31,22 @@ const SPONSOR_MAILTO =
 
 /* ---------------------------------------------
    Motion helpers
+   - useFade: real hook (top-level only)
+   - makeFade: pure helper (safe inside maps/loops)
 --------------------------------------------- */
-function useFade(delay = 0) {
-  const reduce = useReducedMotion();
+function makeFade(reduce: boolean | null, delay = 0) {
+  const r = !!reduce; // normalize null -> false
   return {
-    initial: reduce ? { opacity: 1 } : { y: 16, opacity: 0 },
+    initial: r ? { opacity: 1 } : { y: 16, opacity: 0 },
     whileInView: { y: 0, opacity: 1 },
     viewport: { once: true, margin: "-64px" },
     transition: { duration: 0.5, delay },
   } as const;
+}
+
+function useFade(delay = 0) {
+  const reduce = useReducedMotion(); // boolean | null
+  return makeFade(reduce, delay);
 }
 
 /* ---------------------------------------------
@@ -342,6 +349,8 @@ function OverviewShadow() {
    Partnering, Benefits, CTA, More Initiatives
 --------------------------------------------- */
 function Partnering() {
+  const reduce = useReducedMotion(); // boolean | null
+
   const items = [
     {
       title: "Hosting workshops",
@@ -362,10 +371,11 @@ function Partnering() {
       img: "/shadow-program/shadow-company-2.jpg",
     },
   ];
+
   return (
     <section className="bg-neutral-50">
       <div className="mx-auto max-w-7xl px-6 py-12 sm:py-16">
-        <motion.div {...useFade(0)} className="max-w-3xl">
+        <motion.div {...makeFade(reduce, 0)} className="max-w-3xl">
           <Eyebrow>Partnering with RU SHPE</Eyebrow>
           <h2 className="mt-1 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
             We collaborate to empower underrepresented communities through STEM.
@@ -380,7 +390,7 @@ function Partnering() {
           {items.map((it, idx) => (
             <motion.article
               key={it.title}
-              {...useFade(0.05 * idx)}
+              {...makeFade(reduce, 0.05 * idx)}
               className="group overflow-hidden rounded-3xl bg-white ring-1 ring-black/10"
             >
               <div className="relative aspect-[16/10]">
@@ -407,6 +417,8 @@ function Partnering() {
 }
 
 function Benefits() {
+  const reduce = useReducedMotion(); // boolean | null
+
   const cards = [
     {
       icon: <Camera className="h-6 w-6" />,
@@ -442,7 +454,7 @@ function Benefits() {
           {cards.map((c, i) => (
             <motion.div
               key={c.title}
-              {...useFade(0.05 * i)}
+              {...makeFade(reduce, 0.05 * i)}
               className="rounded-3xl bg-white p-6 ring-1 ring-black/10"
             >
               <div
@@ -571,6 +583,8 @@ function InitiativeCard({ i }: { i: Initiative }) {
 }
 
 function MoreInitiatives() {
+  const reduce = useReducedMotion(); // boolean | null
+
   return (
     <section className="bg-neutral-50">
       <div className="mx-auto max-w-7xl px-6 py-12 sm:py-16">
@@ -583,7 +597,7 @@ function MoreInitiatives() {
 
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
           {INITIATIVES.map((i, idx) => (
-            <motion.div key={i.slug} {...useFade(0.05 * idx)}>
+            <motion.div key={i.slug} {...makeFade(reduce, 0.05 * idx)}>
               <InitiativeCard i={i} />
             </motion.div>
           ))}
@@ -661,7 +675,7 @@ function Gallery() {
           ))}
         </motion.div>
 
-        {/* Lightbox rendered via Portal with high z-index so it sits above navbar */}
+        {/* Lightbox via Portal */}
         {lightbox &&
           createPortal(
             <div
@@ -675,7 +689,6 @@ function Gallery() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="h-full w-full grid place-items-center">
-                  {/* Use fill + object-contain to fit full photo regardless of aspect ratio */}
                   <div className="relative h-full w-full">
                     <Image
                       src={lightbox.src}
@@ -687,7 +700,6 @@ function Gallery() {
                   </div>
                 </div>
 
-                {/* Top-right icon controls */}
                 <div className="absolute right-3 top-3 flex items-center gap-1.5">
                   <a
                     href={lightbox.src}
