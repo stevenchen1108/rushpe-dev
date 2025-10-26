@@ -24,13 +24,14 @@ import geeseImage4 from "@/../public/home-pg-assets/shadow-program-geese.jpg";
 import geeseImage5 from "@/../public/home-pg-assets/estamos-aqui.jpg";
 import geeseImage6 from "@/../public/home-pg-assets/contact-geese.jpg";
 
-
 /* ------------------------------ Social icons --------------------------- */
-/* Ensure files exist in /public/socials with these names */
 import igIcon from "@/../public/socials/instagram-logo.png";
 import liIcon from "@/../public/socials/linkedin-logo.png";
 import fbIcon from "@/../public/socials/facebook-logo.png";
 import tkIcon from "@/../public/socials/tiktok-logo.png";
+
+/* ------------------------------ Title logo ----------------------------- */
+import sheLogo from "@/../public/she-logo.png";
 
 export default function Home() {
   const quickItems = [
@@ -137,16 +138,23 @@ export default function Home() {
 
   return (
     <main id="main" className="bg-white text-slate-900">
-      {/* HERO */}
+      {/* HERO (full-viewport on laptop/desktop) */}
       <section className="relative isolate">
-        <div className="relative aspect-[16/9] min-h-[52vh] max-h-[72vh] w-full overflow-hidden bg-slate-900">
+        {/* Height controller — full viewport height on >=sm */}
+        <div
+          className="
+           w-full overflow-hidden bg-slate-900
+            min-h-[58svh] sm:min-h-[78svh] md:min-h-[82svh]
+            max-h-[900px]
+          "
+        >
           <video
             autoPlay
             muted
             loop
             playsInline
             poster={heroPoster.src}
-            className="h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
           >
             <source
               src="/home-pg-assets/home-bg-vid-jan2025.mp4"
@@ -160,9 +168,19 @@ export default function Home() {
         <div className="absolute inset-0 flex items-end">
           <div className="mx-auto w-full max-w-7xl px-4 pb-[env(safe-area-inset-bottom)] pb-5 sm:px-6 sm:pb-10">
             <div className="max-w-xl rounded-xl bg-white/8 p-3 backdrop-blur-[2px] sm:max-w-3xl sm:rounded-2xl sm:p-4">
-              <h1 className="text-[28px] leading-[1.1] font-extrabold tracking-tight text-white drop-shadow sm:text-5xl">
-                Welcome to Rutgers SHPE
-              </h1>
+              {/* Title row with logo on the right */}
+              <div className="flex items-center gap-3 sm:gap-4">
+                <h1 className="text-[28px] leading-[1.1] font-extrabold tracking-tight text-white drop-shadow sm:text-5xl">
+                  Welcome to Rutgers SHPE
+                </h1>
+                <Image
+                  src={sheLogo}
+                  alt="Rutgers SHPE logo"
+                  priority
+                  className="hidden sm:block h-8 sm:h-10 md:h-12 w-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]"
+                />
+              </div>
+
               <p className="mt-2 text-white/90 text-base sm:mt-3 sm:max-w-prose sm:text-lg">
                 We foster academic and professional growth for all
                 students—rooted in community, mentorship, and opportunity.
@@ -189,9 +207,7 @@ export default function Home() {
       {/* SOCIALS SECTION (simple, clean) */}
       <section aria-labelledby="socials-title" className="relative">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
-          {/* slightly more space above, but still compact */}
           <div className="pt-6 sm:pt-7 md:pt-8" />
-
           <div className="text-center">
             <span className="block text-[11px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
               Stay connected
@@ -203,8 +219,6 @@ export default function Home() {
               Follow us on our socials
             </h2>
           </div>
-
-          {/* icons — modest size, even spacing */}
           <div className="mt-4 sm:mt-5 flex items-center justify-center gap-9 sm:gap-11 md:gap-12">
             <a
               href="https://www.instagram.com/shpe_ru/"
@@ -267,8 +281,6 @@ export default function Home() {
               />
             </a>
           </div>
-
-          {/* a little breathing room below */}
           <div className="pb-6 sm:pb-7 md:pb-8" />
         </div>
       </section>

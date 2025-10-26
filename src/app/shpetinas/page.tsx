@@ -277,7 +277,7 @@ function ActionButton({
       className={`${base} ${styles}`}
     >
       {children}
-      <span aria-hidden className="inline-block">↗</span>
+      <span aria-hidden className="inline-block"></span>
     </Link>
   );
 }

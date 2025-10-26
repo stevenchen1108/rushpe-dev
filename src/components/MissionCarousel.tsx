@@ -109,7 +109,7 @@ export default function WidgetCarousel({
                   href={it.href}
                   className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-white hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900"
                 >
-                  Learn more <span aria-hidden>↗</span>
+                  Learn more <span aria-hidden></span>
                 </Link>
               </div>
             </article>

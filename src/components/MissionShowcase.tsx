@@ -231,7 +231,7 @@ export default function MissionShowcase({
                   className="inline-flex items-center gap-2 rounded-full bg-white/95 px-5 py-2.5 text-slate-900 font-semibold ring-1 ring-white/70 backdrop-blur hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-scarlet"
                 >
                   {cta.label}
-                  <span aria-hidden>↗</span>
+                  <span aria-hidden></span>
                 </Link>
               </div>
             </div>

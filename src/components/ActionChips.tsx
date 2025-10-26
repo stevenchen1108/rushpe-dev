@@ -56,7 +56,7 @@ export default function ActionChips({ items }: { items: QuickItem[] }) {
 
               {/* Visual CTA (not a separate link) */}
               <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-white font-semibold transition group-hover:bg-slate-800">
-                Learn more <span aria-hidden>↗</span>
+                Learn more <span aria-hidden></span>
               </span>
 
               <div className="hidden md:block md:flex-1" />

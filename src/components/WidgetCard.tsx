@@ -77,7 +77,7 @@ export default function WidgetCard({ item, density = "comfortable" }: Props) {
           className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-4 py-2 text-sm text-white shadow-sm hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900"
           aria-label={`Learn more about ${item.title}`}
         >
-          Learn more <span aria-hidden>↗</span>
+          Learn more <span aria-hidden></span>
         </Link>
       </div>
     </article>
