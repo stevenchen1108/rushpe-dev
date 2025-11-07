@@ -2,7 +2,6 @@
 
 import Image, { type StaticImageData } from 'next/image';
 import {
-  verizonLogo,
   bofaLogo,
   whitingturnerLogo,
   bloombergLogo,
@@ -10,7 +9,6 @@ import {
 
 /** Edit this list to control what shows in the marquee (order = left→right). */
 export const MARQUEE_LOGOS: (StaticImageData | string)[] = [
-  verizonLogo,
   bofaLogo,
   whitingturnerLogo,
   bloombergLogo,
