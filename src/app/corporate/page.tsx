@@ -15,7 +15,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 /* ------------------------------- Hero image ----------------------------- */
-import ssmImg from "@/../public/she-swe-meet/she-swe-meet-logo.png";
+import ssmImg from "@/../public/she-swe-meet/she-swe-meet-logo.jpg";
 
 /* -------------------------------- Data --------------------------------- */
 import type { Company, SponsorTiers, LogoLink, Organizer } from "./data/types";
@@ -247,8 +247,8 @@ export default function Corporate() {
                 information.
               </p>
               <div data-reveal className="reveal mt-6 flex flex-wrap items-center lg:justify-start justify-center gap-2">
-                <span className="chip">40th Annual</span>
-                <span className="chip">October 3, 2025</span>
+                <span className="chip">41st Annual</span>
+                <span className="chip">October 6, 2026</span>
                 <span className="chip">10AM – 2PM</span>
                 <span className="chip">50+ Companies</span>
                 <span className="chip">Internship Opportunities</span>

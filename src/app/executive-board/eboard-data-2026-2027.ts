@@ -115,7 +115,7 @@ export const eBoardData2026_2027 = [
         headshot: shpetinasHeadshot2026,
         email: 'shpetinas@rushpe.org',
         linkedin: "https://www.linkedin.com/in/esmeralda-gil-/",
-        desc: "Hi, my name is Esmeralda! I a junior studying Chemical Engineering. I am excited to serve as this year's SHPEtinas Chair. This year, my goal is to create meaninful opportunities, build confidence, and form lasting connections for our members. In my free time, I enjoy reading playing softball, and spending time with friends.",
+        desc: "Hi, my name is Esmeralda! I am a junior studying Chemical Engineering. I am excited to serve as this year's SHPEtinas Chair. This year, my goal is to create meaningful opportunities, build confidence, and form lasting connections for our members. In my free time, I enjoy reading, playing softball, and spending time with friends.",
         index: 9
     },
     {
@@ -163,7 +163,7 @@ export const eBoardData2026_2027 = [
         headshot: historianHeadshot2026,
         email: 'historian@rushpe.org',
         linkedin: 'https://www.linkedin.com/in/natalie-mercado-142b2b331/',
-        desc: "Hey! I'm Natalie, a junior studying Industrial and Systems Engineering.",
+        desc: "Hi! I'm Natalie Mercado, a third year in Industrial Engineering and finishing up a Packaging Certificate. I am proud to be both Ecuadorian and Puerto Rican, and am looking forward to serving as your Historian this year. I enjoy watching the WNBA and shows like Star Wars the Clone Wars. Some hobbies include playing sports, woodcarving, and making robots for Combat Robotics at Rutgers. If you see me around don't be afraid to say hi :)",
         index: 13
     },
 ];

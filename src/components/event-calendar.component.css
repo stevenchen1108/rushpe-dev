@@ -8,7 +8,12 @@
 
   /* ---------- Header ---------- */
   .cal-header { @apply flex items-center justify-between gap-4 pb-4; }
+  .cal-month-controls { @apply flex items-center gap-2 sm:gap-3; }
   .cal-month  { @apply text-3xl tracking-widest font-extrabold text-black; }
+  .cal-month-nav {
+    @apply grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-slate-200 bg-white text-xl leading-none text-black
+           transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300;
+  }
   .cal-subscribe{
     @apply inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-white bg-sky-600
            focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300;

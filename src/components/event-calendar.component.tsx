@@ -2,11 +2,14 @@
 
 import Image, { type StaticImageData } from "next/image";
 import {
+  addMonths,
   eachDayOfInterval,
   startOfMonth,
   endOfMonth,
   startOfWeek,
   endOfWeek,
+  isSameDay,
+  isSameMonth,
   set,
   format,
 } from "date-fns";
@@ -276,6 +279,20 @@ function buildMonthGrid(forDate: Date): DayCell[] {
   );
 }
 
+function buildCalendarWithEvents(forDate: Date, events: EventItem[]): DayCell[] {
+  const grid = buildMonthGrid(forDate);
+
+  events.forEach((event) => {
+    const eventDate = new Date(event.startISO);
+    if (!isSameMonth(eventDate, forDate)) return;
+
+    const cell = grid.find((day) => isSameDay(day.date, eventDate));
+    cell?.events.push(event);
+  });
+
+  return grid;
+}
+
 /* ======================== Component ======================== */
 
 export default function Events() {
@@ -287,22 +304,32 @@ export default function Events() {
   );
 
   const initialGrid = useMemo(() => buildMonthGrid(today), [today]);
-  const firstDOM = startOfMonth(today);
-  const dateIndexOffset = firstDOM.getDay() - 1;
 
+  const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(today));
+  const [allEvents, setAllEvents] = useState<EventItem[]>([]);
   const [calendarData, setCalendar] = useState<DayCell[]>(initialGrid);
   const [daySelected, setDaySelected] = useState<DayCell>(
-    initialGrid[today.getDate() + dateIndexOffset],
+    initialGrid.find((cell) => isSameDay(cell.date, today)) ?? initialGrid[0],
   );
   const [eventSelected, setEventSelected] = useState<EventItem | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   // QUICK accessor for today's cell from current state
   const todayCell = useMemo(
-    () =>
-      calendarData.find((c) => c.date.getTime() === today.getTime()) ??
-      initialGrid[today.getDate() + dateIndexOffset],
-    [calendarData, today, initialGrid, dateIndexOffset],
+    () => {
+      const visibleToday = calendarData.find((c) => isSameDay(c.date, today));
+      if (visibleToday) return visibleToday;
+
+      const fallback =
+        initialGrid.find((cell) => isSameDay(cell.date, today)) ?? initialGrid[0];
+      return {
+        ...fallback,
+        events: allEvents.filter((event) =>
+          isSameDay(new Date(event.startISO), today),
+        ),
+      };
+    },
+    [calendarData, today, initialGrid, allEvents],
   );
   const startOfTomorrow = useMemo(() => {
     const nextDay = new Date(today);
@@ -311,8 +338,7 @@ export default function Events() {
   }, [today]);
   const todayEventsCount = todayCell?.events?.length ?? 0;
   const nextUpcomingEvent = useMemo(() => {
-    const upcoming = calendarData
-      .flatMap((cell) => cell.events)
+    const upcoming = allEvents
       .filter(
         (event) =>
           new Date(event.startISO).getTime() >= startOfTomorrow.getTime(),
@@ -322,7 +348,17 @@ export default function Events() {
           new Date(a.startISO).getTime() - new Date(b.startISO).getTime(),
       );
     return upcoming[0] ?? null;
-  }, [calendarData, startOfTomorrow]);
+  }, [allEvents, startOfTomorrow]);
+
+  useEffect(() => {
+    const nextGrid = buildCalendarWithEvents(visibleMonth, allEvents);
+    setCalendar(
+      nextGrid.map((cell) => ({
+        ...cell,
+        selected: isSameDay(cell.date, daySelected.date),
+      })),
+    );
+  }, [allEvents, visibleMonth, daySelected.date]);
 
   const renderEventCard = (event: EventItem, key: string) => {
     const start = new Date(event.startISO);
@@ -416,45 +452,32 @@ export default function Events() {
         );
         const data: { items?: GCalItem[] } = await res.json();
 
-        const next = buildMonthGrid(today);
+        const events: EventItem[] = [];
 
         (data.items ?? []).forEach((item) => {
           const startISO = toISO(item.start);
           const endISO = toISO(item.end);
-          const startDate = new Date(startISO);
+          const { clean, tokens } = extractTokens(item.description ?? "");
+          const stableKey = `${item.summary ?? ""}|${startISO}`;
+          const pastel = tokens.color ?? pickPastelKey(stableKey);
 
-          if (
-            startDate.getMonth() === today.getMonth() &&
-            startDate.getFullYear() === today.getFullYear()
-          ) {
-            const { clean, tokens } = extractTokens(item.description ?? "");
-            const stableKey = `${item.summary ?? ""}|${startISO}`;
-            const pastel = tokens.color ?? pickPastelKey(stableKey);
-
-            const event: EventItem = {
-              summary: item.summary ?? "Untitled Event",
-              description: clean,
-              startISO,
-              endISO,
-              attachments: Array.isArray(item.attachments)
-                ? item.attachments.map((a) => a.fileId)
-                : [],
-              location: item.location,
-              color: pastel,
-              rsvp: tokens.rsvp,
-              image: tokens.image,
-              text: tokens.text,
-            };
-
-            const idx = startDate.getDate() + dateIndexOffset;
-            if (next[idx]) next[idx].events.push(event);
-          }
+          events.push({
+            summary: item.summary ?? "Untitled Event",
+            description: clean,
+            startISO,
+            endISO,
+            attachments: Array.isArray(item.attachments)
+              ? item.attachments.map((a) => a.fileId)
+              : [],
+            location: item.location,
+            color: pastel,
+            rsvp: tokens.rsvp,
+            image: tokens.image,
+            text: tokens.text,
+          });
         });
 
-        setCalendar(next);
-        // also select today automatically so under-grid list is filled
-        const todayIdx = today.getDate() + dateIndexOffset;
-        setDaySelected(next[todayIdx]);
+        setAllEvents(events);
       } catch (e) {
         console.error("Calendar fetch failed", e);
       }
@@ -479,6 +502,12 @@ export default function Events() {
     if (!cell.events.length) setModalOpen(false);
   };
 
+  const changeMonth = (amount: number) => {
+    setVisibleMonth((current) => addMonths(current, amount));
+    setDaySelected((current) => ({ ...current, selected: false }));
+    setModalOpen(false);
+  };
+
   const onEventClick = (ev: EventItem, e: MouseEvent) => {
     e.stopPropagation();
     setEventSelected(ev);
@@ -489,7 +518,25 @@ export default function Events() {
     <section className="cal-shell">
       {/* Header */}
       <div className="cal-header">
-        <h1 className="cal-month">{format(today, "LLLL").toUpperCase()}</h1>
+        <div className="cal-month-controls">
+          <button
+            type="button"
+            className="cal-month-nav"
+            onClick={() => changeMonth(-1)}
+            aria-label="Show previous month"
+          >
+            &#8592;
+          </button>
+          <h1 className="cal-month">{format(visibleMonth, "LLLL yyyy").toUpperCase()}</h1>
+          <button
+            type="button"
+            className="cal-month-nav"
+            onClick={() => changeMonth(1)}
+            aria-label="Show next month"
+          >
+            &#8594;
+          </button>
+        </div>
         <a
           className="cal-subscribe"
           href="https://calendar.google.com/calendar/u/0/r?cid=c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com"
@@ -661,7 +708,8 @@ export default function Events() {
       <div className="calendar-grid">
         {calendarData.map((cell) => {
           const isToday = cell.date.getTime() === today.getTime();
-          const isDim = cell.date.getMonth() !== today.getMonth();
+          const isDim = cell.date.getMonth() !== visibleMonth.getMonth() ||
+            cell.date.getFullYear() !== visibleMonth.getFullYear();
 
           return (
             <div
