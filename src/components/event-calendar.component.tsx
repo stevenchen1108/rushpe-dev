@@ -13,7 +13,7 @@ import {
   set,
   format,
 } from "date-fns";
-import { useState, useEffect, useMemo, MouseEvent } from "react";
+import { useState, useEffect, useMemo, useRef, MouseEvent } from "react";
 import "./event-calendar.component.css";
 import { VscChromeClose } from "react-icons/vsc";
 import { SiGooglecalendar } from "react-icons/si";
@@ -295,6 +295,61 @@ function buildCalendarWithEvents(forDate: Date, events: EventItem[]): DayCell[] 
 
 /* ======================== Component ======================== */
 
+function FlyerPreview({ src, title, onClose }: {
+  src: string;
+  title: string;
+  onClose: () => void;
+}) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const trigger = document.activeElement instanceof HTMLElement
+      ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    // Native modal dialogs keep keyboard focus inside and make the page inert.
+    dialog.showModal();
+    document.body.style.overflow = "hidden";
+    return () => {
+      dialog.close();
+      document.body.style.overflow = previousOverflow;
+      if (trigger?.isConnected) trigger.focus();
+    };
+  }, []);
+
+  return (
+    <dialog
+      ref={dialogRef}
+      className="flyer-preview"
+      aria-labelledby="flyer-preview-title"
+      onCancel={(event) => { event.preventDefault(); onClose(); }}
+      onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
+      onKeyDown={(event) => {
+        // The close button is the preview's only interactive control.
+        if (event.key === "Tab") {
+          event.preventDefault();
+          closeRef.current?.focus();
+        }
+      }}
+    >
+      <div className="flyer-preview-panel">
+        <header className="flyer-preview-header">
+          <h2 id="flyer-preview-title">{title}</h2>
+          <button ref={closeRef} type="button" className="flyer-preview-close" onClick={onClose} aria-label="Close flyer">
+            <VscChromeClose aria-hidden="true" />
+          </button>
+        </header>
+        <div className="flyer-preview-body">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={src} alt={`Flyer for ${title}`} className="flyer-preview-image" />
+        </div>
+      </div>
+    </dialog>
+  );
+}
+
 export default function Events() {
   const WEEK = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
   const today = useMemo(
@@ -313,6 +368,7 @@ export default function Events() {
   );
   const [eventSelected, setEventSelected] = useState<EventItem | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [flyerPreview, setFlyerPreview] = useState<{ src: string; title: string } | null>(null);
 
   // QUICK accessor for today's cell from current state
   const todayCell = useMemo(
@@ -363,28 +419,52 @@ export default function Events() {
   const renderEventCard = (event: EventItem, key: string) => {
     const start = new Date(event.startISO);
     const end = new Date(event.endISO);
+    const flyerSrc = event.image || (event.attachments[0]
+      ? `https://lh3.googleusercontent.com/d/${event.attachments[0]}`
+      : undefined);
 
     return (
       <article
         key={key}
-        className="detail-card"
+        className={`detail-card${flyerSrc ? " detail-card--with-image" : ""}`}
         style={
           event.color ? { borderLeft: `8px solid ${event.color}` } : undefined
         }
       >
-        <header className="detail-head">
-          <h3 className="detail-title">{event.summary}</h3>
-          <p className="detail-when">
-            {format(start, "EEE, MMM d")} · {format(start, "h:mm a")} –{" "}
-            {format(end, "h:mm a")}
-          </p>
-        </header>
+        {flyerSrc && (
+          <button
+            type="button"
+            className="detail-flyer"
+            onClick={() => setFlyerPreview({ src: flyerSrc, title: event.summary })}
+            aria-label={`View full flyer for ${event.summary}`}
+            aria-haspopup="dialog"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt={`Flyer for ${event.summary}`}
+              className="detail-img"
+              src={flyerSrc}
+              loading="lazy"
+              decoding="async"
+            />
+          </button>
+        )}
 
-        <div className="detail-meta">
+        <div className="detail-summary">
+          <header className="detail-head">
+            <h3 className="detail-title">{event.summary}</h3>
+            <p className="detail-when">
+              {format(start, "EEE, MMM d")} · {format(start, "h:mm a")} –{" "}
+              {format(end, "h:mm a")}
+            </p>
+          </header>
+
           {event.location && (
-            <div className="meta">
-              <PinIcon className="meta-ic" />
-              <span>{event.location}</span>
+            <div className="detail-meta">
+              <div className="meta">
+                <PinIcon className="meta-ic" />
+                <span>{event.location}</span>
+              </div>
             </div>
           )}
         </div>
@@ -395,19 +475,6 @@ export default function Events() {
             dangerouslySetInnerHTML={{
               __html: linkify(normalizeDescription(event.description)),
             }}
-          />
-        )}
-
-        {(Boolean(event.image) || event.attachments.length > 0) && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            alt="event"
-            className="detail-img"
-            src={
-              event.image
-                ? event.image
-                : "https://lh3.googleusercontent.com/d/" + event.attachments[0]
-            }
           />
         )}
 
@@ -516,6 +583,9 @@ export default function Events() {
 
   return (
     <section className="cal-shell">
+      {flyerPreview && (
+        <FlyerPreview {...flyerPreview} onClose={() => setFlyerPreview(null)} />
+      )}
       {/* Header */}
       <div className="cal-header">
         <div className="cal-month-controls">
