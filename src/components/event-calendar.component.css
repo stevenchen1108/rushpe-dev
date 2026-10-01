@@ -6,16 +6,20 @@
   /* ---------- Shell ---------- */
   .cal-shell { @apply bg-white text-black px-4 sm:px-6 lg:px-8 py-8 sm:py-12; }
 
-  /* ---------- Header ---------- */
-  .cal-header { @apply flex flex-wrap items-center justify-between gap-4 pb-4 sm:flex-nowrap; }
-  .cal-month-controls { @apply flex items-center gap-2 sm:gap-3; }
-  .cal-month  { @apply text-3xl tracking-widest font-extrabold text-black; }
+  /* ---------- Calendar widget ---------- */
+  .cal-calendar-widget {
+    @apply mt-6 rounded-2xl bg-white ring-1 ring-slate-200;
+    box-shadow: 0 10px 24px rgba(2, 6, 23, 0.04);
+  }
+  .cal-header { @apply flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 p-4 sm:p-6; }
+  .cal-month-controls { @apply flex min-w-0 items-center gap-2 sm:gap-3; }
+  .cal-month  { @apply whitespace-nowrap text-xl font-bold tracking-wide text-black sm:text-2xl lg:text-3xl; }
   .cal-month-nav {
     @apply grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-slate-200 bg-white text-xl leading-none text-black
            transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300;
   }
   .cal-subscribe{
-    @apply inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-white bg-sky-600
+    @apply ml-auto inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-white bg-sky-600
            focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300;
     box-shadow: 0 8px 22px rgba(2, 6, 23, 0.15);
     transition: transform 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
@@ -40,39 +44,13 @@
   }
   .today-empty   { @apply text-sm text-black/70; }
 
-  /* ---------- Socials ---------- */
-  .cal-socials{
-    @apply mb-5 rounded-2xl bg-white ring-1 ring-slate-200 p-4 sm:p-5;
-    box-shadow: 0 10px 24px rgba(2, 6, 23, 0.04);
-  }
-  .cal-socials-head{ @apply mb-3 sm:mb-4; }
-  .cal-socials-title{ @apply text-lg sm:text-xl font-semibold text-black; }
-  .cal-socials-subtitle{ @apply mt-1 text-sm text-black/70; }
-  .cal-socials-grid{ @apply grid grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-4; }
-  .cal-social-card{
-    @apply flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-medium text-black
-           focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300;
-    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
-  }
-  .cal-social-card:hover{
-    transform: translateY(-1px);
-    border-color: rgb(125 211 252);
-    background-color: rgb(255 255 255);
-    box-shadow: 0 10px 22px rgba(2, 6, 23, 0.08);
-  }
-  .cal-social-icon-wrap{
-    @apply inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white ring-1 ring-slate-200;
-  }
-  .cal-social-icon{ @apply h-5 w-5 object-contain; }
-  .cal-social-label{ @apply truncate; }
-
   /* ---------- Week labels ---------- */
-  .cal-weeklabels { @apply grid grid-cols-7 text-center text-xs text-black pb-2; }
+  .cal-weeklabels { @apply grid grid-cols-7 px-4 pb-2 pt-5 text-center text-xs text-black sm:px-6; }
 
   /* ---------- Grid ---------- */
   .calendar-grid{
     position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 0;
-    @apply rounded-2xl overflow-hidden ring-1 ring-slate-200;
+    @apply mx-4 mb-4 overflow-hidden rounded-xl ring-1 ring-slate-200 sm:mx-6 sm:mb-6;
   }
   .day-cell{ @apply relative min-h-20 bg-white transition-colors; border-right:1px solid rgb(226,232,240); border-bottom:1px solid rgb(226,232,240); }
   .day-cell--dim{ @apply opacity-60; }
@@ -120,13 +98,22 @@
   .day-detail-section{
     @apply mt-7 rounded-2xl bg-slate-50/70 ring-1 ring-slate-200 px-4 py-5 sm:px-6 sm:py-6;
   }
-  .day-detail-header{ @apply mb-4 sm:mb-5; }
+  .day-detail-section--today{ @apply mt-0; }
+  .day-detail-header{ @apply mb-4 flex flex-wrap items-start justify-between gap-3 sm:mb-5; }
   .day-detail-title-main{
     @apply text-2xl sm:text-3xl font-bold tracking-tight text-black;
   }
   .day-detail-subtitle{
     @apply mt-1 text-sm sm:text-base text-black/70;
   }
+  .day-detail-socials { @apply ml-auto flex shrink-0 items-center gap-1; }
+  .day-detail-social-link {
+    @apply grid h-10 w-10 place-items-center rounded-full bg-white ring-1 ring-slate-200
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+  .day-detail-social-link:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(2, 6, 23, 0.1); }
+  .day-detail-social-icon { @apply h-7 w-7 object-contain; }
   .day-detail-list{ @apply flex flex-col gap-4; }
   .detail-card{
     @apply relative w-full p-4 sm:p-5 rounded-2xl bg-white ring-1 ring-slate-200 text-black;

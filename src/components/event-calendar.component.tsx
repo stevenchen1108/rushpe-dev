@@ -586,50 +586,35 @@ export default function Events() {
       {flyerPreview && (
         <FlyerPreview {...flyerPreview} onClose={() => setFlyerPreview(null)} />
       )}
-      {/* Header */}
-      <div className="cal-header">
-        <div className="cal-month-controls">
-          <button
-            type="button"
-            className="cal-month-nav"
-            onClick={() => changeMonth(-1)}
-            aria-label="Show previous month"
-          >
-            &#8592;
-          </button>
-          <h1 className="cal-month">{format(visibleMonth, "LLLL yyyy").toUpperCase()}</h1>
-          <button
-            type="button"
-            className="cal-month-nav"
-            onClick={() => changeMonth(1)}
-            aria-label="Show next month"
-          >
-            &#8594;
-          </button>
-        </div>
-        <a
-          className="cal-subscribe"
-          href="https://calendar.google.com/calendar/u/0/r?cid=c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com"
-        >
-          <SiGooglecalendar className="h-[1.1rem] w-[1.1rem]" />
-          <span className="sm:hidden">Subscribe</span>
-          <span className="hidden sm:inline">Subscribe to our calendar</span>
-        </a>
-      </div>
-
       {/* Today's events */}
       <section
-        className="day-detail-section"
+        className="day-detail-section day-detail-section--today"
         aria-labelledby="todays-events-title"
       >
         <header className="day-detail-header">
-          <h2 id="todays-events-title" className="day-detail-title-main">
-            Today&apos;s Events
-          </h2>
-          <p className="day-detail-subtitle">
-            {format(today, "EEEE, MMMM d")} · {todayEventsCount} event
-            {todayEventsCount === 1 ? "" : "s"} scheduled
-          </p>
+          <div>
+            <h1 id="todays-events-title" className="day-detail-title-main">
+              Today&apos;s Events
+            </h1>
+            <p className="day-detail-subtitle">
+              {format(today, "EEEE, MMMM d")} · {todayEventsCount} event
+              {todayEventsCount === 1 ? "" : "s"} scheduled
+            </p>
+          </div>
+          <nav aria-label="Rutgers SHPE social media" className="day-detail-socials">
+            {SOCIAL_ITEMS.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="day-detail-social-link"
+                aria-label={`Follow Rutgers SHPE on ${social.label}`}
+              >
+                <Image src={social.icon} alt="" width={28} height={28} className="day-detail-social-icon" />
+              </a>
+            ))}
+          </nav>
         </header>
 
         <div className="day-detail-list">
@@ -648,42 +633,38 @@ export default function Events() {
         </div>
       </section>
 
-      {/* ======= Follow our socials ======= */}
-      <section className="cal-socials" aria-labelledby="cal-socials-title">
-        <div className="cal-socials-head">
-          <h2 id="cal-socials-title" className="cal-socials-title">
-            Follow Our Socials
-          </h2>
-          <p className="cal-socials-subtitle">
-            Stay up to date with event announcements, reminders, and chapter
-            highlights.
-          </p>
-        </div>
-
-        <div className="cal-socials-grid">
-          {SOCIAL_ITEMS.map((social) => (
-            <a
-              key={social.label}
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cal-social-card"
-              aria-label={`Follow Rutgers SHPE on ${social.label}`}
+      <section className="cal-calendar-widget" aria-labelledby="calendar-month-title">
+        <div className="cal-header">
+          <div className="cal-month-controls">
+            <button
+              type="button"
+              className="cal-month-nav"
+              onClick={() => changeMonth(-1)}
+              aria-label="Show previous month"
             >
-              <span className="cal-social-icon-wrap" aria-hidden="true">
-                <Image
-                  src={social.icon}
-                  alt=""
-                  width={24}
-                  height={24}
-                  className="cal-social-icon"
-                />
-              </span>
-              <span className="cal-social-label">{social.label}</span>
-            </a>
-          ))}
+              &#8592;
+            </button>
+            <h2 id="calendar-month-title" className="cal-month">
+              {format(visibleMonth, "LLLL yyyy").toUpperCase()}
+            </h2>
+            <button
+              type="button"
+              className="cal-month-nav"
+              onClick={() => changeMonth(1)}
+              aria-label="Show next month"
+            >
+              &#8594;
+            </button>
+          </div>
+          <a
+            className="cal-subscribe"
+            href="https://calendar.google.com/calendar/u/0/r?cid=c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com"
+          >
+            <SiGooglecalendar className="h-[1.1rem] w-[1.1rem]" />
+            <span className="sm:hidden">Subscribe</span>
+            <span className="hidden sm:inline">Subscribe to our calendar</span>
+          </a>
         </div>
-      </section>
 
       {/* Week labels */}
       <div className="cal-weeklabels">
@@ -818,6 +799,7 @@ export default function Events() {
           );
         })}
       </div>
+      </section>
 
       {/* Next upcoming event */}
       <section
