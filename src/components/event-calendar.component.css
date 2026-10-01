@@ -80,7 +80,7 @@
     animation: fadeIn 180ms ease-out;
   }
   .cal-modal-card{
-    @apply w-[min(92vw,42rem)] max-h-[85vh] overflow-auto rounded-2xl bg-white ring-1 ring-slate-200 shadow-2xl p-5;
+    @apply w-[min(92vw,52rem)] max-h-[85dvh] overflow-auto rounded-2xl bg-white ring-1 ring-slate-200 shadow-2xl p-5;
     animation: popIn 160ms ease-out;
   }
   .cal-modal-head{ @apply flex items-center justify-between gap-3 mb-2; }
@@ -88,11 +88,22 @@
   .cal-close{ @apply grid place-items-center h-8 w-8 rounded-lg text-black hover:bg-slate-200/70 transition; }
 
   .cal-modal-meta{ @apply grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-black mb-3; }
+  .cal-modal-details { min-width: 0; }
+  .cal-modal-body--with-image { @apply grid gap-4; }
+  @media (min-width: 640px) {
+    .cal-modal-body--with-image { grid-template-columns: minmax(0, 1fr) minmax(10rem, 14rem); gap: 1.5rem; }
+  }
   .meta{ @apply inline-flex items-center gap-2; }
   .meta-ic{ @apply h-4 w-4 text-black; }
 
   .cal-modal-desc{ @apply text-[14px] leading-relaxed text-black; }
-  .cal-modal-img{ @apply mt-3 rounded-lg ring-1 ring-slate-200 object-cover; }
+  .cal-modal-flyer {
+    @apply justify-self-end self-start overflow-hidden rounded-lg border border-slate-200 bg-slate-50 text-left
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2;
+    width: min(100%, 10rem);
+  }
+  @media (min-width: 640px) { .cal-modal-flyer { width: 100%; } }
+  .cal-modal-img { display: block; width: 100%; height: auto; max-height: 22rem; object-fit: contain; }
 
   .cal-rsvp{
     @apply mt-4 inline-flex items-center gap-2 self-start rounded-lg px-3 py-1.5 text-sm font-semibold text-white bg-sky-600

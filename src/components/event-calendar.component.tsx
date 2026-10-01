@@ -363,6 +363,9 @@ export default function Events() {
   const [eventSelected, setEventSelected] = useState<EventItem | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [flyerPreview, setFlyerPreview] = useState<{ src: string; title: string } | null>(null);
+  const selectedFlyerSrc = eventSelected?.image || (eventSelected?.attachments[0]
+    ? `https://lh3.googleusercontent.com/d/${eventSelected.attachments[0]}`
+    : null);
 
   const calendarData = useMemo(
     () => buildCalendarWithEvents(visibleMonth, allEvents).map((cell) => ({
@@ -708,64 +711,69 @@ export default function Events() {
               </button>
             </div>
 
-            <div className="cal-modal-meta">
-              <div className="meta">
-                <CalendarIcon className="meta-ic" />
-                <span>
-                  {format(new Date(eventSelected.startISO), "EEEE, MMM d")}
-                </span>
-              </div>
-              <div className="meta">
-                <ClockIcon className="meta-ic" />
-                <span>
-                  {format(new Date(eventSelected.startISO), "h:mm a")} –{" "}
-                  {format(new Date(eventSelected.endISO), "h:mm a")}
-                </span>
-              </div>
-              {eventSelected.location && (
-                <div className="meta">
-                  <PinIcon className="meta-ic" />
-                  <span>{eventSelected.location}</span>
+            <div className={`cal-modal-body${selectedFlyerSrc ? " cal-modal-body--with-image" : ""}`}>
+              <div className="cal-modal-details">
+                <div className="cal-modal-meta">
+                  <div className="meta">
+                    <CalendarIcon className="meta-ic" />
+                    <span>
+                      {format(new Date(eventSelected.startISO), "EEEE, MMM d")}
+                    </span>
+                  </div>
+                  <div className="meta">
+                    <ClockIcon className="meta-ic" />
+                    <span>
+                      {format(new Date(eventSelected.startISO), "h:mm a")} –{" "}
+                      {format(new Date(eventSelected.endISO), "h:mm a")}
+                    </span>
+                  </div>
+                  {eventSelected.location && (
+                    <div className="meta">
+                      <PinIcon className="meta-ic" />
+                      <span>{eventSelected.location}</span>
+                    </div>
+                  )}
                 </div>
+
+                {hasMeaningfulDescription(eventSelected.description) && (
+                  <p
+                    className="cal-modal-desc"
+                    dangerouslySetInnerHTML={{
+                      __html: linkify(
+                        normalizeDescription(eventSelected.description),
+                      ),
+                    }}
+                  />
+                )}
+
+                {eventSelected.rsvp && (
+                  <a
+                    className="cal-rsvp"
+                    href={eventSelected.rsvp}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    RSVP
+                  </a>
+                )}
+              </div>
+
+              {selectedFlyerSrc && (
+                <button
+                  type="button"
+                  className="cal-modal-flyer"
+                  onClick={() => setFlyerPreview({ src: selectedFlyerSrc, title: eventSelected.summary })}
+                  aria-label={`Expand flyer for ${eventSelected.summary}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    alt={`Flyer for ${eventSelected.summary}`}
+                    className="cal-modal-img"
+                    src={selectedFlyerSrc}
+                  />
+                </button>
               )}
             </div>
-
-            {hasMeaningfulDescription(eventSelected.description) && (
-              <p
-                className="cal-modal-desc"
-                dangerouslySetInnerHTML={{
-                  __html: linkify(
-                    normalizeDescription(eventSelected.description),
-                  ),
-                }}
-              />
-            )}
-
-            {(Boolean(eventSelected.image) ||
-              eventSelected.attachments.length > 0) && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                alt="event"
-                className="cal-modal-img"
-                src={
-                  eventSelected.image
-                    ? eventSelected.image
-                    : "https://lh3.googleusercontent.com/d/" +
-                      eventSelected.attachments[0]
-                }
-              />
-            )}
-
-            {eventSelected.rsvp && (
-              <a
-                className="cal-rsvp"
-                href={eventSelected.rsvp}
-                target="_blank"
-                rel="noreferrer"
-              >
-                RSVP
-              </a>
-            )}
           </div>
         </div>
       )}
