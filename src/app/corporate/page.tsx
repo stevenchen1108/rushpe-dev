@@ -25,7 +25,7 @@ import { ATTENDING_UNIS } from "./data/attending-unis";
 import { LogoMarquee } from "./data/marquee";
 
 /* ----------------------------- Organizers ------------------------------ */
-import ruShpeLogo from "@/../public/she-swe-meet/ru-shpe-logo.jpg";
+import ruShpeLogo from "@/../public/she-logo.png";
 import ruMeetLogo from "@/../public/she-swe-meet/ru-meet-logo.jpg";
 import ruSweLogo from "@/../public/she-swe-meet/ru-swe-logo.jpg";
 
@@ -156,15 +156,17 @@ function OrgCard({ name, logo, href, cta }: Organizer) {
   return (
     <div
       data-reveal
-      className="reveal group relative rounded-3xl bg-white/70 backdrop-blur-md border border-white/60 shadow-[0_10px_30px_rgba(2,6,23,.08)] transition-all duration-300 hover:shadow-[0_20px_50px_rgba(2,6,23,.14)] hover:-translate-y-1"
+      className="reveal group relative rounded-3xl bg-white border border-white/60 shadow-[0_10px_30px_rgba(2,6,23,.08)] transition-all duration-300 hover:shadow-[0_20px_50px_rgba(2,6,23,.14)] hover:-translate-y-1"
     >
       <div className="p-8 sm:p-10 flex flex-col items-center text-center gap-6">
-        <div className="relative h-44 w-full flex items-center justify-center">
+        {/* A shared height keeps the crests aligned; the wide SWE mark can use the full width. */}
+        <div className="relative h-60 w-full">
           <Image
             src={logo}
             alt={`${name} logo`}
-            className="max-h-44 w-auto object-contain drop-shadow-sm"
-            sizes="(max-width:640px) 80vw, 320px"
+            fill
+            className="object-contain"
+            sizes="(max-width: 639px) calc(100vw - 96px), (max-width: 1023px) 320px, 340px"
           />
         </div>
         <a
