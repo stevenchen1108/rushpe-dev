@@ -26,10 +26,9 @@ import geeseImage5 from "@/../public/home-pg-assets/optimized/estamos-aqui.jpg";
 import geeseImage6 from "@/../public/home-pg-assets/optimized/contact-geese.jpg";
 
 /* ------------------------------ Social icons --------------------------- */
-import igIcon from "@/../public/socials/instagram-logo-small.png";
-import liIcon from "@/../public/socials/linkedin-logo-small.png";
-import fbIcon from "@/../public/socials/facebook-logo-small.png";
-import tkIcon from "@/../public/socials/tiktok-logo-small.png";
+import igIcon from "@/../public/socials/instagram-app.webp";
+import liIcon from "@/../public/socials/linkedin-mark.png";
+import fbIcon from "@/../public/socials/facebook-mark.png";
 
 const socialLinks = [
   {
@@ -50,7 +49,7 @@ const socialLinks = [
   {
     label: "TikTok",
     href: "https://www.tiktok.com/@shpe_ru",
-    icon: tkIcon,
+    icon: "/socials/tiktok-logo-clean.svg",
   },
 ];
 
@@ -295,7 +294,7 @@ export default function Home() {
             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-white/75">
               Follow Rutgers SHPE
             </span>
-            <ul className="flex items-center justify-center gap-2 sm:gap-3">
+            <ul className="flex items-center justify-center gap-4 sm:gap-6">
               {socialLinks.map((social) => (
                 <li key={social.label}>
                   <a
@@ -303,14 +302,14 @@ export default function Home() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Follow Rutgers SHPE on ${social.label}`}
-                    className="group grid h-11 w-11 place-items-center rounded-xl bg-white/95 shadow-md transition hover:-translate-y-0.5 hover:bg-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                    className="group grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-xl motion-safe:transition-transform motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
                   >
                     <Image
                       src={social.icon}
                       alt=""
-                      width={28}
-                      height={28}
-                      className="h-8 w-8 object-contain transition-transform group-hover:scale-110"
+                      width={48}
+                      height={48}
+                      className="h-10 w-10 sm:h-12 sm:w-12 object-contain motion-safe:transition-transform motion-safe:group-hover:scale-110"
                     />
                   </a>
                 </li>
