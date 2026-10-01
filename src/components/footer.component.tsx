@@ -1,5 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import { FaFacebook, FaInstagram, FaLinkedinIn, FaTiktok } from "react-icons/fa6";
+
+const socialLinks = [
+  { label: "Instagram", href: "https://www.instagram.com/shpe_ru/", icon: FaInstagram },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/rutgers-university-shpe-686bba295", icon: FaLinkedinIn },
+  { label: "Facebook", href: "https://www.facebook.com/rutgers.she/", icon: FaFacebook },
+  { label: "TikTok", href: "https://www.tiktok.com/@shpe_ru", icon: FaTiktok },
+];
 
 const columns = [
   {
@@ -19,87 +27,103 @@ const columns = [
       { label: "SHPEtinas", href: "/shpetinas" },
       { label: "Volunteer", href: "/events" },
       { label: "Alumni Spotlight", href: "/ru-shine" },
-
-    ],
-  },
-  {
-    title: "About Rutgers SHPE",
-    links: [
-      { label: "Mission & History", href: "/about-us#mission" },
-      { label: "Our Pillars", href: "/about-us#affiliation" },
-      { label: "Constitution (PDF)", href: "/about-us#constitution" },
-    ],
-  },
-  {
-    title: "Connect",
-    links: [
-      { label: "Email: rushpe@gmail.com", href: "mailto:rushpe@gmail.com" },
-      {
-        label: "600 Bartholomew Rd, Piscataway, NJ",
-        href: "https://maps.google.com/?q=600+Bartholomew+Rd+Piscataway+NJ+08854",
-      },
     ],
   },
 ];
 
+const aboutLinks = [
+  { label: "Mission & History", href: "/about-us#mission" },
+  { label: "Our Pillars", href: "/about-us#affiliation" },
+  { label: "Constitution (PDF)", href: "/about-us#constitution" },
+];
+
+const connectLinks = [
+  { label: "Email: rushpe@gmail.com", href: "mailto:rushpe@gmail.com" },
+  {
+    label: "600 Bartholomew Rd, Piscataway, NJ",
+    href: "https://maps.google.com/?q=600+Bartholomew+Rd+Piscataway+NJ+08854",
+  },
+];
+
+function FooterLinks({ links }: { links: { label: string; href: string }[] }) {
+  return (
+    <ul className="mt-4 space-y-3 text-sm leading-relaxed sm:text-base">
+      {links.map((link) => (
+        <li key={link.label}>
+          <Link
+            href={link.href}
+            className="rounded text-slate-600 transition-colors hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-700"
+          >
+            {link.label}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function FooterBar() {
   return (
     <footer className="border-t border-slate-200 bg-white text-slate-700">
-      {/* Increased vertical rhythm and max width */}
-      <div className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:py-20">
-        {/* Columns: larger type + spacing */}
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
-          {columns.map((col) => (
-            <nav key={col.title} aria-label={col.title}>
-              <h3 className="text-lg font-semibold text-slate-900 md:text-xl">
-                {col.title}
-              </h3>
-              <ul className="mt-5 space-y-3 text-base">
-                {col.links.map((l) => (
-                  <li key={l.label}>
-                    <Link
-                      href={l.href}
-                      className="rounded text-slate-600 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-scarlet"
+      <div className="mx-auto max-w-7xl px-6 py-14 sm:px-8 lg:py-20">
+        <div className="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.15fr)_repeat(3,minmax(0,1fr))] lg:gap-x-12">
+          <div>
+            <Link
+              href="/"
+              aria-label="Rutgers SHPE Home"
+              className="inline-block rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-red-700 focus-visible:ring-offset-4"
+            >
+              <Image
+                src="/she-logo.png"
+                alt="Rutgers SHPE logo"
+                width={472}
+                height={472}
+                className="h-20 w-20 object-contain sm:h-24 sm:w-24"
+              />
+            </Link>
+            <nav aria-label="Rutgers SHPE social media" className="mt-5">
+              <ul className="flex items-center gap-2">
+                {socialLinks.map((social) => (
+                  <li key={social.label}>
+                    <a
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Follow Rutgers SHPE on ${social.label}`}
+                      className="group grid h-11 w-11 place-items-center rounded-lg text-slate-500 transition-colors hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-700 motion-safe:transition-transform motion-safe:hover:-translate-y-0.5"
                     >
-                      {l.label}
-                    </Link>
+                      <social.icon aria-hidden="true" className="h-7 w-7 motion-safe:transition-transform motion-safe:group-hover:scale-110 sm:h-8 sm:w-8" />
+                    </a>
                   </li>
                 ))}
               </ul>
             </nav>
+          </div>
+          {columns.map((col) => (
+            <nav key={col.title} aria-label={col.title}>
+              <h3 className="text-base font-bold text-slate-900 sm:text-lg">{col.title}</h3>
+              <FooterLinks links={col.links} />
+            </nav>
           ))}
+          <div className="space-y-9">
+            <nav aria-label="About Rutgers SHPE">
+              <h3 className="text-base font-bold text-slate-900 sm:text-lg">About Rutgers SHPE</h3>
+              <FooterLinks links={aboutLinks} />
+            </nav>
+            <nav aria-label="Connect">
+              <h3 className="text-base font-bold text-slate-900 sm:text-lg">Connect</h3>
+              <FooterLinks links={connectLinks} />
+            </nav>
+          </div>
         </div>
 
-        {/* Divider + bottom bar */}
-        <div className="mt-14 flex flex-col items-center justify-between gap-6 border-t border-slate-200 pt-6 sm:flex-row">
-          {/* Brand (larger, fixed aspect, crisp) */}
-          <Link
-            href="/"
-            className="flex items-center gap-4 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-scarlet"
-            aria-label="Rutgers SHPE Home"
-          >
-            <span className="relative inline-grid h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 place-items-center rounded-full ring-1 ring-slate-200 bg-white shadow-sm">
-              <Image
-                src="/brand/she-logo-small.png"
-                alt="Rutgers SHPE logo"
-                width={120}
-                height={120}
-                className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 rounded-full object-contain p-1"
-                priority={false}
-              />
-            </span>
-            <span className="text-base font-semibold text-slate-900 sm:text-lg">
-              Rutgers SHPE
-            </span>
-          </Link>
-
-          {/* Bottom-right: © + Help → /contact (kept per your spec) */}
-          <ul className="ml-auto flex items-center gap-6 text-sm sm:text-base text-slate-600">
+        <div className="mt-14 border-t border-slate-200 pt-6">
+          <ul className="flex flex-wrap items-center justify-start gap-x-6 gap-y-2 text-sm text-slate-500 sm:justify-end">
             <li>© {new Date().getFullYear()} Rutgers SHPE</li>
             <li>
               <Link
                 href="/contact"
-                className="rounded hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-scarlet"
+                className="rounded hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-700"
               >
                 Help
               </Link>
