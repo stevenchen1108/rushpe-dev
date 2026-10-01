@@ -1,26 +1,24 @@
 "use client";
 
-import Image, { type StaticImageData } from "next/image";
 import {
+  addDays,
   addMonths,
   eachDayOfInterval,
   startOfMonth,
-  endOfMonth,
   startOfWeek,
-  endOfWeek,
   isSameDay,
   isSameMonth,
   set,
   format,
 } from "date-fns";
 import { useState, useEffect, useMemo, useRef, MouseEvent } from "react";
+import Image, { type StaticImageData } from "next/image";
 import "./event-calendar.component.css";
 import { VscChromeClose } from "react-icons/vsc";
 import { SiGooglecalendar } from "react-icons/si";
-import igIcon from "@/../public/socials/instagram-logo-small.png";
-import liIcon from "@/../public/socials/linkedin-logo-small.png";
-import fbIcon from "@/../public/socials/facebook-logo-small.png";
-import tkIcon from "@/../public/socials/tiktok-logo-small.png";
+import igIcon from "@/../public/socials/instagram-app.webp";
+import liIcon from "@/../public/socials/linkedin-mark.png";
+import fbIcon from "@/../public/socials/facebook-mark.png";
 
 /* ======================== Types ======================== */
 
@@ -58,7 +56,7 @@ type DayCell = {
 type SocialItem = {
   label: string;
   href: string;
-  icon: StaticImageData;
+  icon: StaticImageData | string;
 };
 
 // No shared social config currently exists; use the same canonical links already
@@ -82,7 +80,7 @@ const SOCIAL_ITEMS: SocialItem[] = [
   {
     label: "TikTok",
     href: "https://www.tiktok.com/@shpe_ru",
-    icon: tkIcon,
+    icon: "/socials/tiktok-logo-light.svg",
   },
 ];
 
@@ -269,7 +267,8 @@ function hasMeaningfulDescription(value: string): boolean {
 function buildMonthGrid(forDate: Date): DayCell[] {
   const firstDOM = startOfMonth(forDate);
   const firstOfGrid = startOfWeek(firstDOM, { weekStartsOn: 0 });
-  const lastOfGrid = endOfWeek(endOfMonth(forDate), { weekStartsOn: 0 });
+  // Six weeks keep the calendar height steady when moving between months.
+  const lastOfGrid = addDays(firstOfGrid, 41);
   return eachDayOfInterval({ start: firstOfGrid, end: lastOfGrid }).map(
     (d) => ({
       date: d,
@@ -358,41 +357,30 @@ export default function Events() {
     [],
   );
 
-  const initialGrid = useMemo(() => buildMonthGrid(today), [today]);
-
   const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(today));
   const [allEvents, setAllEvents] = useState<EventItem[]>([]);
-  const [calendarData, setCalendar] = useState<DayCell[]>(initialGrid);
-  const [daySelected, setDaySelected] = useState<DayCell>(
-    initialGrid.find((cell) => isSameDay(cell.date, today)) ?? initialGrid[0],
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | null>(today);
   const [eventSelected, setEventSelected] = useState<EventItem | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [flyerPreview, setFlyerPreview] = useState<{ src: string; title: string } | null>(null);
 
-  // QUICK accessor for today's cell from current state
-  const todayCell = useMemo(
-    () => {
-      const visibleToday = calendarData.find((c) => isSameDay(c.date, today));
-      if (visibleToday) return visibleToday;
-
-      const fallback =
-        initialGrid.find((cell) => isSameDay(cell.date, today)) ?? initialGrid[0];
-      return {
-        ...fallback,
-        events: allEvents.filter((event) =>
-          isSameDay(new Date(event.startISO), today),
-        ),
-      };
-    },
-    [calendarData, today, initialGrid, allEvents],
+  const calendarData = useMemo(
+    () => buildCalendarWithEvents(visibleMonth, allEvents).map((cell) => ({
+      ...cell,
+      selected: selectedDate !== null && isSameDay(cell.date, selectedDate),
+    })),
+    [visibleMonth, allEvents, selectedDate],
+  );
+  const todayEvents = useMemo(
+    () => allEvents.filter((event) => isSameDay(new Date(event.startISO), today)),
+    [allEvents, today],
   );
   const startOfTomorrow = useMemo(() => {
     const nextDay = new Date(today);
     nextDay.setDate(nextDay.getDate() + 1);
     return nextDay;
   }, [today]);
-  const todayEventsCount = todayCell?.events?.length ?? 0;
+  const todayEventsCount = todayEvents.length;
   const nextUpcomingEvent = useMemo(() => {
     const upcoming = allEvents
       .filter(
@@ -405,16 +393,6 @@ export default function Events() {
       );
     return upcoming[0] ?? null;
   }, [allEvents, startOfTomorrow]);
-
-  useEffect(() => {
-    const nextGrid = buildCalendarWithEvents(visibleMonth, allEvents);
-    setCalendar(
-      nextGrid.map((cell) => ({
-        ...cell,
-        selected: isSameDay(cell.date, daySelected.date),
-      })),
-    );
-  }, [allEvents, visibleMonth, daySelected.date]);
 
   const renderEventCard = (event: EventItem, key: string) => {
     const start = new Date(event.startISO);
@@ -494,15 +472,6 @@ export default function Events() {
     );
   };
 
-  useEffect(() => {
-    setCalendar((prev) =>
-      prev.map((c) => ({
-        ...c,
-        selected: c.date.getTime() === daySelected.date.getTime(),
-      })),
-    );
-  }, [daySelected]);
-
   // Fetch Google Calendar once
   useEffect(() => {
     const fetchEvents = async () => {
@@ -565,13 +534,13 @@ export default function Events() {
   }, [modalOpen]);
 
   const onDayClick = (cell: DayCell) => {
-    setDaySelected(cell);
+    setSelectedDate(cell.date);
     if (!cell.events.length) setModalOpen(false);
   };
 
   const changeMonth = (amount: number) => {
     setVisibleMonth((current) => addMonths(current, amount));
-    setDaySelected((current) => ({ ...current, selected: false }));
+    setSelectedDate(null);
     setModalOpen(false);
   };
 
@@ -592,34 +561,18 @@ export default function Events() {
         aria-labelledby="todays-events-title"
       >
         <header className="day-detail-header">
-          <div>
-            <h1 id="todays-events-title" className="day-detail-title-main">
-              Today&apos;s Events
-            </h1>
-            <p className="day-detail-subtitle">
-              {format(today, "EEEE, MMMM d")} · {todayEventsCount} event
-              {todayEventsCount === 1 ? "" : "s"} scheduled
-            </p>
-          </div>
-          <nav aria-label="Rutgers SHPE social media" className="day-detail-socials">
-            {SOCIAL_ITEMS.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="day-detail-social-link"
-                aria-label={`Follow Rutgers SHPE on ${social.label}`}
-              >
-                <Image src={social.icon} alt="" width={28} height={28} className="day-detail-social-icon" />
-              </a>
-            ))}
-          </nav>
+          <h1 id="todays-events-title" className="day-detail-title-main">
+            Today&apos;s Events
+          </h1>
+          <p className="day-detail-subtitle">
+            {format(today, "EEEE, MMMM d")} · {todayEventsCount} event
+            {todayEventsCount === 1 ? "" : "s"} scheduled
+          </p>
         </header>
 
         <div className="day-detail-list">
-          {todayCell?.events?.length ? (
-            todayCell.events.map((event) =>
+          {todayEvents.length ? (
+            todayEvents.map((event) =>
               renderEventCard(
                 event,
                 `${event.startISO}-${event.summary}-today`,
@@ -656,22 +609,84 @@ export default function Events() {
               &#8594;
             </button>
           </div>
-          <a
-            className="cal-subscribe"
-            href="https://calendar.google.com/calendar/u/0/r?cid=c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com"
-          >
-            <SiGooglecalendar className="h-[1.1rem] w-[1.1rem]" />
-            <span className="sm:hidden">Subscribe</span>
-            <span className="hidden sm:inline">Subscribe to our calendar</span>
-          </a>
+          <div className="cal-header-actions">
+            <a
+              className="cal-subscribe"
+              href="https://calendar.google.com/calendar/u/0/r?cid=c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com"
+            >
+              <SiGooglecalendar className="h-[1.1rem] w-[1.1rem]" />
+              <span className="sm:hidden">Subscribe</span>
+              <span className="hidden sm:inline">Subscribe to our calendar</span>
+            </a>
+            <nav aria-label="Rutgers SHPE social media" className="cal-social-links">
+              {SOCIAL_ITEMS.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cal-social-link"
+                  aria-label={`Follow Rutgers SHPE on ${social.label}`}
+                >
+                  <Image src={social.icon} alt="" width={32} height={32} className="h-8 w-8 object-contain" />
+                </a>
+              ))}
+            </nav>
+          </div>
         </div>
 
-      {/* Week labels */}
-      <div className="cal-weeklabels">
-        {WEEK.map((d) => (
-          <span key={d}>{d}</span>
-        ))}
+        {/* Week labels */}
+        <div className="cal-weeklabels">
+          {WEEK.map((d) => (
+            <span key={d}>{d}</span>
+          ))}
+        </div>
+
+      {/* Month grid */}
+      <div key={format(visibleMonth, "yyyy-MM")} className="calendar-grid">
+        {calendarData.map((cell) => {
+          const isToday = cell.date.getTime() === today.getTime();
+          const isDim = cell.date.getMonth() !== visibleMonth.getMonth() ||
+            cell.date.getFullYear() !== visibleMonth.getFullYear();
+
+          return (
+            <div
+              key={cell.date.toISOString()}
+              className={`day-cell${cell.selected ? " day-cell--selected" : ""}${
+                isToday ? " day-cell--today" : ""
+              }${isDim ? " day-cell--dim" : ""}`}
+              onClick={() => onDayClick(cell)}
+            >
+              <div className="day-number">{cell.date.getDate()}</div>
+              <div className="event-stack">
+                {cell.events.map((ev) => (
+                  <div key={`${ev.startISO}-${ev.summary}`}>
+                    <div
+                      className="event-bar sm:hidden"
+                      style={
+                        ev.color ? { backgroundColor: ev.color } : undefined
+                      }
+                      aria-hidden
+                    />
+                    <button
+                      className="event-pill hidden sm:block"
+                      style={{
+                        backgroundColor: ev.color,
+                        color: "#000",
+                      }}
+                      onClick={(e) => onEventClick(ev, e)}
+                      title={ev.summary}
+                    >
+                      {ev.summary}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
+      </section>
 
       {/* Centered modal */}
       {modalOpen && eventSelected && (
@@ -754,52 +769,6 @@ export default function Events() {
           </div>
         </div>
       )}
-
-      {/* Month grid */}
-      <div className="calendar-grid">
-        {calendarData.map((cell) => {
-          const isToday = cell.date.getTime() === today.getTime();
-          const isDim = cell.date.getMonth() !== visibleMonth.getMonth() ||
-            cell.date.getFullYear() !== visibleMonth.getFullYear();
-
-          return (
-            <div
-              key={cell.date.toISOString()}
-              className={`day-cell${cell.selected ? " day-cell--selected" : ""}${
-                isToday ? " day-cell--today" : ""
-              }${isDim ? " day-cell--dim" : ""}`}
-              onClick={() => onDayClick(cell)}
-            >
-              <div className="day-number">{cell.date.getDate()}</div>
-              <div className="event-stack">
-                {cell.events.map((ev) => (
-                  <div key={`${ev.startISO}-${ev.summary}`}>
-                    <div
-                      className="event-bar sm:hidden"
-                      style={
-                        ev.color ? { backgroundColor: ev.color } : undefined
-                      }
-                      aria-hidden
-                    />
-                    <button
-                      className="event-pill hidden sm:block"
-                      style={{
-                        backgroundColor: ev.color,
-                        color: "#000",
-                      }}
-                      onClick={(e) => onEventClick(ev, e)}
-                      title={ev.summary}
-                    >
-                      {ev.summary}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      </section>
 
       {/* Next upcoming event */}
       <section

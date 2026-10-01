@@ -10,4 +10,6 @@ The Facebook PNG was proportionally resized to 128 pixels. Original colors, artw
 
 `tiktok-logo-clean.svg` is the existing transparent, full-color symbol for dark backgrounds. Its appearance was checked against the logo pack linked by [TikTok's design guidelines](https://developers.tiktok.com/docs/en/getting-started-design-guidelines). It was reused without modification.
 
+`tiktok-logo-light.svg` is a copy of that symbol for light backgrounds. Its white foreground shape is black; the cyan and pink layers remain unchanged.
+
 The platform logos belong to their respective owners. The older image files remain available for other pages.
