@@ -4,15 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Plus_Jakarta_Sans } from "next/font/google";
 import "./corporate-page.css";
-
-/* -------------------------------- Fonts -------------------------------- */
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-});
 
 /* ------------------------------- Hero image ----------------------------- */
 import ssmImg from "@/../public/she-swe-meet/she-swe-meet-logo.jpg";
@@ -222,7 +214,7 @@ export default function Corporate() {
   const { platinum, gold, silver, bronze } = SPONSORS as SponsorTiers;
 
   return (
-    <main className={`${plusJakarta.className} overflow-x-hidden bg-gradient-to-b from-slate-50 via-slate-50 to-slate-100`}>
+    <main className="overflow-x-hidden bg-gradient-to-b from-slate-50 via-slate-50 to-slate-100">
       {/* -------------------------------- HERO ------------------------------- */}
       <section className="hero-section relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 -z-10">

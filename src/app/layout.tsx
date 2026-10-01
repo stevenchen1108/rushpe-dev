@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import NavBar from "@/components/navbar.component";
 import FooterBar from "@/components/footer.component";
 
-const inter = Inter({ subsets: ["latin"] });
+const montserrat = localFont({
+  src: "../../public/fonts/montserrat-latin-variable.woff2",
+  display: "swap",
+  weight: "100 900",
+});
 
 export const metadata: Metadata = {
   title: "SHPE | Rutgers University",
@@ -17,7 +21,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={montserrat.className}>
         {/* Removed currLink. Let NavBar detect active route itself */}
         <NavBar isTransparent={false} />
         {children}

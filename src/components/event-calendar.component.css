@@ -7,7 +7,7 @@
   .cal-shell { @apply bg-white text-black px-4 sm:px-6 lg:px-8 py-8 sm:py-12; }
 
   /* ---------- Header ---------- */
-  .cal-header { @apply flex items-center justify-between gap-4 pb-4; }
+  .cal-header { @apply flex flex-wrap items-center justify-between gap-4 pb-4 sm:flex-nowrap; }
   .cal-month-controls { @apply flex items-center gap-2 sm:gap-3; }
   .cal-month  { @apply text-3xl tracking-widest font-extrabold text-black; }
   .cal-month-nav {
