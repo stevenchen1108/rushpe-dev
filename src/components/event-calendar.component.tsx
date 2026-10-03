@@ -12,13 +12,9 @@ import {
   format,
 } from "date-fns";
 import { useState, useEffect, useMemo, useRef, MouseEvent } from "react";
-import Image, { type StaticImageData } from "next/image";
 import "./event-calendar.component.css";
 import { VscChromeClose } from "react-icons/vsc";
 import { SiGooglecalendar } from "react-icons/si";
-import igIcon from "@/../public/socials/instagram-app.webp";
-import liIcon from "@/../public/socials/linkedin-mark.png";
-import fbIcon from "@/../public/socials/facebook-mark.png";
 
 /* ======================== Types ======================== */
 
@@ -52,37 +48,6 @@ type DayCell = {
   selected: boolean;
   events: EventItem[];
 };
-
-type SocialItem = {
-  label: string;
-  href: string;
-  icon: StaticImageData | string;
-};
-
-// No shared social config currently exists; use the same canonical links already
-// used on the home/contact pages while keeping this addition scoped to events.
-const SOCIAL_ITEMS: SocialItem[] = [
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/shpe_ru/",
-    icon: igIcon,
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/rutgers-university-shpe-686bba295",
-    icon: liIcon,
-  },
-  {
-    label: "Facebook",
-    href: "https://www.facebook.com/rutgers.she/",
-    icon: fbIcon,
-  },
-  {
-    label: "TikTok",
-    href: "https://www.tiktok.com/@shpe_ru",
-    icon: "/socials/tiktok-logo-light.svg",
-  },
-];
 
 /* ======================== Small icons ======================== */
 
@@ -621,20 +586,6 @@ export default function Events() {
               <span className="sm:hidden">Subscribe</span>
               <span className="hidden sm:inline">Subscribe to our calendar</span>
             </a>
-            <nav aria-label="Rutgers SHPE social media" className="cal-social-links">
-              {SOCIAL_ITEMS.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cal-social-link"
-                  aria-label={`Follow Rutgers SHPE on ${social.label}`}
-                >
-                  <Image src={social.icon} alt="" width={32} height={32} className="h-8 w-8 object-contain" />
-                </a>
-              ))}
-            </nav>
           </div>
         </div>
 

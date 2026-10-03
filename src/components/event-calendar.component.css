@@ -26,12 +26,6 @@
     transition: transform 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
   }
   .cal-subscribe:hover{ transform: translateY(-1px); background-color: rgb(2 132 199); box-shadow: 0 12px 30px rgba(2,6,23,.22); }
-  .cal-social-links { @apply flex items-center gap-1; }
-  .cal-social-link {
-    @apply grid h-11 w-11 place-items-center rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500;
-    transition: transform 180ms ease;
-  }
-  .cal-social-link:hover { transform: translateY(-2px); }
 
   /* ---------- Today panel ---------- */
   .today-panel{
@@ -196,7 +190,5 @@
   @keyframes calendar-month-in { from { opacity: .35; } to { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) {
     .calendar-grid { animation: none; }
-    .cal-social-link { transition: none; }
-    .cal-social-link:hover { transform: none; }
   }
 }
