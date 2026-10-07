@@ -12,7 +12,10 @@ const compiled = ts.transpileModule(fs.readFileSync(filename, "utf8"), {
 }).outputText;
 const calendarModule = new Module(filename, module);
 calendarModule._compile(compiled, filename);
-const { parseCalendarEvent, selectEventAnnouncements, fetchEventAnnouncements, getEventFlyer, safeEventUrl } = calendarModule.exports;
+const {
+  parseCalendarEvent, selectEventAnnouncements, fetchEventAnnouncements,
+  getEventFlyer, safeEventUrl, selectUpcomingEvent, getEventDayLabel, getEventNoticeKey, fetchUpcomingEvent,
+} = calendarModule.exports;
 
 function timed(id, start, end, extra = {}) {
   return parseCalendarEvent({ id, summary: id, start: { dateTime: start }, end: { dateTime: end }, ...extra });
@@ -123,4 +126,89 @@ test("fetch follows pagination and expands recurring events until the next event
 test("calendar failures reject instead of consuming the visitor's announcement", async (t) => {
   t.mock.method(globalThis, "fetch", async () => new Response("Unavailable", { status: 503 }));
   await assert.rejects(fetchEventAnnouncements(), /Unable to load calendar announcements/);
+});
+
+test("widget skips events that have ended and selects an ongoing event before a future event", () => {
+  const now = new Date("2026-10-07T16:00:00Z");
+  const events = [
+    timed("future", "2026-10-07T18:00:00Z", "2026-10-07T19:00:00Z"),
+    timed("ended", "2026-10-07T14:00:00Z", "2026-10-07T16:00:00Z"),
+    timed("ongoing", "2026-10-07T15:00:00Z", "2026-10-07T17:00:00Z"),
+  ];
+  assert.equal(selectUpcomingEvent(events, now).id, "ongoing");
+  assert.equal(selectUpcomingEvent([events[1]], now), null);
+  assert.equal(selectUpcomingEvent([], now), null);
+});
+
+test("widget expires all-day events at chapter-local midnight using the exclusive end date", () => {
+  const event = allDay("all-day", "2026-10-07", "2026-10-08");
+  assert.equal(selectUpcomingEvent([event], new Date("2026-10-08T03:59:00Z")).id, "all-day");
+  assert.equal(selectUpcomingEvent([event], new Date("2026-10-08T04:00:00Z")), null);
+});
+
+test("widget labels Today and Tomorrow in the chapter time zone even when the UTC day differs", () => {
+  const now = new Date("2026-10-08T02:00:00Z");
+  assert.equal(getEventDayLabel(timed("today", "2026-10-08T03:00:00Z", "2026-10-08T03:30:00Z"), now), "Today");
+  assert.equal(getEventDayLabel(allDay("tomorrow", "2026-10-08", "2026-10-09"), now), "Tomorrow");
+  assert.equal(getEventDayLabel(allDay("later", "2026-10-09", "2026-10-10"), now), null);
+});
+
+test("widget's Tomorrow label compares calendar dates across the spring DST change", () => {
+  const now = new Date("2026-03-08T04:30:00Z");
+  assert.equal(getEventDayLabel(timed("tomorrow", "2026-03-08T23:45:00-04:00", "2026-03-09T00:00:00-04:00"), now), "Tomorrow");
+});
+
+test("widget fetch paginates past invalid and cancelled items and requests only unended events", async (t) => {
+  const urls = [];
+  const future = new Date(Date.now() + 86400000).toISOString();
+  const futureEnd = new Date(Date.now() + 90000000).toISOString();
+  t.mock.method(globalThis, "fetch", async (url) => {
+    const query = new URL(url).searchParams;
+    urls.push(query);
+    return Response.json(query.has("pageToken")
+      ? { items: [{ id: "next", start: { dateTime: future }, end: { dateTime: futureEnd } }] }
+      : { items: [{ id: "invalid" }, { id: "cancelled", status: "cancelled" }], nextPageToken: "next-page" });
+  });
+  assert.equal((await fetchUpcomingEvent()).id, "next");
+  assert.equal(urls.length, 2);
+  assert.equal(urls[0].get("singleEvents"), "true");
+  assert.equal(urls[0].get("timeZone"), "America/New_York");
+  assert.ok(Math.abs(Date.parse(urls[0].get("timeMin")) - Date.now()) < 1000);
+  assert.equal(urls[1].get("pageToken"), "next-page");
+});
+
+test("widget fetch returns no event for an empty calendar", async (t) => {
+  t.mock.method(globalThis, "fetch", async () => Response.json({ items: [] }));
+  assert.equal(await fetchUpcomingEvent(), null);
+});
+
+test("widget fetch rejects failed requests so the component can hide and retry", async (t) => {
+  t.mock.method(globalThis, "fetch", async () => new Response("Unavailable", { status: 503 }));
+  await assert.rejects(fetchUpcomingEvent(), /Unable to load upcoming events/);
+});
+
+test("a dismissed future notice stays the same through Tomorrow, with a distinct event-day reminder", () => {
+  const event = allDay("workshop", "2026-10-08", "2026-10-10");
+  const upcoming = getEventNoticeKey(event, new Date("2026-10-06T16:00:00Z"));
+  assert.equal(getEventNoticeKey(event, new Date("2026-10-08T03:59:00Z")), upcoming);
+  const today = getEventNoticeKey(event, new Date("2026-10-08T04:00:00Z"));
+  assert.notEqual(today, upcoming);
+  assert.equal(getEventNoticeKey(event, new Date("2026-10-09T16:00:00Z")), today);
+});
+
+test("different events, recurring instances, and rescheduled events receive distinct notice keys", () => {
+  const now = new Date("2026-10-07T16:00:00Z");
+  const event = timed("workshop", "2026-10-08T18:00:00-04:00", "2026-10-08T19:00:00-04:00");
+  const key = getEventNoticeKey(event, now);
+  assert.notEqual(getEventNoticeKey({ ...event, id: "another-workshop" }, now), key);
+  assert.notEqual(getEventNoticeKey({ ...event, startISO: "2026-10-15T18:00:00-04:00" }, now), key);
+  assert.equal(getEventNoticeKey({ ...event, startISO: "2026-10-08T22:00:00Z" }, now), key);
+});
+
+test("event-day reminders follow the chapter's time zone across daylight-saving changes", () => {
+  const event = allDay("workshop", "2026-11-01", "2026-11-02");
+  const before = getEventNoticeKey(event, new Date("2026-11-01T03:59:00Z"));
+  const after = getEventNoticeKey(event, new Date("2026-11-01T04:00:00Z"));
+  assert.notEqual(after, before);
+  assert.equal(getEventNoticeKey(event, new Date("2026-11-02T04:59:00Z")), after);
 });

@@ -244,3 +244,62 @@ export async function fetchEventAnnouncements(signal?: AbortSignal): Promise<Eve
   } while (pageToken);
   return selectEventAnnouncements(events, now);
 }
+
+export function selectUpcomingEvent(events: EventItem[], now = new Date()): EventItem | null {
+  const today = dayKey(now);
+  return [...events]
+    .filter((event) => event.allDay
+      ? event.endISO.slice(0, 10) > today
+      : Date.parse(event.endISO) > now.getTime())
+    .sort((a, b) => (
+      eventDayKey(a).localeCompare(eventDayKey(b)) ||
+      Number(Boolean(b.allDay)) - Number(Boolean(a.allDay)) ||
+      Date.parse(a.startISO) - Date.parse(b.startISO)
+    ))[0] ?? null;
+}
+
+export function getEventDayLabel(event: EventItem, now = new Date()): "Today" | "Tomorrow" | null {
+  const today = dayKey(now);
+  const eventDay = eventDayKey(event);
+  if (eventDay === today) return "Today";
+  // Compare calendar dates rather than 24-hour intervals across DST changes.
+  const tomorrow = new Date(`${today}T12:00:00Z`);
+  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+  return eventDay === tomorrow.toISOString().slice(0, 10) ? "Tomorrow" : null;
+}
+
+export function getEventNoticeKey(event: EventItem, now = new Date()): string {
+  const start = event.allDay ? event.startISO.slice(0, 10) : new Date(event.startISO).toISOString();
+  // Keep one dismissal before the event and another for its event-day reminder.
+  // Dates distinguish recurring instances and allow rescheduled events to return.
+  const phase = eventDayKey(event) <= dayKey(now) ? "today" : "upcoming";
+  return JSON.stringify([event.id ?? event.summary, start, phase]);
+}
+
+export async function fetchUpcomingEvent(signal?: AbortSignal): Promise<EventItem | null> {
+  const now = new Date();
+  const query = new URLSearchParams({
+    key: CALENDAR_API_KEY,
+    singleEvents: "true",
+    orderBy: "startTime",
+    maxResults: "100",
+    timeZone: CALENDAR_TIME_ZONE,
+    timeMin: now.toISOString(),
+  });
+  let pageToken: string | undefined;
+  do {
+    if (pageToken) query.set("pageToken", pageToken);
+    const response = await fetch(
+      `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?${query}`,
+      { signal },
+    );
+    if (!response.ok) throw new Error("Unable to load upcoming events");
+    const data: { items?: GCalItem[]; nextPageToken?: string } = await response.json();
+    const events = (data.items ?? []).map(parseCalendarEvent)
+      .filter((event): event is EventItem => event !== null);
+    const event = selectUpcomingEvent(events, now);
+    if (event) return event;
+    pageToken = data.nextPageToken;
+  } while (pageToken);
+  return null;
+}

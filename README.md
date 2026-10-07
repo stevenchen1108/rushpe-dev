@@ -1,12 +1,14 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Event announcement popup
+## Upcoming-event widget
 
-The site-wide popup shows today's events in `America/New_York` and the next upcoming event from the same public Google Calendar used by `/events`. It includes calendar subscription and social links. Clicking a flyer opens a larger preview inside the site; closing the preview returns to the announcement. Flyers come from `IMAGE: <URL>` in an event description, an HTML image/image link, or a Google Drive attachment. Attached flyers must be publicly viewable.
+The site-wide widget shows the next ongoing or future event from the public Google Calendar used by `/events`. The compact card includes its name, date, time, location, and a “View Details” link to `/events#calendar`. When available, its poster appears on the right and opens the existing in-site preview when clicked. Missing or unavailable posters leave the full width for event details. “Today” and “Tomorrow” use the chapter's `America/New_York` time zone, including daylight-saving changes. All-day events retain their calendar dates.
 
-The popup appears once per page load. Refreshing the page or opening the site in a new tab shows it again; client-side navigation keeps it dismissed. An in-memory flag tracks whether it has opened, with no browser storage required. Close it with the X, an outside click, or Escape. No popup is shown for empty calendars or failed requests; those visits do not set the seen flag. The popup's “View all events” link jumps directly to `/events#calendar`.
+The widget does not take focus or block scrolling when it appears. It stays hidden when the feed is empty, fails to load, or its notice is dismissed. Closing the card or choosing “View Details” saves dismissal for that event across refreshes and navigation. The same event can return once when it becomes “Today”; dismissing that reminder keeps it hidden too. Different events, recurring instances, and rescheduled events receive their own notices. Poster previews do not dismiss the notice.
 
-To preview it again locally, refresh the page. Configure `NEXT_PUBLIC_GOOGLE_CAL_API_KEY` with the public calendar's API key. A key restricted to production HTTP referrers will reject localhost requests; use a development key that allows your local origin (for example, `http://127.0.0.1:3000/*`). Run `npm test` for calendar parsing, event selection, pagination, and failure-handling checks.
+Dismissals are stored under `rushpe:upcoming-event-dismissals:v1` in local storage and synchronized across tabs. If storage is unavailable, dismissal still works while the page stays open. The feed continues refreshing while dismissed so new events can appear; it refreshes every five minutes and when a timed event ends. Day labels and reminder eligibility update every minute. No new dependencies are required.
+
+Configure `NEXT_PUBLIC_GOOGLE_CAL_API_KEY` with the public calendar's API key. A key restricted to production HTTP referrers will reject localhost requests; use a development key that allows your local origin (for example, `http://127.0.0.1:3000/*`). Run `npm test` for event selection, relative day labels, parsing, pagination, and failure handling.
 
 ## Getting Started
 
