@@ -11,37 +11,19 @@ import {
   set,
   format,
 } from "date-fns";
-import { useState, useEffect, useMemo, useRef, MouseEvent } from "react";
+import { useState, useEffect, useMemo, MouseEvent } from "react";
 import "./event-calendar.component.css";
 import { VscChromeClose } from "react-icons/vsc";
 import { SiGooglecalendar } from "react-icons/si";
+import FlyerPreview from "./event-flyer-preview.component";
+import {
+  CALENDAR_ID, CALENDAR_API_KEY, CALENDAR_SUBSCRIBE_URL,
+  parseCalendarEvent, normalizeDescription, hasMeaningfulDescription,
+  getEventFlyer,
+  type EventItem, type GCalItem,
+} from "@/lib/calendar";
 
 /* ======================== Types ======================== */
-
-type GCalDate = { date?: string; dateTime?: string };
-type GCalAttachment = { fileId: string };
-
-type GCalItem = {
-  summary?: string;
-  description?: string;
-  start: GCalDate;
-  end: GCalDate;
-  attachments?: GCalAttachment[];
-  location?: string;
-};
-
-type EventItem = {
-  summary: string;
-  description: string;
-  startISO: string;
-  endISO: string;
-  attachments: string[];
-  rsvp?: string;
-  color?: string;
-  image?: string;
-  text?: string;
-  location?: string;
-};
 
 type DayCell = {
   date: Date;
@@ -131,103 +113,7 @@ function linkify(text: string): string {
   return withEmails.replace(/\n/g, "<br/>");
 }
 
-/* ======================== Pastel color helper ======================== */
-
-const PASTELS = [
-  "#F8D7DA",
-  "#FFE8CC",
-  "#DDEBFF",
-  "#DFF5E1",
-  "#FFF7CC",
-] as const;
-
-function pickPastelKey(stableKey: string): string {
-  let hash = 5381;
-  for (let i = 0; i < stableKey.length; i++) {
-    hash = (hash << 5) + hash + stableKey.charCodeAt(i);
-  }
-  const idx = Math.abs(hash) % PASTELS.length;
-  return PASTELS[idx];
-}
-
 /* ======================== Helpers ======================== */
-
-function toISO(d: GCalDate): string {
-  if (d.dateTime) return d.dateTime;
-  if (d.date) return `${d.date}T12:00:00Z`;
-  return new Date().toISOString();
-}
-
-function extractTokens(desc: string): {
-  clean: string;
-  tokens: Partial<EventItem>;
-} {
-  let working = (desc ?? "").replace(/<br\s*\/?>/gi, "\n");
-
-  const tokens: Partial<EventItem> = {};
-
-  const imageAnchorRx =
-    /<a[^>]*href="([^"]+\.(?:png|jpe?g|webp|gif))"[^>]*>.*?<\/a>/i;
-  const imgAnchorMatch = working.match(imageAnchorRx);
-  if (imgAnchorMatch && !tokens.image) {
-    tokens.image = imgAnchorMatch[1];
-    working = working.replace(imageAnchorRx, "");
-  }
-
-  working = working.replace(/<a[^>]*href="([^"]+)"[^>]*>.*?<\/a>/gi, "$1");
-
-  (["RSVP", "COLOR", "IMAGE", "TEXT", "ID"] as const).forEach((opt) => {
-    const rx = new RegExp(`\\s*${opt}:\\s*([^\\s]+)`, "g");
-    const m = rx.exec(working);
-    if (m) {
-      const v = m[1];
-      if (opt === "RSVP") tokens.rsvp = v;
-      if (opt === "COLOR") tokens.color = v;
-      if (opt === "IMAGE" && !tokens.image) tokens.image = v;
-      if (opt === "TEXT") tokens.text = v;
-    }
-    working = working.replace(rx, "");
-  });
-
-  return { clean: normalizeDescription(working), tokens };
-}
-
-function decodeHtmlEntities(value: string): string {
-  return value
-    .replace(/&nbsp;|&#160;|&#xa0;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;|&apos;/gi, "'")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">");
-}
-
-function normalizeDescription(value: string): string {
-  const withoutTags = value.replace(/<[^>]*>/g, " ");
-  const decoded = decodeHtmlEntities(withoutTags);
-  const withoutInvisible = decoded.replace(/[\u200B-\u200D\uFEFF]/g, "");
-  const withoutControl = withoutInvisible.replace(
-    /[\u0000-\u001F\u007F]/g,
-    " ",
-  );
-  const cleaned = withoutControl.replace(/\s+/g, " ").trim();
-  if (!cleaned) return "";
-  const normalized = cleaned.toLowerCase();
-  if (
-    normalized === "0" ||
-    normalized === "null" ||
-    normalized === "undefined" ||
-    normalized === "n/a" ||
-    normalized === "na"
-  ) {
-    return "";
-  }
-  return cleaned;
-}
-
-function hasMeaningfulDescription(value: string): boolean {
-  return normalizeDescription(value).length > 0;
-}
 
 function buildMonthGrid(forDate: Date): DayCell[] {
   const firstDOM = startOfMonth(forDate);
@@ -259,61 +145,6 @@ function buildCalendarWithEvents(forDate: Date, events: EventItem[]): DayCell[] 
 
 /* ======================== Component ======================== */
 
-function FlyerPreview({ src, title, onClose }: {
-  src: string;
-  title: string;
-  onClose: () => void;
-}) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    const trigger = document.activeElement instanceof HTMLElement
-      ? document.activeElement : null;
-    const previousOverflow = document.body.style.overflow;
-    // Native modal dialogs keep keyboard focus inside and make the page inert.
-    dialog.showModal();
-    document.body.style.overflow = "hidden";
-    return () => {
-      dialog.close();
-      document.body.style.overflow = previousOverflow;
-      if (trigger?.isConnected) trigger.focus();
-    };
-  }, []);
-
-  return (
-    <dialog
-      ref={dialogRef}
-      className="flyer-preview"
-      aria-labelledby="flyer-preview-title"
-      onCancel={(event) => { event.preventDefault(); onClose(); }}
-      onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
-      onKeyDown={(event) => {
-        // The close button is the preview's only interactive control.
-        if (event.key === "Tab") {
-          event.preventDefault();
-          closeRef.current?.focus();
-        }
-      }}
-    >
-      <div className="flyer-preview-panel">
-        <header className="flyer-preview-header">
-          <h2 id="flyer-preview-title">{title}</h2>
-          <button ref={closeRef} type="button" className="flyer-preview-close" onClick={onClose} aria-label="Close flyer">
-            <VscChromeClose aria-hidden="true" />
-          </button>
-        </header>
-        <div className="flyer-preview-body">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={src} alt={`Flyer for ${title}`} className="flyer-preview-image" />
-        </div>
-      </div>
-    </dialog>
-  );
-}
-
 export default function Events() {
   const WEEK = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
   const today = useMemo(
@@ -328,9 +159,7 @@ export default function Events() {
   const [eventSelected, setEventSelected] = useState<EventItem | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [flyerPreview, setFlyerPreview] = useState<{ src: string; title: string } | null>(null);
-  const selectedFlyerSrc = eventSelected?.image || (eventSelected?.attachments[0]
-    ? `https://lh3.googleusercontent.com/d/${eventSelected.attachments[0]}`
-    : null);
+  const selectedFlyerSrc = eventSelected ? getEventFlyer(eventSelected) : null;
 
   const calendarData = useMemo(
     () => buildCalendarWithEvents(visibleMonth, allEvents).map((cell) => ({
@@ -365,9 +194,7 @@ export default function Events() {
   const renderEventCard = (event: EventItem, key: string) => {
     const start = new Date(event.startISO);
     const end = new Date(event.endISO);
-    const flyerSrc = event.image || (event.attachments[0]
-      ? `https://lh3.googleusercontent.com/d/${event.attachments[0]}`
-      : undefined);
+    const flyerSrc = getEventFlyer(event);
 
     return (
       <article
@@ -443,43 +270,20 @@ export default function Events() {
   // Fetch Google Calendar once
   useEffect(() => {
     const fetchEvents = async () => {
-      const calendarId =
-        "c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com";
-      const apiKey =
-        process.env.NEXT_PUBLIC_GOOGLE_CAL_API_KEY ??
-        "AIzaSyBCIOf5yqU8ThEm-h95QvynRXrM4H7wnUs";
-
       try {
         const res = await fetch(
-          `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${apiKey}&supportsAttachments=true&singleEvents=true&orderBy=startTime`,
+          `https://www.googleapis.com/calendar/v3/calendars/${CALENDAR_ID}/events?key=${CALENDAR_API_KEY}&supportsAttachments=true&singleEvents=true&orderBy=startTime`,
           { headers: { "Content-Type": "application/json" } },
         );
+        if (!res.ok) throw new Error("Unable to load calendar events");
         const data: { items?: GCalItem[] } = await res.json();
 
         const events: EventItem[] = [];
 
-        (data.items ?? []).forEach((item) => {
-          const startISO = toISO(item.start);
-          const endISO = toISO(item.end);
-          const { clean, tokens } = extractTokens(item.description ?? "");
-          const stableKey = `${item.summary ?? ""}|${startISO}`;
-          const pastel = tokens.color ?? pickPastelKey(stableKey);
-
-          events.push({
-            summary: item.summary ?? "Untitled Event",
-            description: clean,
-            startISO,
-            endISO,
-            attachments: Array.isArray(item.attachments)
-              ? item.attachments.map((a) => a.fileId)
-              : [],
-            location: item.location,
-            color: pastel,
-            rsvp: tokens.rsvp,
-            image: tokens.image,
-            text: tokens.text,
-          });
-        });
+        for (const item of data.items ?? []) {
+          const event = parseCalendarEvent(item);
+          if (event) events.push(event);
+        }
 
         setAllEvents(events);
       } catch (e) {
@@ -554,7 +358,7 @@ export default function Events() {
         </div>
       </section>
 
-      <section className="cal-calendar-widget" aria-labelledby="calendar-month-title">
+      <section id="calendar" className="cal-calendar-widget" aria-labelledby="calendar-month-title">
         <div className="cal-header">
           <div className="cal-month-controls">
             <button
@@ -580,7 +384,7 @@ export default function Events() {
           <div className="cal-header-actions">
             <a
               className="cal-subscribe"
-              href="https://calendar.google.com/calendar/u/0/r?cid=c_de6a59ee297dd00115ded8690255602ffe6aa68f8579743bde8866d9ad2380cb@group.calendar.google.com"
+              href={CALENDAR_SUBSCRIBE_URL}
             >
               <SiGooglecalendar className="h-[1.1rem] w-[1.1rem]" />
               <span className="sm:hidden">Subscribe</span>

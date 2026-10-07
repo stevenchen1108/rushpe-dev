@@ -1,5 +1,13 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Event announcement popup
+
+The site-wide popup shows today's events in `America/New_York` and the next upcoming event from the same public Google Calendar used by `/events`. It includes calendar subscription and social links. Clicking a flyer opens a larger preview inside the site; closing the preview returns to the announcement. Flyers come from `IMAGE: <URL>` in an event description, an HTML image/image link, or a Google Drive attachment. Attached flyers must be publicly viewable.
+
+The popup appears once per page load. Refreshing the page or opening the site in a new tab shows it again; client-side navigation keeps it dismissed. An in-memory flag tracks whether it has opened, with no browser storage required. Close it with the X, an outside click, or Escape. No popup is shown for empty calendars or failed requests; those visits do not set the seen flag. The popup's “View all events” link jumps directly to `/events#calendar`.
+
+To preview it again locally, refresh the page. Configure `NEXT_PUBLIC_GOOGLE_CAL_API_KEY` with the public calendar's API key. A key restricted to production HTTP referrers will reject localhost requests; use a development key that allows your local origin (for example, `http://127.0.0.1:3000/*`). Run `npm test` for calendar parsing, event selection, pagination, and failure-handling checks.
+
 ## Getting Started
 
 First, run the development server:

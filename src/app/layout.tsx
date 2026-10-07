@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import NavBar from "@/components/navbar.component";
 import FooterBar from "@/components/footer.component";
+import EventAnnouncement from "@/components/event-announcement.component";
 
 const montserrat = localFont({
   src: "../../public/fonts/montserrat-latin-variable.woff2",
@@ -26,6 +27,7 @@ export default function RootLayout({
         <NavBar isTransparent={false} />
         {children}
         <FooterBar />
+        <EventAnnouncement />
       </body>
     </html>
   );
