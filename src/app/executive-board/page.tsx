@@ -329,19 +329,19 @@ export default function ExecutiveBoard() {
             <Chip>Mentorship</Chip>
             <Chip>Community</Chip>
           </div>
-
-          <div className="mt-8 flex flex-col items-center justify-center">
-            <button className="eb-archive-trigger" onClick={() => setModalOpen(true)}>
-              ✨ Meet Previous E-Board
-            </button>
-            <span className="eb-archive-hint mt-2">Tap to Meet</span>
-          </div>
         </div>
       </section>
 
       {/* Current Board Grid */}
       <section className="eb-grid-wrap">
         <BoardGrid members={members} />
+
+        <div className="mt-8 flex flex-col items-center justify-center">
+          <button className="eb-archive-trigger" onClick={() => setModalOpen(true)}>
+            Meet Previous E-Board
+          </button>
+          <span className="eb-archive-hint mt-2">Tap to Meet</span>
+        </div>
       </section>
 
       {/* Modal */}
