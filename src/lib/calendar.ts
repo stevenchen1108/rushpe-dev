@@ -38,19 +38,20 @@ export type EventItem = {
 };
 
 const PASTELS = [
-  "#F8D7DA",
-  "#FFE8CC",
-  "#DDEBFF",
-  "#DFF5E1",
-  "#FFF7CC",
+  "#F8D7DA", // Blush
+  "#FFE8CC", // Peach
+  "#DDEBFF", // Blue
+  "#DFF5E1", // Mint
+  "#FFF7CC", // Yellow
+  "#EDE2FA", // Lavender
 ] as const;
 
 function pickPastelKey(stableKey: string): string {
   let hash = 5381;
   for (let i = 0; i < stableKey.length; i++) {
-    hash = (hash << 5) + hash + stableKey.charCodeAt(i);
+    hash = (Math.imul(hash, 33) + stableKey.charCodeAt(i)) | 0;
   }
-  const idx = Math.abs(hash) % PASTELS.length;
+  const idx = (hash >>> 0) % PASTELS.length;
   return PASTELS[idx];
 }
 
@@ -93,7 +94,6 @@ function extractTokens(desc: string): {
     if (m) {
       const v = m[1];
       if (opt === "RSVP") tokens.rsvp = decodeHtmlEntities(v);
-      if (opt === "COLOR") tokens.color = v;
       if (opt === "IMAGE" && !tokens.image) tokens.image = decodeHtmlEntities(v);
       if (opt === "TEXT") tokens.text = v;
     }
@@ -157,7 +157,9 @@ export function parseCalendarEvent(item: GCalItem): EventItem | null {
     attachments: (item.attachments ?? []).map((attachment) => attachment.fileId).filter(Boolean),
     location: item.location,
     ...tokens,
-    color: tokens.color ?? pickPastelKey(`${item.summary ?? ""}|${startISO}`),
+    // Always use readable pastels, ignoring legacy COLOR overrides. A stable
+    // event key varies the colors without reshuffling them on refresh.
+    color: pickPastelKey(`${item.id ?? item.summary ?? ""}|${startISO}`),
   };
 }
 
